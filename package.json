@@ -1,0 +1,24 @@
+{
+    "name": "@wraith13/slide-rule",
+    "version": "0.0.0",
+    "description": "Slide Rule Web App",
+    "scripts": {
+        "build all": "node ./build.js ../build.json all",
+        "build script": "tsc -p ./script/tsconfig.json",
+        "build html": "node ./build.js ../build.json html"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/wraith13/slide-rule.git"
+    },
+    "author": "wraith13",
+    "license": "BSL-1.0",
+    "bugs": {
+        "url": "https://github.com/wraith13/slide-rule/issues"
+    },
+    "homepage": "https://github.com/wraith13/slide-rule/#readme",
+    "devDependencies": {
+        "@types/node": "^25.0.9",
+        "typescript": "^5.9.3"
+    }
+}
