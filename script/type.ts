@@ -22,5 +22,5 @@ export namespace Type
             default: return value.toLocaleString(locales, options);
         }
     }
-    export type PrimaryLane = "primary" | "inverse" | "sine" | "cosine" | "tangent" | "cotangent";
+    export type PrimaryLane = "primary" | "inverse" | "sine" | "cosine" | "tangent" | "cotangent" | "linear";
 }

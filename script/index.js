@@ -67,6 +67,64 @@ define("resource/config", [], {
     "canonicalUrl": "https://wraith13.github.io/slide-rule/",
     "description": "Slide Rule Web App",
     "noscriptMessage": "JavaScript is disabled. Please enable JavaScript.",
+    "model": {
+        "lane": {
+            "presets": {
+                "A": {
+                    "type": "primary",
+                    "logScale": "2"
+                },
+                "B": {
+                    "type": "primary",
+                    "logScale": "2"
+                },
+                "C": {
+                    "type": "primary",
+                    "logScale": "1"
+                },
+                "D": {
+                    "type": "primary",
+                    "logScale": "1"
+                },
+                "CI": {
+                    "type": "inverse",
+                    "logScale": "1"
+                },
+                "DI": {
+                    "type": "inverse",
+                    "logScale": "1"
+                },
+                "K": {
+                    "type": "primary",
+                    "logScale": "3"
+                },
+                "L": {
+                    "type": "linear",
+                    "logScale": "e"
+                },
+                "S": {
+                    "type": "sine",
+                    "logScale": "1"
+                },
+                "T": {
+                    "type": "tangent",
+                    "logScale": "1"
+                },
+                "ST": {
+                    "type": "small-tangent",
+                    "logScale": "1"
+                },
+                "P": {
+                    "type": "power",
+                    "logScale": "2"
+                },
+                "LL": {
+                    "type": "log-log",
+                    "logScale": "e"
+                }
+            }
+        }
+    },
     "view": {
         "defaultMode": "ruler",
         "defaultScale": "logarithmic",
@@ -83,9 +141,19 @@ define("script/view", ["require", "exports", "script/url", "script/type", "resou
     config_json_1 = __importDefault(config_json_1);
     var View;
     (function (View) {
+        var viewMode;
+        View.getViewMode = function () { return viewMode; };
+        View.isRulerView = function () { return viewMode === "ruler"; };
+        View.isGridView = function () { return viewMode === "grid"; };
+        View.setViewMode = function (mode) {
+            viewMode = mode;
+            url_1.Url.addParameter("view-mode", mode);
+            document.body.classList.toggle("grid-view", View.isGridView());
+            document.body.classList.toggle("ruler-view", View.isRulerView());
+        };
         View.initialize = function () {
             var _a, _b, _c, _d, _e, _f, _g, _h;
-            View.viewMode = (_c = (_a = url_1.Url.params["view-mode"]) !== null && _a !== void 0 ? _a : (_b = config_json_1.default.view) === null || _b === void 0 ? void 0 : _b.defaultMode) !== null && _c !== void 0 ? _c : "ruler";
+            View.setViewMode((_c = (_a = url_1.Url.params["view-mode"]) !== null && _a !== void 0 ? _a : (_b = config_json_1.default.view) === null || _b === void 0 ? void 0 : _b.defaultMode) !== null && _c !== void 0 ? _c : "ruler");
             View.viewScale = Number(url_1.Url.params["view-scale"]) || 1;
             View.scaleMode = (_f = (_d = url_1.Url.params["scale-mode"]) !== null && _d !== void 0 ? _d : (_e = config_json_1.default.view) === null || _e === void 0 ? void 0 : _e.defaultScale) !== null && _f !== void 0 ? _f : "logarithmic";
             View.baseOfLogarithm = Number(type_1.Type.getNamedNumberValue(url_1.Url.params["base"]))

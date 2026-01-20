@@ -26,10 +26,24 @@ export namespace UI
         }
         return element as SVGElementTagNameMap[T];
     };
-    export const gridView = (): HTMLDivElement =>
-        getHtmlElementById("div", "grid-view");
-    export const rulerView = (): SVGSVGElement =>
-        getSvgElementById("svg", "ruler-view");
-    export const controlPanel = (): HTMLDivElement =>
-        getHtmlElementById("div", "control-panel");
+    export const setAriaHidden = (element: HTMLElement | SVGElement, hidden: boolean) =>
+    {
+        const attributeKey = "aria-hidden";
+        if (hidden)
+        {
+            const attribute = document.createAttribute(attributeKey);
+            attribute.value = "true";
+            element.attributes.setNamedItem(attribute);
+        }
+        else
+        {
+            if (element.attributes.getNamedItem(attributeKey))
+            {
+                element.attributes.removeNamedItem(attributeKey);
+            }
+        }
+    };
+    export const rulerView: SVGSVGElement = getSvgElementById("svg", "ruler-view");
+    export const gridView: HTMLDivElement = getHtmlElementById("div", "grid-view");
+    export const controlPanel: HTMLDivElement = getHtmlElementById("div", "control-panel");
 }

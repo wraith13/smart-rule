@@ -2,7 +2,7 @@
 <!--
     This file is genereted by build.js. このファイルは build.js によって生成されました。
     build options: ../build.json all
-    build at: Tue Jan 20 2026 06:28:27 GMT+0900 (日本標準時)
+    build at: Tue Jan 20 2026 18:58:10 GMT+0900 (日本標準時)
     repository: https://github.com/wraith13/slide-rule/
 -->
 <!-- license:
@@ -87,6 +87,98 @@ html, body
     inset: 0px;
     image-rendering: pixelated;
 }
+body:not(.ruler-view) #ruler-view
+{
+    display: none;
+}
+body:not(.grid-view) #grid-view
+{
+    display: none;
+}
+#ruler-view
+{
+    background-color: cadetblue;
+}
+#grid-view
+{
+    background-color: lightblue;
+}
+#control-panel
+{
+    position: fixed;
+    z-index: 100;
+    bottom: 0.5rem;
+    bottom: max(0.5rem, env(safe-area-inset-bottom, 0.5rem));
+    right: 0.5rem;
+    right: max(0.5rem, env(safe-area-inset-right, 0.5rem));
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(0.5rem);
+    padding: 0.25rem;
+    border-radius: 2rem;
+    display: flex;
+    flex-direction: row;
+    transition: opacity 0.5s ease;
+}
+button
+{
+    position: relative;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    height: 3rem;
+    width: 3rem;
+    padding: calc(0.5rem - 4px);
+    border-width: 4px;
+    border-style: solid;
+    border-color: black;
+    transition: border-color 0.5s ease;
+    color: white;
+}
+button svg
+{
+    position: relative;
+    height: 2.0rem;
+    width: 2.0rem;
+    color: white;
+    fill: white;
+}
+button svg path
+{
+    color: white !important;
+    fill: white !important;
+}
+button.round-bar::before
+{
+    position: absolute;
+    content: "";
+    height: 3rem;
+    width: 3rem;
+    top: -4px;
+    left: -4px;
+    transition: --low 0.5s ease, --high 0.5s ease, --rotate 0.5s ease;
+    border-radius: 50%;
+    mask-image: radial-gradient(circle at center, transparent 0%, transparent calc(70.71% - 4px), white calc(70.71% - 4px));
+    background:
+        radial-gradient(circle at center, black 0%, black calc(70.71% - 4px), transparent calc(70.71% - 4px)), /* This radial-gradient is a fallback for older environments */
+        conic-gradient(black 0deg, black calc(var(--low) * 360deg),  white calc(var(--low) * 360deg),  white calc(var(--high) * 360deg), white calc(var(--high) * 360deg), black calc(var(--high) * 360deg));
+    transform: rotate(calc(var(--rotate) * 360deg));
+}
+button.on
+{
+    border-color: white;
+}
+button:focus
+{
+    outline: none;
+    background-color: hsla(200, 100%, 35%, 0.9);
+}
+@media (hover: hover)
+{
+    button:hover
+    {
+        background-color: hsla(100, 100%, 25%, 0.9);
+    }
+}
 
 </style>
 </head>
@@ -100,13 +192,16 @@ html, body
     </div>
 </noscript>
 🚧 UNDERCONSTRUCTION
-<div id="grid-view" class="screen"></div>
 <svg id="ruler-view" class="screen"></svg>
-<div id="control-panel"></div>
+<div id="grid-view" class="screen"></div>
+<div id="control-panel">
+<button>📏</button>
+<button>📈</button>
+</div>
 <script type="text/javascript">
 const build = {
-    at: "Tue Jan 20 2026 06:28:27 GMT+0900 (日本標準時)",
-    tick: 1768858107107
+    at: "Tue Jan 20 2026 18:58:10 GMT+0900 (日本標準時)",
+    tick: 1768903090900
 };
 const evilCommonjsConfig = {
     "log": {
@@ -535,6 +630,64 @@ define("resource/config", [], {
     "canonicalUrl": "https://wraith13.github.io/slide-rule/",
     "description": "Slide Rule Web App",
     "noscriptMessage": "JavaScript is disabled. Please enable JavaScript.",
+    "model": {
+        "lane": {
+            "presets": {
+                "A": {
+                    "type": "primary",
+                    "logScale": "2"
+                },
+                "B": {
+                    "type": "primary",
+                    "logScale": "2"
+                },
+                "C": {
+                    "type": "primary",
+                    "logScale": "1"
+                },
+                "D": {
+                    "type": "primary",
+                    "logScale": "1"
+                },
+                "CI": {
+                    "type": "inverse",
+                    "logScale": "1"
+                },
+                "DI": {
+                    "type": "inverse",
+                    "logScale": "1"
+                },
+                "K": {
+                    "type": "primary",
+                    "logScale": "3"
+                },
+                "L": {
+                    "type": "linear",
+                    "logScale": "e"
+                },
+                "S": {
+                    "type": "sine",
+                    "logScale": "1"
+                },
+                "T": {
+                    "type": "tangent",
+                    "logScale": "1"
+                },
+                "ST": {
+                    "type": "small-tangent",
+                    "logScale": "1"
+                },
+                "P": {
+                    "type": "power",
+                    "logScale": "2"
+                },
+                "LL": {
+                    "type": "log-log",
+                    "logScale": "e"
+                }
+            }
+        }
+    },
     "view": {
         "defaultMode": "ruler",
         "defaultScale": "logarithmic",
@@ -551,9 +704,19 @@ define("script/view", ["require", "exports", "script/url", "script/type", "resou
     config_json_1 = __importDefault(config_json_1);
     var View;
     (function (View) {
+        var viewMode;
+        View.getViewMode = function () { return viewMode; };
+        View.isRulerView = function () { return viewMode === "ruler"; };
+        View.isGridView = function () { return viewMode === "grid"; };
+        View.setViewMode = function (mode) {
+            viewMode = mode;
+            url_1.Url.addParameter("view-mode", mode);
+            document.body.classList.toggle("grid-view", View.isGridView());
+            document.body.classList.toggle("ruler-view", View.isRulerView());
+        };
         View.initialize = function () {
             var _a, _b, _c, _d, _e, _f, _g, _h;
-            View.viewMode = (_c = (_a = url_1.Url.params["view-mode"]) !== null && _a !== void 0 ? _a : (_b = config_json_1.default.view) === null || _b === void 0 ? void 0 : _b.defaultMode) !== null && _c !== void 0 ? _c : "ruler";
+            View.setViewMode((_c = (_a = url_1.Url.params["view-mode"]) !== null && _a !== void 0 ? _a : (_b = config_json_1.default.view) === null || _b === void 0 ? void 0 : _b.defaultMode) !== null && _c !== void 0 ? _c : "ruler");
             View.viewScale = Number(url_1.Url.params["view-scale"]) || 1;
             View.scaleMode = (_f = (_d = url_1.Url.params["scale-mode"]) !== null && _d !== void 0 ? _d : (_e = config_json_1.default.view) === null || _e === void 0 ? void 0 : _e.defaultScale) !== null && _f !== void 0 ? _f : "logarithmic";
             View.baseOfLogarithm = Number(type_1.Type.getNamedNumberValue(url_1.Url.params["base"]))

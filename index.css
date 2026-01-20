@@ -23,3 +23,95 @@ html, body
     inset: 0px;
     image-rendering: pixelated;
 }
+body:not(.ruler-view) #ruler-view
+{
+    display: none;
+}
+body:not(.grid-view) #grid-view
+{
+    display: none;
+}
+#ruler-view
+{
+    background-color: cadetblue;
+}
+#grid-view
+{
+    background-color: lightblue;
+}
+#control-panel
+{
+    position: fixed;
+    z-index: 100;
+    bottom: 0.5rem;
+    bottom: max(0.5rem, env(safe-area-inset-bottom, 0.5rem));
+    right: 0.5rem;
+    right: max(0.5rem, env(safe-area-inset-right, 0.5rem));
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(0.5rem);
+    padding: 0.25rem;
+    border-radius: 2rem;
+    display: flex;
+    flex-direction: row;
+    transition: opacity 0.5s ease;
+}
+button
+{
+    position: relative;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    height: 3rem;
+    width: 3rem;
+    padding: calc(0.5rem - 4px);
+    border-width: 4px;
+    border-style: solid;
+    border-color: black;
+    transition: border-color 0.5s ease;
+    color: white;
+}
+button svg
+{
+    position: relative;
+    height: 2.0rem;
+    width: 2.0rem;
+    color: white;
+    fill: white;
+}
+button svg path
+{
+    color: white !important;
+    fill: white !important;
+}
+button.round-bar::before
+{
+    position: absolute;
+    content: "";
+    height: 3rem;
+    width: 3rem;
+    top: -4px;
+    left: -4px;
+    transition: --low 0.5s ease, --high 0.5s ease, --rotate 0.5s ease;
+    border-radius: 50%;
+    mask-image: radial-gradient(circle at center, transparent 0%, transparent calc(70.71% - 4px), white calc(70.71% - 4px));
+    background:
+        radial-gradient(circle at center, black 0%, black calc(70.71% - 4px), transparent calc(70.71% - 4px)), /* This radial-gradient is a fallback for older environments */
+        conic-gradient(black 0deg, black calc(var(--low) * 360deg),  white calc(var(--low) * 360deg),  white calc(var(--high) * 360deg), white calc(var(--high) * 360deg), black calc(var(--high) * 360deg));
+    transform: rotate(calc(var(--rotate) * 360deg));
+}
+button.on
+{
+    border-color: white;
+}
+button:focus
+{
+    outline: none;
+    background-color: hsla(200, 100%, 35%, 0.9);
+}
+@media (hover: hover)
+{
+    button:hover
+    {
+        background-color: hsla(100, 100%, 25%, 0.9);
+    }
+}

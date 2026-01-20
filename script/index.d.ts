@@ -13,13 +13,17 @@ declare module "script/type" {
         const phi: number;
         const getNamedNumberValue: (value: NamedNumber) => number;
         const getNamedNumberLabel: (value: NamedNumber, locales?: Intl.LocalesArgument, options?: Intl.NumberFormatOptions) => string;
+        type PrimaryLane = "primary" | "inverse" | "sine" | "cosine" | "tangent" | "cotangent" | "linear";
     }
 }
 declare module "script/view" {
     import { Type } from "script/type";
     export namespace View {
-        type ViewMode = "grid" | "ruler";
-        let viewMode: ViewMode;
+        type ViewMode = "ruler" | "grid";
+        const getViewMode: () => ViewMode;
+        const isRulerView: () => boolean;
+        const isGridView: () => boolean;
+        const setViewMode: (mode: ViewMode) => void;
         let viewScale: number;
         type ScaleMode = "linear" | "logarithmic";
         let scaleMode: ScaleMode;
