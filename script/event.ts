@@ -11,6 +11,15 @@ export namespace Event
     export const initialize = () =>
     {
         console.log("Event initialized");
+        window.addEventListener
+        (
+            "resize",
+            () =>
+            {
+                Ruler.resize();
+                Render.markDirty();
+            }
+        );
         UI.viewModeButton.addEventListener
         (
             "click",

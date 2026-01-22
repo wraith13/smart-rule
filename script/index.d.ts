@@ -101,6 +101,8 @@ declare module "script/ruler" {
     export namespace Ruler {
         const renderer: (model: Type.Model, _view: Type.View, _dirty: boolean | Set<number>) => void;
         const drawAnkorLine: (position: number) => void;
+        const resize: () => void;
+        const initialize: () => void;
     }
 }
 declare module "script/grid" {

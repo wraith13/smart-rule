@@ -401,10 +401,23 @@ define("script/ruler", ["require", "exports", "script/ui"], function (require, e
                 line.classList.add("ankor-line");
                 svg.appendChild(line);
             }
-            line.setAttribute("x1", position.toString());
-            line.setAttribute("y1", "0");
-            line.setAttribute("x2", position.toString());
-            line.setAttribute("y2", svg.viewBox.baseVal.height.toString());
+            line.setAttribute("x1", "0");
+            line.setAttribute("y1", position.toString());
+            line.setAttribute("x2", svg.viewBox.baseVal.width.toString());
+            line.setAttribute("y2", position.toString());
+            var color = "red";
+            line.setAttribute("stroke", color);
+            line.setAttribute("stroke-width", "1");
+        };
+        Ruler.resize = function () {
+            var svg = ui_2.UI.rulerSvg;
+            document.body;
+            svg.setAttribute("width", document.body.clientWidth.toString());
+            svg.setAttribute("height", document.body.clientHeight.toString());
+            svg.setAttribute("viewBox", "0 0 ".concat(document.body.clientWidth, " ").concat(document.body.clientHeight));
+        };
+        Ruler.initialize = function () {
+            Ruler.resize();
         };
     })(Ruler || (exports.Ruler = Ruler = {}));
 });
@@ -436,6 +449,10 @@ define("script/event", ["require", "exports", "script/type", "script/view", "scr
     (function (Event) {
         Event.initialize = function () {
             console.log("Event initialized");
+            window.addEventListener("resize", function () {
+                ruler_1.Ruler.resize();
+                render_1.Render.markDirty();
+            });
             ui_3.UI.viewModeButton.addEventListener("click", function () {
                 var current = view_2.View.getViewMode();
                 var next = type_3.Type.getNext(type_3.Type.viewModeList, current);
@@ -474,7 +491,7 @@ define("script/event", ["require", "exports", "script/type", "script/view", "scr
         };
     })(Event || (exports.Event = Event = {}));
 });
-define("script/index", ["require", "exports", "script/url", "script/type", "script/ui", "script/model", "script/view", "script/event"], function (require, exports, url_3, type_4, ui_4, model_2, view_3, event_1) {
+define("script/index", ["require", "exports", "script/url", "script/type", "script/ui", "script/model", "script/view", "script/event", "script/ruler", "script/render"], function (require, exports, url_3, type_4, ui_4, model_2, view_3, event_1, ruler_2, render_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     console.log("🚀 Slide Rule build script");
@@ -484,5 +501,8 @@ define("script/index", ["require", "exports", "script/url", "script/type", "scri
     model_2.Model.initialize();
     view_3.View.initialize();
     event_1.Event.initialize();
+    ruler_2.Ruler.initialize();
+    render_2.Render.setRenderer(ruler_2.Ruler.renderer);
+    render_2.Render.markDirty();
 });
 //# sourceMappingURL=index.js.map
