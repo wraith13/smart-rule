@@ -3,8 +3,9 @@ declare module "script/url" {
         const parseParameter: (url: string) => Record<string, string>;
         const make: () => string;
         const addParameter: (key: string, value: string) => Record<string, string>;
+        const get: (key: string) => string | undefined;
         const initialize: () => void;
-        const params: Record<string, string>;
+        const reloadParameters: () => Record<string, string>;
     }
 }
 declare module "script/type" {
@@ -119,6 +120,8 @@ declare module "script/graph" {
 }
 declare module "script/event" {
     export namespace Event {
+        const updateViewModeRoundBar: () => void;
+        const updateScaleModeRoundBar: () => void;
         const initialize: () => void;
     }
 }

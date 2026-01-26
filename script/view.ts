@@ -37,10 +37,10 @@ export namespace View
     };
     export const initialize = () =>
     {
-        setViewMode(Url.params["view-mode"] as Type.ViewMode ?? config.view?.defaultViewMode ?? "ruler");
-        setScaleMode(Url.params["scale-mode"] as Type.ScaleMode ?? config.view?.defaultScaleMode ?? "logarithmic");
-        data.viewScale = Number(Url.params["view-scale"]) || 1;
-        data.baseOfLogarithm = Number(Type.getNamedNumberValue(Url.params["base"] as Type.NamedNumber))
+        setViewMode(Url.get("view-mode") as Type.ViewMode ?? config.view?.defaultViewMode ?? "ruler");
+        setScaleMode(Url.get("scale-mode") as Type.ScaleMode ?? config.view?.defaultScaleMode ?? "logarithmic");
+        data.viewScale = Number(Url.get("view-scale")) || 1;
+        data.baseOfLogarithm = Number(Type.getNamedNumberValue(Url.get("base") as Type.NamedNumber))
             || config.view?.baseOfLogarithm?.default
             || 10;
         console.log(`View initialized: mode=${data.viewMode}, scale=${data.viewScale}, scaleMode=${data.scaleMode}, base=${data.baseOfLogarithm}`);

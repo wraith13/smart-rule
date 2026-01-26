@@ -49,7 +49,7 @@ export namespace Model
     }
     export const initialize = () =>
     {
-        data.anchor = Number(Url.params["anchor"]) || 100;
+        data.anchor = Number(Url.get("anchor")) || 100;
         console.log(`Model initialized: anchor=${data.anchor}`);
     };
 }

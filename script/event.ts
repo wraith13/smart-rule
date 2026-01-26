@@ -8,6 +8,24 @@ import { Grid } from "./grid";
 import { Graph } from "./graph";
 export namespace Event
 {
+    export const updateViewModeRoundBar = () => UI.updateRoundBar
+    (
+        UI.viewModeButton,
+        {
+            low: 0 /Type.viewModeList.length,
+            high: 1 /Type.viewModeList.length,
+            rotate: Type.viewModeList.indexOf(View.getViewMode()) /Type.viewModeList.length,
+        }
+    );
+    export const updateScaleModeRoundBar = () => UI.updateRoundBar
+    (
+        UI.scaleModeButton,
+        {
+            low: 0 /Type.scaleModeList.length,
+            high: 1 /Type.scaleModeList.length,
+            rotate: Type.scaleModeList.indexOf(View.getScaleMode()) /Type.scaleModeList.length,
+        }
+    );
     export const initialize = () =>
     {
         console.log("Event initialized");
@@ -27,16 +45,8 @@ export namespace Event
             {
                 const current = View.getViewMode();
                 const next = Type.getNext(Type.viewModeList, current);
-                UI.updateRoundBar
-                (
-                    UI.viewModeButton,
-                    {
-                        low: 0 /Type.viewModeList.length,
-                        high: 1 /Type.viewModeList.length,
-                        rotate: Type.viewModeList.indexOf(next) /Type.viewModeList.length,
-                    }
-                );
                 View.setViewMode(next);
+                updateViewModeRoundBar();
                 switch(next)
                 {
                 case "ruler":
@@ -60,19 +70,13 @@ export namespace Event
             {
                 const current = View.getScaleMode();
                 const next = Type.getNext(Type.scaleModeList, current);
-                UI.updateRoundBar
-                (
-                    UI.scaleModeButton,
-                    {
-                        low: 0 /Type.scaleModeList.length,
-                        high: 1 /Type.scaleModeList.length,
-                        rotate: Type.scaleModeList.indexOf(next) /Type.scaleModeList.length,
-                    }
-                );
                 View.setScaleMode(next);
+                updateScaleModeRoundBar();
                 Render.markDirty();
                 console.log(`Scale mode changed: ${current} -> ${next}`);
             }
         );
+        updateViewModeRoundBar();
+        updateScaleModeRoundBar();
     };
 }

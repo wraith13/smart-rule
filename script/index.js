@@ -17,24 +17,29 @@ define("script/url", ["require", "exports"], function (require, exports) {
         };
         Url.make = function () {
             var url = new URL(window.location.href.replace(/#/g, "?"));
-            for (var _i = 0, _a = Object.entries(Url.params); _i < _a.length; _i++) {
+            for (var _i = 0, _a = Object.entries(params); _i < _a.length; _i++) {
                 var _b = _a[_i], key = _b[0], value = _b[1];
                 url.searchParams.set(key, value);
             }
             return url.toString().replace(/\?/g, "#");
         };
         Url.addParameter = function (key, value) {
-            Url.params[key] = value;
+            params[key] = value;
             pushUrl();
-            return Url.params;
+            return params;
+        };
+        Url.get = function (key) {
+            return params[key];
         };
         var pushUrl = function () {
             return window.history.replaceState({}, "", Url.make());
         };
         Url.initialize = function () {
-            console.log("Url initialized");
         };
-        Url.params = Url.parseParameter(window.location.href);
+        var params = Url.parseParameter(window.location.href);
+        Url.reloadParameters = function () {
+            return params = Url.parseParameter(window.location.href);
+        };
     })(Url || (exports.Url = Url = {}));
 });
 define("script/type", ["require", "exports"], function (require, exports) {
@@ -210,7 +215,7 @@ define("script/model", ["require", "exports", "script/type", "script/url"], func
             }
         };
         Model.initialize = function () {
-            Model.data.anchor = Number(url_1.Url.params["anchor"]) || 100;
+            Model.data.anchor = Number(url_1.Url.get("anchor")) || 100;
             console.log("Model initialized: anchor=".concat(Model.data.anchor));
         };
     })(Model || (exports.Model = Model = {}));
@@ -337,10 +342,10 @@ define("script/view", ["require", "exports", "script/type", "script/url", "scrip
         };
         View.initialize = function () {
             var _a, _b, _c, _d, _e, _f, _g, _h;
-            View.setViewMode((_c = (_a = url_2.Url.params["view-mode"]) !== null && _a !== void 0 ? _a : (_b = config_json_1.default.view) === null || _b === void 0 ? void 0 : _b.defaultViewMode) !== null && _c !== void 0 ? _c : "ruler");
-            View.setScaleMode((_f = (_d = url_2.Url.params["scale-mode"]) !== null && _d !== void 0 ? _d : (_e = config_json_1.default.view) === null || _e === void 0 ? void 0 : _e.defaultScaleMode) !== null && _f !== void 0 ? _f : "logarithmic");
-            View.data.viewScale = Number(url_2.Url.params["view-scale"]) || 1;
-            View.data.baseOfLogarithm = Number(type_2.Type.getNamedNumberValue(url_2.Url.params["base"]))
+            View.setViewMode((_c = (_a = url_2.Url.get("view-mode")) !== null && _a !== void 0 ? _a : (_b = config_json_1.default.view) === null || _b === void 0 ? void 0 : _b.defaultViewMode) !== null && _c !== void 0 ? _c : "ruler");
+            View.setScaleMode((_f = (_d = url_2.Url.get("scale-mode")) !== null && _d !== void 0 ? _d : (_e = config_json_1.default.view) === null || _e === void 0 ? void 0 : _e.defaultScaleMode) !== null && _f !== void 0 ? _f : "logarithmic");
+            View.data.viewScale = Number(url_2.Url.get("view-scale")) || 1;
+            View.data.baseOfLogarithm = Number(type_2.Type.getNamedNumberValue(url_2.Url.get("base")))
                 || ((_h = (_g = config_json_1.default.view) === null || _g === void 0 ? void 0 : _g.baseOfLogarithm) === null || _h === void 0 ? void 0 : _h.default)
                 || 10;
             console.log("View initialized: mode=".concat(View.data.viewMode, ", scale=").concat(View.data.viewScale, ", scaleMode=").concat(View.data.scaleMode, ", base=").concat(View.data.baseOfLogarithm));
@@ -447,6 +452,16 @@ define("script/event", ["require", "exports", "script/type", "script/view", "scr
     exports.Event = void 0;
     var Event;
     (function (Event) {
+        Event.updateViewModeRoundBar = function () { return ui_3.UI.updateRoundBar(ui_3.UI.viewModeButton, {
+            low: 0 / type_3.Type.viewModeList.length,
+            high: 1 / type_3.Type.viewModeList.length,
+            rotate: type_3.Type.viewModeList.indexOf(view_2.View.getViewMode()) / type_3.Type.viewModeList.length,
+        }); };
+        Event.updateScaleModeRoundBar = function () { return ui_3.UI.updateRoundBar(ui_3.UI.scaleModeButton, {
+            low: 0 / type_3.Type.scaleModeList.length,
+            high: 1 / type_3.Type.scaleModeList.length,
+            rotate: type_3.Type.scaleModeList.indexOf(view_2.View.getScaleMode()) / type_3.Type.scaleModeList.length,
+        }); };
         Event.initialize = function () {
             console.log("Event initialized");
             window.addEventListener("resize", function () {
@@ -456,12 +471,8 @@ define("script/event", ["require", "exports", "script/type", "script/view", "scr
             ui_3.UI.viewModeButton.addEventListener("click", function () {
                 var current = view_2.View.getViewMode();
                 var next = type_3.Type.getNext(type_3.Type.viewModeList, current);
-                ui_3.UI.updateRoundBar(ui_3.UI.viewModeButton, {
-                    low: 0 / type_3.Type.viewModeList.length,
-                    high: 1 / type_3.Type.viewModeList.length,
-                    rotate: type_3.Type.viewModeList.indexOf(next) / type_3.Type.viewModeList.length,
-                });
                 view_2.View.setViewMode(next);
+                Event.updateViewModeRoundBar();
                 switch (next) {
                     case "ruler":
                         render_1.Render.setRenderer(ruler_1.Ruler.renderer);
@@ -479,15 +490,13 @@ define("script/event", ["require", "exports", "script/type", "script/view", "scr
             ui_3.UI.scaleModeButton.addEventListener("click", function () {
                 var current = view_2.View.getScaleMode();
                 var next = type_3.Type.getNext(type_3.Type.scaleModeList, current);
-                ui_3.UI.updateRoundBar(ui_3.UI.scaleModeButton, {
-                    low: 0 / type_3.Type.scaleModeList.length,
-                    high: 1 / type_3.Type.scaleModeList.length,
-                    rotate: type_3.Type.scaleModeList.indexOf(next) / type_3.Type.scaleModeList.length,
-                });
                 view_2.View.setScaleMode(next);
+                Event.updateScaleModeRoundBar();
                 render_1.Render.markDirty();
                 console.log("Scale mode changed: ".concat(current, " -> ").concat(next));
             });
+            Event.updateViewModeRoundBar();
+            Event.updateScaleModeRoundBar();
         };
     })(Event || (exports.Event = Event = {}));
 });
