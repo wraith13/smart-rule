@@ -1,4 +1,5 @@
 import { Type } from "./type";
+import { Number } from "./number";
 import { Url } from "./url";
 import { UI } from "./ui";
 import config from "@resource/config.json";
@@ -39,10 +40,10 @@ export namespace View
     {
         setViewMode(Url.get("view-mode") as Type.ViewMode ?? config.view?.defaultViewMode ?? "ruler");
         setScaleMode(Url.get("scale-mode") as Type.ScaleMode ?? config.view?.defaultScaleMode ?? "logarithmic");
-        data.viewScale = Number(Url.get("view-scale")) || 1;
-        data.baseOfLogarithm = Number(Type.getNamedNumberValue(Url.get("base") as Type.NamedNumber))
-            || config.view?.baseOfLogarithm?.default
-            || 10;
+        data.viewScale = Number.parse(Url.get("view-scale")) ?? 1;
+        data.baseOfLogarithm = Number.orUndefined(Type.getNamedNumberValue(Url.get("base") as Type.NamedNumber)) ??
+            config.view?.baseOfLogarithm?.default ??
+            10;
         console.log(`View initialized: mode=${data.viewMode}, scale=${data.viewScale}, scaleMode=${data.scaleMode}, base=${data.baseOfLogarithm}`);
     };
 }

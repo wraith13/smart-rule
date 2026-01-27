@@ -71,6 +71,12 @@ declare module "script/model" {
         const initialize: () => void;
     }
 }
+declare module "script/number" {
+    export namespace Number {
+        const parse: (value: string | undefined) => number | undefined;
+        const orUndefined: (value: any) => number | undefined;
+    }
+}
 declare module "script/view" {
     import { Type } from "script/type";
     export namespace View {
