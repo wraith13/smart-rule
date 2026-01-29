@@ -51,6 +51,11 @@ export namespace Model
             throw new Error(`🦋 FIXME: getPositionAt not implemented for lane type: ${lane.type}`);
         }
     };
+    export const makeSlide = (anchor: number = 0): Type.SlideUnit =>
+    ({
+        lanes: [],
+        anchor: anchor
+    });
     export const add = (lane: Type.Lane): void =>
     {
         data.lanes.push(lane);
@@ -84,14 +89,20 @@ export namespace Model
     });
     export const remove = (index: number): void =>
     {
-        if (0 <= index && index < data.lanes.length)
+        let i = 0;
+        for(const slide of data.slides)
         {
-            data.lanes.splice(index, 1);
+            for(const lane of slide.lanes)
+            {
+                if (i === index)
+                {
+                    slide.lanes.splice(slide.lanes.indexOf(lane), 1);
+                    return;
+                }
+                ++i;
+            }
         }
-        else
-        {
-            throw new Error(`🦋 FIXME: Model.remove: index out of range: ${index}`);
-        }
+        throw new Error(`🦋 FIXME: Model.remove: index out of range: ${index}`);
     };
     export const initialize = () =>
     {

@@ -59,12 +59,12 @@ export namespace Type
         isLinked: boolean;
         offset: number;
     }
-    export interface SlideUnit
+    export interface SlideUnit // 🔥 後で evil-type.ts ベースに！
     {
         lanes: Lane[];
         anchor: number;
     }
-    export interface Model
+    export interface Model // 🔥 後で evil-type.ts ベースに！
     {
         slides: SlideUnit[];
         anchor: number;
