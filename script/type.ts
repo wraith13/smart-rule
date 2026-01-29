@@ -59,9 +59,14 @@ export namespace Type
         isLinked: boolean;
         offset: number;
     }
-    export interface Model
+    export interface SlideUnit
     {
         lanes: Lane[];
+        anchor: number;
+    }
+    export interface Model
+    {
+        slides: SlideUnit[];
         anchor: number;
     }
 }

@@ -6,9 +6,11 @@ export namespace Model
 {
     export const data: Type.Model =
     {
-        lanes: [],
+        slides: [],
         anchor: 0
     };
+    export const getAllLanes = (): Type.Lane[] =>
+        data.slides.reduce((allLanes, slide) => allLanes.concat(slide.lanes), [] as Type.Lane[]);
     export const getValueAt = (lane: Type.Lane, position: number, view: Type.View): number =>
     {
         switch(lane.type)
@@ -60,7 +62,7 @@ export namespace Model
             const preset = config.model.lane.presets[i];
             if
             (
-                data.lanes.every(lane => lane.name !== i) &&
+                data.slides.every(slide => slide.lanes.every(lane => lane.name !== i)) &&
                 preset.type === laneSeed.type &&
                 preset.isInverted === laneSeed.isInverted &&
                 preset.logScale === laneSeed.logScale
