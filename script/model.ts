@@ -56,9 +56,17 @@ export namespace Model
         lanes: [],
         anchor: anchor
     });
-    export const add = (lane: Type.Lane): void =>
+    export const makeSureSlide = (): Type.SlideUnit =>
     {
-        data.lanes.push(lane);
+        if (data.slides.length <= 0)
+        {
+            data.slides.push(makeSlide());
+        }
+        return data.slides[data.slides.length - 1];
+    };
+    export const addLane = (lane: Type.Lane): void =>
+    {
+        makeSureSlide().lanes.push(lane);
     };
     const getLaneName = (laneSeed: Type.LaneBase): string | null =>
     {
