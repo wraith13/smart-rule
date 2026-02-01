@@ -2,7 +2,6 @@ import * as Number from "./number";
 import * as Type from "./type";
 import * as Url from "./url";
 import config from "@resource/config.json";
-
 export const data: Type.Model =
 {
     slides: [],
@@ -63,9 +62,31 @@ export const makeRootLane = (): Type.Lane =>
 };
 export const isRootLane = (indexOrLane: number | Type.Lane): boolean =>
     (typeof indexOrLane === "number" ? RootLaneIndex: getLane(RootLaneIndex)) === indexOrLane;
-    // typeof indexOrLane === "number" ?
-    //     RootLaneIndex === indexOrLane:
-    //     getLane(RootLaneIndex) === indexOrLane;
+export const getSlideIndex = (slide: Type.SlideUnit): number =>
+{
+    const index = data.slides.indexOf(slide);
+    if (0 <= index)
+    {
+        return index;
+    }
+    throw new Error(`🦋 FIXME: Model.getSlideIndex: slide not found`);
+};
+export const getLaneIndex = (lane: Type.Lane): number =>
+{
+    let i = 0;
+    for(const slide of data.slides)
+    {
+        for(const l of slide.lanes)
+        {
+            if (l === lane)
+            {
+                return i;
+            }
+            ++i;
+        }
+    }
+    throw new Error(`🦋 FIXME: Model.getLaneIndex: lane not found`);
+};
 export const makeSlide = (anchor: number = 0): Type.SlideUnit =>
 ({
     lanes: [],

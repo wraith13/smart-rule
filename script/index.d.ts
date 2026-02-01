@@ -74,6 +74,8 @@ declare module "script/model" {
     export const getPositionAt: (lane: Type.Lane, value: number, view: Type.View) => number;
     export const makeRootLane: () => Type.Lane;
     export const isRootLane: (indexOrLane: number | Type.Lane) => boolean;
+    export const getSlideIndex: (slide: Type.SlideUnit) => number;
+    export const getLaneIndex: (lane: Type.Lane) => number;
     export const makeSlide: (anchor?: number) => Type.SlideUnit;
     export const makeSureSlide: () => Type.SlideUnit;
     export const getLaneAndSlide: (index: number) => {
@@ -110,6 +112,8 @@ declare module "script/render" {
 declare module "script/ruler" {
     import * as Type from "script/type";
     export const renderer: (model: Type.Model, _view: Type.View, _dirty: boolean | Set<number>) => void;
+    export const drawSlide: (slide: Type.SlideUnit) => void;
+    export const drawLane: (_group: SVGGElement, _lane: Type.Lane) => void;
     export const drawAnkorLine: (position: number) => void;
     export const resize: () => void;
     export const initialize: () => void;

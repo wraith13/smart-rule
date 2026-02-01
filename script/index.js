@@ -328,7 +328,7 @@ define("resource/config", [], {
 define("script/model", ["require", "exports", "script/number", "script/type", "script/url", "resource/config"], function (require, exports, Number, Type, Url, config_json_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.removeLane = exports.makeLane = exports.addLane = exports.getLane = exports.getLaneAndSlide = exports.makeSureSlide = exports.makeSlide = exports.isRootLane = exports.makeRootLane = exports.getPositionAt = exports.getValueAt = exports.getAllLanes = exports.RootLaneIndex = exports.data = void 0;
+    exports.initialize = exports.removeLane = exports.makeLane = exports.addLane = exports.getLane = exports.getLaneAndSlide = exports.makeSureSlide = exports.makeSlide = exports.getLaneIndex = exports.getSlideIndex = exports.isRootLane = exports.makeRootLane = exports.getPositionAt = exports.getValueAt = exports.getAllLanes = exports.RootLaneIndex = exports.data = void 0;
     Number = __importStar(Number);
     Type = __importStar(Type);
     Url = __importStar(Url);
@@ -391,9 +391,29 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
         return (typeof indexOrLane === "number" ? exports.RootLaneIndex : (0, exports.getLane)(exports.RootLaneIndex)) === indexOrLane;
     };
     exports.isRootLane = isRootLane;
-    // typeof indexOrLane === "number" ?
-    //     RootLaneIndex === indexOrLane:
-    //     getLane(RootLaneIndex) === indexOrLane;
+    var getSlideIndex = function (slide) {
+        var index = exports.data.slides.indexOf(slide);
+        if (0 <= index) {
+            return index;
+        }
+        throw new Error("\uD83E\uDD8B FIXME: Model.getSlideIndex: slide not found");
+    };
+    exports.getSlideIndex = getSlideIndex;
+    var getLaneIndex = function (lane) {
+        var i = 0;
+        for (var _i = 0, _a = exports.data.slides; _i < _a.length; _i++) {
+            var slide = _a[_i];
+            for (var _b = 0, _c = slide.lanes; _b < _c.length; _b++) {
+                var l = _c[_b];
+                if (l === lane) {
+                    return i;
+                }
+                ++i;
+            }
+        }
+        throw new Error("\uD83E\uDD8B FIXME: Model.getLaneIndex: lane not found");
+    };
+    exports.getLaneIndex = getLaneIndex;
     var makeSlide = function (anchor) {
         if (anchor === void 0) { anchor = 0; }
         return ({
@@ -569,16 +589,51 @@ define("script/render", ["require", "exports", "script/view", "script/model"], f
     };
     exports.setRenderer = setRenderer;
 });
-define("script/ruler", ["require", "exports", "script/ui", "resource/config"], function (require, exports, UI, config_json_3) {
+define("script/ruler", ["require", "exports", "script/ui", "script/model", "resource/config"], function (require, exports, UI, Model, config_json_3) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.resize = exports.drawAnkorLine = exports.renderer = void 0;
+    exports.initialize = exports.resize = exports.drawAnkorLine = exports.drawLane = exports.drawSlide = exports.renderer = void 0;
     UI = __importStar(UI);
+    Model = __importStar(Model);
     config_json_3 = __importDefault(config_json_3);
     var renderer = function (model, _view, _dirty) {
+        for (var _i = 0, _a = model.slides; _i < _a.length; _i++) {
+            var slide = _a[_i];
+            (0, exports.drawSlide)(slide);
+        }
         (0, exports.drawAnkorLine)(model.anchor);
     };
     exports.renderer = renderer;
+    var drawSlide = function (slide) {
+        var svg = UI.rulerSvg;
+        var group = svg.querySelector("g.slide-group[data-slide-index=\"".concat(Model.getSlideIndex(slide), "\"]"));
+        if (!group) {
+            group = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            group.classList.add("slide-group");
+            group.setAttribute("data-slide-index", Model.getSlideIndex(slide).toString());
+            svg.appendChild(group);
+        }
+        // Clear previous lines
+        group.innerHTML = "";
+        for (var _i = 0, _a = slide.lanes; _i < _a.length; _i++) {
+            var lane = _a[_i];
+            (0, exports.drawLane)(group, lane);
+        }
+    };
+    exports.drawSlide = drawSlide;
+    var drawLane = function (_group, _lane) {
+        // const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        // line.classList.add("lane-line");
+        // line.setAttribute("x1", "0");
+        // line.setAttribute("y1", Model.getPositionAt(lane, lane.startValue, UI.data).toString());
+        // line.setAttribute("x2", UI.rulerSvg.viewBox.baseVal.width.toString());
+        // line.setAttribute("y2", Model.getPositionAt(lane, lane.endValue, UI.data).toString());
+        // const color = config.render.ruler.laneLineColor;
+        // line.setAttribute("stroke", color);
+        // line.setAttribute("stroke-width", config.render.ruler.laneLineWidth.toString());
+        // group.appendChild(line);
+    };
+    exports.drawLane = drawLane;
     var drawAnkorLine = function (position) {
         var svg = UI.rulerSvg;
         var line = svg.querySelector("line.ankor-line");
