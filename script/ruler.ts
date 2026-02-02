@@ -28,18 +28,18 @@ export const drawSlide = (slide: Type.SlideUnit): void =>
         drawLane(group, lane);
     }
 };
-export const drawLane = (_group: SVGGElement, _lane: Type.Lane): void =>
+export const drawLane = (group: SVGGElement, lane: Type.Lane): void =>
 {
-    // const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    // line.classList.add("lane-line");
-    // line.setAttribute("x1", "0");
-    // line.setAttribute("y1", Model.getPositionAt(lane, lane.startValue, UI.data).toString());
-    // line.setAttribute("x2", UI.rulerSvg.viewBox.baseVal.width.toString());
-    // line.setAttribute("y2", Model.getPositionAt(lane, lane.endValue, UI.data).toString());
-    // const color = config.render.ruler.laneLineColor;
-    // line.setAttribute("stroke", color);
-    // line.setAttribute("stroke-width", config.render.ruler.laneLineWidth.toString());
-    // group.appendChild(line);
+    const laneIndex = Model.getLaneIndex(lane);
+    const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    rect.classList.add("lane-background");
+    rect.setAttribute("x", (laneIndex * config.render.ruler.laneWidth).toString());
+    rect.setAttribute("y", "0");
+    rect.setAttribute("width", config.render.ruler.laneWidth.toString());
+    rect.setAttribute("height", group.ownerSVGElement!.viewBox.baseVal.height.toString());
+    const color = config.render.ruler.laneBackgroundColor;
+    rect.setAttribute("fill", color);
+    group.appendChild(rect);
 };
 export const drawAnkorLine = (position: number): void =>
 {

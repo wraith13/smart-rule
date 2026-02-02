@@ -62,6 +62,8 @@ export const makeRootLane = (): Type.Lane =>
 };
 export const isRootLane = (indexOrLane: number | Type.Lane): boolean =>
     (typeof indexOrLane === "number" ? RootLaneIndex: getLane(RootLaneIndex)) === indexOrLane;
+export const isRooeSlide = (indexOrSlide: number | Type.SlideUnit): boolean =>
+    (0 === (typeof indexOrSlide === "number" ? indexOrSlide : getSlideIndex(indexOrSlide)));
 export const getSlideIndex = (slide: Type.SlideUnit): number =>
 {
     const index = data.slides.indexOf(slide);
@@ -120,6 +122,17 @@ export const getLaneAndSlide = (index: number): { lane: Type.Lane, slide: Type.S
 };
 export const getLane = (index: number): Type.Lane =>
     getLaneAndSlide(index).lane;
+export const getSlideFromLane = (lane: Type.Lane): Type.SlideUnit =>
+{
+    for(const slide of data.slides)
+    {
+        if (slide.lanes.includes(lane))
+        {
+            return slide;
+        }
+    }
+    throw new Error(`🦋 FIXME: Model.getSlideFromLane: lane not found in any slide`);
+};
 export const addLane = (lane: Type.Lane): void =>
 {
     makeSureSlide().lanes.push(lane);
@@ -153,11 +166,23 @@ export const makeLane = (laneSeed: Type.LaneBase): Type.Lane =>
 });
 export const removeLane = (index: number): void =>
 {
-    const { slide, lane } = getLaneAndSlide(index);
-    slide.lanes.splice(slide.lanes.indexOf(lane), 1);
+    if (isRootLane(index))
+    {
+        throw new Error(`🦋 FIXME: Model.removeLane: cannot remove root lane`);
+    }
+    else
+    {
+        const { slide, lane } = getLaneAndSlide(index);
+        slide.lanes.splice(slide.lanes.indexOf(lane), 1);
+    }
+};
+export const makeSure = (): void =>
+{
+    makeSureSlide();
 };
 export const initialize = () =>
 {
     data.anchor = Number.parse(Url.get("anchor")) ?? 100;
     console.log(`Model initialized: anchor=${data.anchor}`);
+    makeSure();
 };
