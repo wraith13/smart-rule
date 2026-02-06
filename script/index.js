@@ -714,7 +714,8 @@ define("script/ruler", ["require", "exports", "script/ui", "script/model", "reso
         var tick = document.createElementNS("http://www.w3.org/2000/svg", "line");
         tick.classList.add("tick", "tick-".concat(type));
         var left = exports.LaneWidths.slice(0, laneIndex).reduce(function (a, b) { return a + b; }, 0);
-        if (Model.isRooeSlide(Model.getSlideFromLane(lane))) {
+        var isRootSlide = Model.isRooeSlide(Model.getSlideFromLane(lane));
+        if (isRootSlide) {
             var width = config_json_3.default.render.ruler.laneWidth;
             ;
             var right = left + width;
@@ -732,6 +733,25 @@ define("script/ruler", ["require", "exports", "script/ui", "script/model", "reso
         tick.setAttribute("stroke", config_json_3.default.render.ruler.tick[type].color);
         tick.setAttribute("stroke-width", config_json_3.default.render.ruler.tick[type].toString());
         group.appendChild(tick);
+        if (type === "long") {
+            var label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            label.classList.add("tick-label");
+            if (isRootSlide) {
+                var width = config_json_3.default.render.ruler.laneWidth;
+                ;
+                var right = left + width;
+                label.setAttribute("x", (right - config_json_3.default.render.ruler.tick[type].length - 4).toString());
+            }
+            else {
+                label.setAttribute("x", (left + config_json_3.default.render.ruler.tick[type].length + 4).toString());
+            }
+            label.setAttribute("y", (position + 4).toString());
+            label.setAttribute("fill", "#000000");
+            label.setAttribute("font-size", "12");
+            label.setAttribute("text-anchor", Model.isRooeSlide(Model.getSlideFromLane(lane)) ? "end" : "start");
+            label.textContent = position.toString();
+            group.appendChild(label);
+        }
     };
     exports.drawTick = drawTick;
     var drawAnkorLine = function (position) {

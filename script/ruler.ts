@@ -79,7 +79,8 @@ export const drawTick = (group: SVGGElement, lane: Type.Lane, position: number, 
     const tick = document.createElementNS("http://www.w3.org/2000/svg", "line");
     tick.classList.add("tick", `tick-${type}`);
     const left = LaneWidths.slice(0, laneIndex).reduce((a, b) => a + b, 0);
-    if (Model.isRooeSlide(Model.getSlideFromLane(lane)))
+    const isRootSlide = Model.isRooeSlide(Model.getSlideFromLane(lane));
+    if (isRootSlide)
     {
         const width = config.render.ruler.laneWidth;;
         const right = left + width;
@@ -98,6 +99,27 @@ export const drawTick = (group: SVGGElement, lane: Type.Lane, position: number, 
     tick.setAttribute("stroke", config.render.ruler.tick[type].color);
     tick.setAttribute("stroke-width", config.render.ruler.tick[type].toString());
     group.appendChild(tick);
+    if (type === "long")
+    {
+        const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        label.classList.add("tick-label");
+        if (isRootSlide)
+        {
+            const width = config.render.ruler.laneWidth;;
+            const right = left + width;
+            label.setAttribute("x", (right - config.render.ruler.tick[type].length - 4).toString());
+        }
+        else
+        {
+            label.setAttribute("x", (left + config.render.ruler.tick[type].length + 4).toString());
+        }
+        label.setAttribute("y", (position + 4).toString());
+        label.setAttribute("fill", "#000000");
+        label.setAttribute("font-size", "12");
+        label.setAttribute("text-anchor", Model.isRooeSlide(Model.getSlideFromLane(lane)) ? "end" : "start");
+        label.textContent = position.toString();
+        group.appendChild(label);
+    }
 };
 export const drawAnkorLine = (position: number): void =>
 {
