@@ -113,6 +113,14 @@
                     "width": 2,
                     "color": "#000000"
                 }
+            },
+            "tickLabel": {
+                "fontFamily": "Arial, sans-serif",
+                "fontSize": 12,
+                "fontColor": "#000000",
+                "offset": 5,
+                "minInterval": 30,
+                "maxInterval": 150
             }
         }
     }

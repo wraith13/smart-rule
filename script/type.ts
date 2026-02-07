@@ -67,4 +67,4 @@ export interface Model // 🔥 後で evil-type.ts ベースに！
     slides: SlideUnit[];
     anchor: number;
 }
-
+export type TickType = "short" | "medium" | "long";

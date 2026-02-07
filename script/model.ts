@@ -50,6 +50,32 @@ export const getPositionAt = (lane: Type.Lane, value: number, view: Type.View): 
         throw new Error(`🦋 FIXME: getPositionAt not implemented for lane type: ${lane.type}`);
     }
 };
+export const getFirstLabelValue = (lane: Type.Lane, view: Type.View): number =>
+{
+    const minValue = getValueAt(lane, 0, view);
+    const maxValue = getValueAt(lane, config.render.ruler.tickLabel.maxInterval, view);
+    const range = maxValue - minValue;
+    let interval = Math.pow(10, Math.floor(Math.log10(range)));
+    if (range / interval < 2)
+    {
+        interval /= 5;
+    }
+    else if (range / interval < 5)
+    {
+        interval /= 2;
+    }
+    const firstLabelValue = Math.ceil(minValue / interval) * interval;
+    return firstLabelValue;
+}
+export const designTicks = (view: Type.View, lane: Type.Lane): { position: number, type: Type.TickType, }[] =>
+{
+    const ticks: { position: number, type: Type.TickType, }[] = [];
+    const height = window.innerHeight;
+    const min = getValueAt(lane, 0, view);
+    const max = getValueAt(lane, height, view);
+
+    return ticks;
+}
 export const makeRootLane = (): Type.Lane =>
 {
     const { type, isInverted, logScale } = config.model.lane.root;

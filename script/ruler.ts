@@ -3,7 +3,6 @@ import * as UI from "./ui";
 import * as Model from "./model";
 import config from "@resource/config.json";
 export let scale = 1.0;
-export type TickType = "short" | "medium" | "long";
 export let LaneWidths: number[] = [];
 export const renderer = (model: Type.Model, _view: Type.View, dirty: boolean | Set<number>) =>
 {
@@ -89,7 +88,7 @@ export const drawLane = (group: SVGGElement, lane: Type.Lane): void =>
     line.setAttribute("stroke-width", config.render.ruler.laneSeparatorWidth.toString());
     group.appendChild(line);
 };
-export const drawTick = (group: SVGGElement, lane: Type.Lane, position: number, type: TickType): void =>
+export const drawTick = (group: SVGGElement, lane: Type.Lane, position: number, type: Type.TickType): void =>
 {
     const laneIndex = Model.getLaneIndex(lane);
     const tick = document.createElementNS("http://www.w3.org/2000/svg", "line");
