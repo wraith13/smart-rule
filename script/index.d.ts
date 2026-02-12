@@ -122,26 +122,28 @@ declare module "script/render" {
     export const markDirty: (laneIndex?: number) => void;
     export const setRenderer: (renderer: typeof currentRenderer) => (model: Type.Model, view: Type.View, dirty: boolean | Set<number>) => unknown;
 }
+declare module "script/svg" {
+    export type SvgTag = keyof SVGElementTagNameMap;
+    export const setAttributes: <T extends SVGElement>(element: T, attributes: {
+        [key: string]: string | number;
+    }) => T;
+    export const make: <T extends SvgTag>(source: {
+        tag: T;
+    } & {
+        [key: string]: string | number;
+    }) => SVGElementTagNameMap[T];
+    export const makeSure: <T extends SvgTag>(parent: SVGElement, selector: string, source: {
+        tag: T;
+    } & {
+        [key: string]: string | number;
+    }) => SVGElementTagNameMap[T];
+}
 declare module "script/ruler" {
     import * as Type from "script/type";
     export let scale: number;
     export let LaneWidths: number[];
     export const renderer: (model: Type.Model, _view: Type.View, dirty: boolean | Set<number>) => void;
     export const drawSlide: (slide: Type.SlideUnit) => void;
-    export type SvgTag = keyof SVGElementTagNameMap;
-    export const setAttributes: <T extends SVGElement>(element: T, attributes: {
-        [key: string]: string | number;
-    }) => T;
-    export const makeSvgElement: <T extends SvgTag>(source: {
-        tag: T;
-    } & {
-        [key: string]: string | number;
-    }) => SVGElementTagNameMap[T];
-    export const makeSureSvgElement: <T extends SvgTag>(parent: SVGElement, selector: string, source: {
-        tag: T;
-    } & {
-        [key: string]: string | number;
-    }) => SVGElementTagNameMap[T];
     export const drawLane: (group: SVGGElement, lane: Type.Lane) => void;
     export const drawTick: (view: Type.View, group: SVGGElement, lane: Type.Lane, value: Type.NamedNumber, type: Type.TickType) => void;
     export const drawAnkorLine: (position: number) => void;

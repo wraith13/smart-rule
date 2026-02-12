@@ -1,6 +1,7 @@
 import * as Type from "./type";
 import * as UI from "./ui";
 import * as Model from "./model";
+import * as SVG from "./svg";
 import config from "@resource/config.json";
 export let scale = 1.0;
 export let LaneWidths: number[] = [];
@@ -39,42 +40,6 @@ export const drawSlide = (slide: Type.SlideUnit): void =>
         drawLane(group, lane);
     }
 };
-export type SvgTag = keyof SVGElementTagNameMap;
-export const setAttributes = <T extends SVGElement>(element: T, attributes: { [key: string]: string | number; }): T =>
-{
-    for(const [key, value] of Object.entries(attributes))
-    {
-        switch(key)
-        {
-        case "tag":
-            // Ignore
-            break;
-        case "textContent":
-            element.textContent = value.toString();
-            break;
-        default:
-            element.setAttribute(key, value.toString());
-            break;
-        }
-    }
-    return element;
-};
-export const makeSvgElement = <T extends SvgTag>(source: { tag: T } & { [key: string]: string | number; }): SVGElementTagNameMap[T] =>
-{
-    const element = document.createElementNS("http://www.w3.org/2000/svg", source.tag);
-    setAttributes(element, source);
-    return element;
-};
-export const makeSureSvgElement = <T extends SvgTag>(parent: SVGElement, selector: string, source: { tag: T } & { [key: string]: string | number; }): SVGElementTagNameMap[T] =>
-{
-    let element = parent.querySelector<SVGElementTagNameMap[T]>(selector);
-    if ( ! element)
-    {
-        element = makeSvgElement(source);
-        parent.appendChild(element);
-    }
-    return element;
-};
 export const drawLane = (group: SVGGElement, lane: Type.Lane): void =>
 {
     const laneIndex = Model.getLaneIndex(lane);
@@ -83,7 +48,7 @@ export const drawLane = (group: SVGGElement, lane: Type.Lane): void =>
     LaneWidths[laneIndex] = width;
     group.append
     (
-        makeSvgElement
+        SVG.make
         ({
             tag: "rect",
             class: "lane-background",
@@ -93,7 +58,7 @@ export const drawLane = (group: SVGGElement, lane: Type.Lane): void =>
             height: group.ownerSVGElement!.viewBox.baseVal.height,
             fill: config.render.ruler.laneBackgroundColor,
         }),
-        makeSvgElement
+        SVG.make
         ({
             tag: "text",
             class: "lane-label",
@@ -103,7 +68,7 @@ export const drawLane = (group: SVGGElement, lane: Type.Lane): void =>
             "font-size": 16,
             textContent: lane.name ?? `Lane ${laneIndex}`,
         }),
-        makeSvgElement
+        SVG.make
         ({
             tag: "line",
             class: "lane-separator",
@@ -168,7 +133,7 @@ export const drawTick = (view: Type.View, group: SVGGElement, lane: Type.Lane, v
 export const drawAnkorLine = (position: number): void =>
 {
     const svg = UI.rulerSvg;
-    const line = makeSureSvgElement
+    const line = SVG.makeSure
     (
         svg,
         "line.ankor-line",
@@ -185,7 +150,7 @@ export const drawAnkorLine = (position: number): void =>
     const color = config.render.ruler.lineColor;
     line.setAttribute("stroke", color);
     line.setAttribute("stroke-width", config.render.ruler.lineWidth.toString());
-    const dragHandle = makeSureSvgElement
+    const dragHandle = SVG.makeSure
     (
         svg,
         "circle.ankor-drag-handle",

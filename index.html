@@ -2,7 +2,7 @@
 <!--
     This file is genereted by build.js. このファイルは build.js によって生成されました。
     build options: ../build.json all
-    build at: Wed Feb 11 2026 22:40:49 GMT+0900 (日本標準時)
+    build at: Thu Feb 12 2026 21:30:29 GMT+0900 (日本標準時)
     repository: https://github.com/wraith13/slide-rule/
 -->
 <!-- license:
@@ -239,8 +239,8 @@ button:focus
 </div>
 <script type="text/javascript">
 const build = {
-    at: "Wed Feb 11 2026 22:40:49 GMT+0900 (日本標準時)",
-    tick: 1770817249062
+    at: "Thu Feb 12 2026 21:30:29 GMT+0900 (日本標準時)",
+    tick: 1770899429412
 };
 const evilCommonjsConfig = {
     "log": {
@@ -1284,13 +1284,52 @@ define("script/render", ["require", "exports", "script/view", "script/model"], f
     };
     exports.setRenderer = setRenderer;
 });
-define("script/ruler", ["require", "exports", "script/type", "script/ui", "script/model", "resource/config"], function (require, exports, Type, UI, Model, config_json_3) {
+define("script/svg", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.resize = exports.drawAnkorLine = exports.drawTick = exports.drawLane = exports.makeSureSvgElement = exports.makeSvgElement = exports.setAttributes = exports.drawSlide = exports.renderer = exports.LaneWidths = exports.scale = void 0;
+    exports.makeSure = exports.make = exports.setAttributes = void 0;
+    var setAttributes = function (element, attributes) {
+        for (var _i = 0, _a = Object.entries(attributes); _i < _a.length; _i++) {
+            var _b = _a[_i], key = _b[0], value = _b[1];
+            switch (key) {
+                case "tag":
+                    // Ignore
+                    break;
+                case "textContent":
+                    element.textContent = value.toString();
+                    break;
+                default:
+                    element.setAttribute(key, value.toString());
+                    break;
+            }
+        }
+        return element;
+    };
+    exports.setAttributes = setAttributes;
+    var make = function (source) {
+        var element = document.createElementNS("http://www.w3.org/2000/svg", source.tag);
+        (0, exports.setAttributes)(element, source);
+        return element;
+    };
+    exports.make = make;
+    var makeSure = function (parent, selector, source) {
+        var element = parent.querySelector(selector);
+        if (!element) {
+            element = (0, exports.make)(source);
+            parent.appendChild(element);
+        }
+        return element;
+    };
+    exports.makeSure = makeSure;
+});
+define("script/ruler", ["require", "exports", "script/type", "script/ui", "script/model", "script/svg", "resource/config"], function (require, exports, Type, UI, Model, SVG, config_json_3) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.initialize = exports.resize = exports.drawAnkorLine = exports.drawTick = exports.drawLane = exports.drawSlide = exports.renderer = exports.LaneWidths = exports.scale = void 0;
     Type = __importStar(Type);
     UI = __importStar(UI);
     Model = __importStar(Model);
+    SVG = __importStar(SVG);
     config_json_3 = __importDefault(config_json_3);
     exports.scale = 1.0;
     exports.LaneWidths = [];
@@ -1325,39 +1364,6 @@ define("script/ruler", ["require", "exports", "script/type", "script/ui", "scrip
         }
     };
     exports.drawSlide = drawSlide;
-    var setAttributes = function (element, attributes) {
-        for (var _i = 0, _a = Object.entries(attributes); _i < _a.length; _i++) {
-            var _b = _a[_i], key = _b[0], value = _b[1];
-            switch (key) {
-                case "tag":
-                    // Ignore
-                    break;
-                case "textContent":
-                    element.textContent = value.toString();
-                    break;
-                default:
-                    element.setAttribute(key, value.toString());
-                    break;
-            }
-        }
-        return element;
-    };
-    exports.setAttributes = setAttributes;
-    var makeSvgElement = function (source) {
-        var element = document.createElementNS("http://www.w3.org/2000/svg", source.tag);
-        (0, exports.setAttributes)(element, source);
-        return element;
-    };
-    exports.makeSvgElement = makeSvgElement;
-    var makeSureSvgElement = function (parent, selector, source) {
-        var element = parent.querySelector(selector);
-        if (!element) {
-            element = (0, exports.makeSvgElement)(source);
-            parent.appendChild(element);
-        }
-        return element;
-    };
-    exports.makeSureSvgElement = makeSureSvgElement;
     var drawLane = function (group, lane) {
         var _a;
         var laneIndex = Model.getLaneIndex(lane);
@@ -1365,7 +1371,7 @@ define("script/ruler", ["require", "exports", "script/type", "script/ui", "scrip
         var width = config_json_3.default.render.ruler.laneWidth;
         ;
         exports.LaneWidths[laneIndex] = width;
-        group.append((0, exports.makeSvgElement)({
+        group.append(SVG.make({
             tag: "rect",
             class: "lane-background",
             x: left,
@@ -1373,7 +1379,7 @@ define("script/ruler", ["require", "exports", "script/type", "script/ui", "scrip
             width: width,
             height: group.ownerSVGElement.viewBox.baseVal.height,
             fill: config_json_3.default.render.ruler.laneBackgroundColor,
-        }), (0, exports.makeSvgElement)({
+        }), SVG.make({
             tag: "text",
             class: "lane-label",
             x: left + 8,
@@ -1381,7 +1387,7 @@ define("script/ruler", ["require", "exports", "script/type", "script/ui", "scrip
             fill: "#000000",
             "font-size": 16,
             textContent: (_a = lane.name) !== null && _a !== void 0 ? _a : "Lane ".concat(laneIndex),
-        }), (0, exports.makeSvgElement)({
+        }), SVG.make({
             tag: "line",
             class: "lane-separator",
             x1: left + width,
@@ -1441,7 +1447,7 @@ define("script/ruler", ["require", "exports", "script/type", "script/ui", "scrip
     exports.drawTick = drawTick;
     var drawAnkorLine = function (position) {
         var svg = UI.rulerSvg;
-        var line = (0, exports.makeSureSvgElement)(svg, "line.ankor-line", {
+        var line = SVG.makeSure(svg, "line.ankor-line", {
             tag: "line",
             class: "ankor-line",
         });
@@ -1453,7 +1459,7 @@ define("script/ruler", ["require", "exports", "script/type", "script/ui", "scrip
         var color = config_json_3.default.render.ruler.lineColor;
         line.setAttribute("stroke", color);
         line.setAttribute("stroke-width", config_json_3.default.render.ruler.lineWidth.toString());
-        var dragHandle = (0, exports.makeSureSvgElement)(svg, "circle.ankor-drag-handle", {
+        var dragHandle = SVG.makeSure(svg, "circle.ankor-drag-handle", {
             tag: "circle",
             class: "ankor-drag-handle",
         });
