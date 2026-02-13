@@ -133,37 +133,47 @@ export const drawTick = (view: Type.View, group: SVGGElement, lane: Type.Lane, v
 export const drawAnkorLine = (position: number): void =>
 {
     const svg = UI.rulerSvg;
-    const line = SVG.makeSure
-    (
-        svg,
-        "line.ankor-line",
-        {
-            tag: "line",
-            class: "ankor-line",
-        }
-    );
-    line.setAttribute("x1", "0");
-    line.setAttribute("y1", position.toString());
-    line.setAttribute("x2", svg.viewBox.baseVal.width.toString());
-    line.setAttribute("y2", position.toString());
     //const color = "red";
     const color = config.render.ruler.lineColor;
-    line.setAttribute("stroke", color);
-    line.setAttribute("stroke-width", config.render.ruler.lineWidth.toString());
-    const dragHandle = SVG.makeSure
+    const handleRadius = 24;
+    SVG.setAttributes
     (
-        svg,
-        "circle.ankor-drag-handle",
+        SVG.makeSure
+        (
+            svg,
+            "line.ankor-line",
+            {
+                tag: "line",
+                class: "ankor-line",
+            }
+        ),
         {
-            tag: "circle",
-            class: "ankor-drag-handle",
+            x1: 0,
+            y1: position,
+            x2: svg.viewBox.baseVal.width,
+            y2: position,
+            stroke: color,
+            "stroke-width": config.render.ruler.lineWidth,
         }
     );
-    const handleRadius = 24;
-    dragHandle.setAttribute("cx", (svg.viewBox.baseVal.width - handleRadius).toString());
-    dragHandle.setAttribute("cy", position.toString());
-    dragHandle.setAttribute("r", handleRadius.toString());
-    dragHandle.setAttribute("fill", color);
+    SVG.setAttributes
+    (
+        SVG.makeSure
+        (
+            svg,
+            "circle.ankor-drag-handle",
+            {
+                tag: "circle",
+                class: "ankor-drag-handle",
+            }
+        ),
+        {
+            cx: svg.viewBox.baseVal.width - handleRadius,
+            cy: position,
+            r: handleRadius,
+            fill: color,
+        }
+    );
 };
 export const resize = (): void =>
 {

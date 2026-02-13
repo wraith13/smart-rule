@@ -19,11 +19,15 @@ export const setAttributes = <T extends SVGElement>(element: T, attributes: { [k
     return element;
 };
 export const make = <T extends SvgTag>(source: { tag: T } & { [key: string]: string | number; }): SVGElementTagNameMap[T] =>
-{
-    const element = document.createElementNS("http://www.w3.org/2000/svg", source.tag);
-    setAttributes(element, source);
-    return element;
-};
+    setAttributes
+    (
+        document.createElementNS
+        (
+            "http://www.w3.org/2000/svg",
+            source.tag
+        ),
+        source
+    );
 export const makeSure = <T extends SvgTag>(parent: SVGElement, selector: string, source: { tag: T } & { [key: string]: string | number; }): SVGElementTagNameMap[T] =>
 {
     let element = parent.querySelector<SVGElementTagNameMap[T]>(selector);

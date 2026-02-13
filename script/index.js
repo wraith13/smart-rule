@@ -705,9 +705,7 @@ define("script/svg", ["require", "exports"], function (require, exports) {
     };
     exports.setAttributes = setAttributes;
     var make = function (source) {
-        var element = document.createElementNS("http://www.w3.org/2000/svg", source.tag);
-        (0, exports.setAttributes)(element, source);
-        return element;
+        return (0, exports.setAttributes)(document.createElementNS("http://www.w3.org/2000/svg", source.tag), source);
     };
     exports.make = make;
     var makeSure = function (parent, selector, source) {
@@ -845,27 +843,29 @@ define("script/ruler", ["require", "exports", "script/type", "script/ui", "scrip
     exports.drawTick = drawTick;
     var drawAnkorLine = function (position) {
         var svg = UI.rulerSvg;
-        var line = SVG.makeSure(svg, "line.ankor-line", {
-            tag: "line",
-            class: "ankor-line",
-        });
-        line.setAttribute("x1", "0");
-        line.setAttribute("y1", position.toString());
-        line.setAttribute("x2", svg.viewBox.baseVal.width.toString());
-        line.setAttribute("y2", position.toString());
         //const color = "red";
         var color = config_json_3.default.render.ruler.lineColor;
-        line.setAttribute("stroke", color);
-        line.setAttribute("stroke-width", config_json_3.default.render.ruler.lineWidth.toString());
-        var dragHandle = SVG.makeSure(svg, "circle.ankor-drag-handle", {
+        var handleRadius = 24;
+        SVG.setAttributes(SVG.makeSure(svg, "line.ankor-line", {
+            tag: "line",
+            class: "ankor-line",
+        }), {
+            x1: 0,
+            y1: position,
+            x2: svg.viewBox.baseVal.width,
+            y2: position,
+            stroke: color,
+            "stroke-width": config_json_3.default.render.ruler.lineWidth,
+        });
+        SVG.setAttributes(SVG.makeSure(svg, "circle.ankor-drag-handle", {
             tag: "circle",
             class: "ankor-drag-handle",
+        }), {
+            cx: svg.viewBox.baseVal.width - handleRadius,
+            cy: position,
+            r: handleRadius,
+            fill: color,
         });
-        var handleRadius = 24;
-        dragHandle.setAttribute("cx", (svg.viewBox.baseVal.width - handleRadius).toString());
-        dragHandle.setAttribute("cy", position.toString());
-        dragHandle.setAttribute("r", handleRadius.toString());
-        dragHandle.setAttribute("fill", color);
     };
     exports.drawAnkorLine = drawAnkorLine;
     var resize = function () {
