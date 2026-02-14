@@ -744,15 +744,12 @@ define("script/ruler", ["require", "exports", "script/type", "script/ui", "scrip
     };
     exports.renderer = renderer;
     var drawSlide = function (slide) {
-        var svg = UI.rulerSvg;
-        var group = svg.querySelector("g.slide-group[data-slide-index=\"".concat(Model.getSlideIndex(slide), "\"]"));
-        if (!group) {
-            group = document.createElementNS("http://www.w3.org/2000/svg", "g");
-            group.classList.add("slide-group");
-            group.setAttribute("data-slide-index", Model.getSlideIndex(slide).toString());
-            svg.appendChild(group);
-        }
-        // Clear previous lines
+        var slideIndex = Model.getSlideIndex(slide);
+        var group = SVG.makeSure(UI.rulerSvg, "g.slide-group[data-slide-index=\"".concat(slideIndex, "\"]"), {
+            tag: "g",
+            class: "slide-group",
+            "data-slide-index": slideIndex,
+        });
         group.innerHTML = "";
         for (var _i = 0, _a = slide.lanes; _i < _a.length; _i++) {
             var lane = _a[_i];

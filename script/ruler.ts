@@ -24,16 +24,17 @@ export const renderer = (model: Type.Model, _view: Type.View, dirty: boolean | S
 };
 export const drawSlide = (slide: Type.SlideUnit): void =>
 {
-    const svg = UI.rulerSvg;
-    let group = svg.querySelector<SVGGElement>(`g.slide-group[data-slide-index="${Model.getSlideIndex(slide)}"]`);
-    if ( ! group)
-    {
-        group = document.createElementNS("http://www.w3.org/2000/svg", "g");
-        group.classList.add("slide-group");
-        group.setAttribute("data-slide-index", Model.getSlideIndex(slide).toString());
-        svg.appendChild(group);
-    }
-    // Clear previous lines
+    const slideIndex = Model.getSlideIndex(slide);
+    const group = SVG.makeSure
+    (
+        UI.rulerSvg,
+        `g.slide-group[data-slide-index="${slideIndex}"]`,
+        {
+            tag: "g",
+            class: "slide-group",
+            "data-slide-index": slideIndex,
+        }
+    );
     group.innerHTML = "";
     for(const lane of slide.lanes)
     {
