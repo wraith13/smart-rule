@@ -740,14 +740,14 @@ define("script/element", ["require", "exports"], function (require, exports) {
 define("script/svg", ["require", "exports", "script/element"], function (require, exports, ELEMENT) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.makeSure = exports.make = exports.makeElement = exports.makeSelector = exports.setAttributes = void 0;
+    exports.makeSure = exports.make = exports.makeSelector = exports.setAttributes = exports.makeElement = void 0;
     ELEMENT = __importStar(ELEMENT);
-    exports.setAttributes = ELEMENT.setAttributes;
-    exports.makeSelector = ELEMENT.makeSelector;
     var makeElement = function (tag) {
         return document.createElementNS("http://www.w3.org/2000/svg", tag);
     };
     exports.makeElement = makeElement;
+    exports.setAttributes = ELEMENT.setAttributes;
+    exports.makeSelector = ELEMENT.makeSelector;
     var make = function (source) {
         return (0, exports.setAttributes)((0, exports.makeElement)(source.tag), source);
     };

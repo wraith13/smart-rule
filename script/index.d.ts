@@ -138,6 +138,8 @@ declare module "script/element" {
 declare module "script/svg" {
     import * as ELEMENT from "script/element";
     export type Tag = ELEMENT.SvgTag;
+    export type ElementTagNameMap = SVGElementTagNameMap;
+    export const makeElement: <T extends Tag>(tag: T) => ElementTagNameMap[T];
     export const setAttributes: <T extends Element>(element: T, attributes: {
         [key: string]: string | number;
     }) => T;
@@ -146,17 +148,16 @@ declare module "script/svg" {
     } & {
         [key: string]: string | number;
     }) => string;
-    export const makeElement: <T extends Tag>(tag: T) => SVGElementTagNameMap[T];
     export const make: <T extends Tag>(source: {
         tag: T;
     } & {
         [key: string]: string | number;
-    }) => SVGElementTagNameMap[T];
+    }) => ElementTagNameMap[T];
     export const makeSure: <T extends Tag>(parent: Element, source: {
         tag: T;
     } & {
         [key: string]: string | number;
-    }) => SVGElementTagNameMap[T];
+    }) => ElementTagNameMap[T];
 }
 declare module "script/ruler" {
     import * as Type from "script/type";
