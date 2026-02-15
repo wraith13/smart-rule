@@ -146,6 +146,7 @@ declare module "script/svg" {
     } & {
         [key: string]: string | number;
     }) => string;
+    export const makeElement: <T extends Tag>(tag: T) => SVGElementTagNameMap[T];
     export const make: <T extends Tag>(source: {
         tag: T;
     } & {

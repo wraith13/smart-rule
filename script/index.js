@@ -740,21 +740,21 @@ define("script/element", ["require", "exports"], function (require, exports) {
 define("script/svg", ["require", "exports", "script/element"], function (require, exports, ELEMENT) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.makeSure = exports.make = exports.makeSelector = exports.setAttributes = void 0;
+    exports.makeSure = exports.make = exports.makeElement = exports.makeSelector = exports.setAttributes = void 0;
     ELEMENT = __importStar(ELEMENT);
     exports.setAttributes = ELEMENT.setAttributes;
     exports.makeSelector = ELEMENT.makeSelector;
+    var makeElement = function (tag) {
+        return document.createElementNS("http://www.w3.org/2000/svg", tag);
+    };
+    exports.makeElement = makeElement;
     var make = function (source) {
-        return (0, exports.setAttributes)(document.createElementNS("http://www.w3.org/2000/svg", source.tag), source);
+        return (0, exports.setAttributes)((0, exports.makeElement)(source.tag), source);
     };
     exports.make = make;
     var makeSure = function (parent, source) {
-        var element = parent.querySelector((0, exports.makeSelector)(source));
-        if (!element) {
-            element = (0, exports.make)(source);
-            parent.appendChild(element);
-        }
-        return element;
+        var _a;
+        return (_a = parent.querySelector((0, exports.makeSelector)(source))) !== null && _a !== void 0 ? _a : parent.appendChild((0, exports.make)(source));
     };
     exports.makeSure = makeSure;
 });
@@ -785,9 +785,7 @@ define("script/ruler", ["require", "exports", "script/type", "script/ui", "scrip
     exports.renderer = renderer;
     var drawSlide = function (slide) {
         var slideIndex = Model.getSlideIndex(slide);
-        var group = SVG.makeSure(UI.rulerSvg, 
-        //`g.slide-group[data-slide-index="${slideIndex}"]`,
-        {
+        var group = SVG.makeSure(UI.rulerSvg, {
             tag: "g",
             class: "slide-group",
             "data-slide-index": slideIndex,
@@ -885,9 +883,7 @@ define("script/ruler", ["require", "exports", "script/type", "script/ui", "scrip
         //const color = "red";
         var color = config_json_3.default.render.ruler.lineColor;
         var handleRadius = 24;
-        SVG.setAttributes(SVG.makeSure(svg, 
-        //"line.ankor-line",
-        {
+        SVG.setAttributes(SVG.makeSure(svg, {
             tag: "line",
             class: "ankor-line",
         }), {
@@ -898,9 +894,7 @@ define("script/ruler", ["require", "exports", "script/type", "script/ui", "scrip
             stroke: color,
             "stroke-width": config_json_3.default.render.ruler.lineWidth,
         });
-        SVG.setAttributes(SVG.makeSure(svg, 
-        //"circle.ankor-drag-handle",
-        {
+        SVG.setAttributes(SVG.makeSure(svg, {
             tag: "circle",
             class: "ankor-drag-handle",
         }), {
