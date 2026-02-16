@@ -2,7 +2,7 @@
 <!--
     This file is genereted by build.js. このファイルは build.js によって生成されました。
     build options: ../build.json all
-    build at: Mon Feb 16 2026 08:04:50 GMT+0900 (日本標準時)
+    build at: Mon Feb 16 2026 19:57:01 GMT+0900 (日本標準時)
     repository: https://github.com/wraith13/slide-rule/
 -->
 <!-- license:
@@ -239,8 +239,8 @@ button:focus
 </div>
 <script type="text/javascript">
 const build = {
-    at: "Mon Feb 16 2026 08:04:50 GMT+0900 (日本標準時)",
-    tick: 1771196690488
+    at: "Mon Feb 16 2026 19:57:01 GMT+0900 (日本標準時)",
+    tick: 1771239421511
 };
 const evilCommonjsConfig = {
     "log": {
@@ -1436,8 +1436,10 @@ define("script/ruler", ["require", "exports", "script/type", "script/ui", "scrip
     exports.drawLane = drawLane;
     var drawTick = function (view, group, lane, value, type) {
         var laneIndex = Model.getLaneIndex(lane);
-        var tick = document.createElementNS("http://www.w3.org/2000/svg", "line");
-        tick.classList.add("tick", "tick-".concat(type));
+        var tick = SVG.make({
+            tag: "line",
+            class: "tick tick-".concat(type),
+        });
         var left = exports.LaneWidths.slice(0, laneIndex).reduce(function (a, b) { return a + b; }, 0);
         var position = Model.getPositionAt(lane, Type.getNamedNumberValue(value), view);
         var isRootSlide = Model.isRooeSlide(Model.getSlideFromLane(lane));

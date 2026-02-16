@@ -834,8 +834,10 @@ define("script/ruler", ["require", "exports", "script/type", "script/ui", "scrip
     exports.drawLane = drawLane;
     var drawTick = function (view, group, lane, value, type) {
         var laneIndex = Model.getLaneIndex(lane);
-        var tick = document.createElementNS("http://www.w3.org/2000/svg", "line");
-        tick.classList.add("tick", "tick-".concat(type));
+        var tick = SVG.make({
+            tag: "line",
+            class: "tick tick-".concat(type),
+        });
         var left = exports.LaneWidths.slice(0, laneIndex).reduce(function (a, b) { return a + b; }, 0);
         var position = Model.getPositionAt(lane, Type.getNamedNumberValue(value), view);
         var isRootSlide = Model.isRooeSlide(Model.getSlideFromLane(lane));

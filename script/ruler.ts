@@ -84,8 +84,11 @@ export const drawLane = (group: SVGGElement, lane: Type.Lane): void =>
 export const drawTick = (view: Type.View, group: SVGGElement, lane: Type.Lane, value: Type.NamedNumber, type: Type.TickType): void =>
 {
     const laneIndex = Model.getLaneIndex(lane);
-    const tick = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    tick.classList.add("tick", `tick-${type}`);
+    const tick = SVG.make
+    ({
+        tag: "line",
+        class: `tick tick-${type}`,
+    });
     const left = LaneWidths.slice(0, laneIndex).reduce((a, b) => a + b, 0);
     const position = Model.getPositionAt(lane, Type.getNamedNumberValue(value), view);
     const isRootSlide = Model.isRooeSlide(Model.getSlideFromLane(lane));
