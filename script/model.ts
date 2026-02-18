@@ -75,10 +75,53 @@ export const getFirstLabelValue = (lane: Type.Lane, view: Type.View): { firstLab
 }
 export const designTicks = (view: Type.View, lane: Type.Lane): { value: Type.NamedNumber, type: Type.TickType, }[] =>
 {
-    const ticks: { value: Type.NamedNumber, type: Type.TickType, }[] = [];
     const height = window.innerHeight;
     const min = getValueAt(lane, 0, view);
     const max = getValueAt(lane, height, view);
+    const ticks: { value: Type.NamedNumber, type: Type.TickType, }[] = [];
+    switch(view.scaleMode)
+    {
+    case "logarithmic":
+        {
+            const logScale = Type.getNamedNumberValue(lane.logScale);
+            for(let value = Math.pow(logScale, Math.ceil(Math.log(min) / Math.log(logScale))); value <= max; value *= logScale)
+            {
+                ticks.push({ value, type: "long", });
+                for(let i = 2; i < logScale; ++i)
+                {
+                    const minorValue = value * i;
+                    if (minorValue <= max)
+                    {
+                        ticks.push({ value: minorValue, type: "short", });
+                    }
+                }
+            }
+        }
+        break;
+    case "linear":
+         {
+            const labelUnit = view.viewScale * 10;
+            for(let value = Math.ceil(min / labelUnit) * labelUnit; value <= max; value += labelUnit)
+            {
+                ticks.push({ value, type: "long", });
+                for(let i = 1; i < 10; ++i)
+                {
+                    const minorValue = value + labelUnit * i / 10;
+                    if (minorValue <= max)
+                    {
+                        ticks.push
+                        ({
+                            value: minorValue,
+                            type: 5 !== i ? "short": "medium",
+                        });
+                    }
+                }
+            }
+        }
+        break;
+    default:
+        throw new Error(`🦋 FIXME: designTicks not implemented for scale mode: ${view.scaleMode}`);
+    }
     Type.namedNumberList.forEach
     (
         value =>
