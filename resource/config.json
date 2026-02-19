@@ -9,7 +9,7 @@
             "root": {
                 "type": "logarithmic",
                 "isInverted": false,
-                "logScale": 1
+                "logScale": "e"
             },
             "presets": {
                 "A": {

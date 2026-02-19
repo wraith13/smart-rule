@@ -19,6 +19,8 @@ export const getValueAt = (lane: Type.Lane, position: number, view: Type.View): 
         {
             const logScale = Type.getNamedNumberValue(lane.logScale);
             const value = Math.pow(logScale, position / view.viewScale);
+            console.log(`getValueAt: lane: ${lane.name ?? "unnamed"}, position: ${position}, value: ${value}`);
+            console.log(`logScale: ${logScale}, viewScale: ${view.viewScale}`);
             return lane.isInverted ? (logScale - value) : value;
         }
         else // linear
@@ -133,11 +135,13 @@ export const designTicks = (view: Type.View, lane: Type.Lane): { value: Type.Nam
             }
         }
     );
+    console.log(`designed ticks for lane: ${lane.name ?? "unnamed"}, ticks: ${ticks.map(tick => `${Type.getNamedNumberValue(tick.value)} (${tick.type})`).join(", ")}`);
+    console.log(`min: ${min}, max: ${max}`);
     return ticks;
 }
 export const makeRootLane = (): Type.Lane =>
 {
-    const { type, isInverted, logScale } = config.model.lane.root;
+    const { type, isInverted, logScale } = config.model.lane.root as Type.LaneBase;
     return makeLane
     ({
         type: type as Type.PrimaryLane,

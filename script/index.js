@@ -242,7 +242,7 @@ define("resource/config", [], {
             "root": {
                 "type": "logarithmic",
                 "isInverted": false,
-                "logScale": 1
+                "logScale": "e"
             },
             "presets": {
                 "A": {
@@ -376,11 +376,14 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
     };
     exports.getAllLanes = getAllLanes;
     var getValueAt = function (lane, position, view) {
+        var _a;
         switch (lane.type) {
             case "logarithmic":
                 if ("logarithmic" === view.scaleMode) {
                     var logScale = Type.getNamedNumberValue(lane.logScale);
                     var value = Math.pow(logScale, position / view.viewScale);
+                    console.log("getValueAt: lane: ".concat((_a = lane.name) !== null && _a !== void 0 ? _a : "unnamed", ", position: ").concat(position, ", value: ").concat(value));
+                    console.log("logScale: ".concat(logScale, ", viewScale: ").concat(view.viewScale));
                     return lane.isInverted ? (logScale - value) : value;
                 }
                 else // linear
@@ -434,6 +437,7 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
     };
     exports.getFirstLabelValue = getFirstLabelValue;
     var designTicks = function (view, lane) {
+        var _a;
         var height = window.innerHeight;
         var min = (0, exports.getValueAt)(lane, 0, view);
         var max = (0, exports.getValueAt)(lane, height, view);
@@ -479,6 +483,8 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
                 ticks.push({ value: value, type: "long", });
             }
         });
+        console.log("designed ticks for lane: ".concat((_a = lane.name) !== null && _a !== void 0 ? _a : "unnamed", ", ticks: ").concat(ticks.map(function (tick) { return "".concat(Type.getNamedNumberValue(tick.value), " (").concat(tick.type, ")"); }).join(", ")));
+        console.log("min: ".concat(min, ", max: ").concat(max));
         return ticks;
     };
     exports.designTicks = designTicks;
