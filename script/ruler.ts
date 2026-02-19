@@ -5,7 +5,7 @@ import * as SVG from "./svg";
 import config from "@resource/config.json";
 export let scale = 1.0;
 export let LaneWidths: number[] = [];
-export const renderer = (model: Type.Model, _view: Type.View, dirty: boolean | Set<number>) =>
+export const renderer = (model: Type.Model, view: Type.View, dirty: boolean | Set<number>) =>
 {
     if (false !== dirty)
     {
@@ -13,7 +13,7 @@ export const renderer = (model: Type.Model, _view: Type.View, dirty: boolean | S
         {
             if ("boolean" === typeof dirty || dirty.has(Model.getSlideIndex(slide)))
             {
-                drawSlide(slide);
+                drawSlide(view, slide);
             }
         }
         if (true === dirty || dirty.has(-1))
@@ -22,7 +22,7 @@ export const renderer = (model: Type.Model, _view: Type.View, dirty: boolean | S
         }
     }
 };
-export const drawSlide = (slide: Type.SlideUnit): void =>
+export const drawSlide = (view: Type.View, slide: Type.SlideUnit): void =>
 {
     const slideIndex = Model.getSlideIndex(slide);
     const group = SVG.makeSure
@@ -37,10 +37,10 @@ export const drawSlide = (slide: Type.SlideUnit): void =>
     group.innerHTML = "";
     for(const lane of slide.lanes)
     {
-        drawLane(group, lane);
+        drawLane(view, group, lane);
     }
 };
-export const drawLane = (group: SVGGElement, lane: Type.Lane): void =>
+export const drawLane = (view: Type.View, group: SVGGElement, lane: Type.Lane): void =>
 {
     const laneIndex = Model.getLaneIndex(lane);
     const left = LaneWidths.slice(0, laneIndex).reduce((a, b) => a + b, 0);
@@ -79,6 +79,10 @@ export const drawLane = (group: SVGGElement, lane: Type.Lane): void =>
             stroke: config.render.ruler.laneSeparatorColor,
             "stroke-width": config.render.ruler.laneSeparatorWidth,
         })
+    );
+    Model.designTicks(view, lane).forEach
+    (
+        tick => drawTick(view, group, lane, tick.value, tick.type)
     );
 };
 export const drawTick = (view: Type.View, group: SVGGElement, lane: Type.Lane, value: Type.NamedNumber, type: Type.TickType): void =>

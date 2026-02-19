@@ -163,9 +163,9 @@ declare module "script/ruler" {
     import * as Type from "script/type";
     export let scale: number;
     export let LaneWidths: number[];
-    export const renderer: (model: Type.Model, _view: Type.View, dirty: boolean | Set<number>) => void;
-    export const drawSlide: (slide: Type.SlideUnit) => void;
-    export const drawLane: (group: SVGGElement, lane: Type.Lane) => void;
+    export const renderer: (model: Type.Model, view: Type.View, dirty: boolean | Set<number>) => void;
+    export const drawSlide: (view: Type.View, slide: Type.SlideUnit) => void;
+    export const drawLane: (view: Type.View, group: SVGGElement, lane: Type.Lane) => void;
     export const drawTick: (view: Type.View, group: SVGGElement, lane: Type.Lane, value: Type.NamedNumber, type: Type.TickType) => void;
     export const drawAnkorLine: (position: number) => void;
     export const resize: () => unknown;

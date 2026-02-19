@@ -434,10 +434,45 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
     };
     exports.getFirstLabelValue = getFirstLabelValue;
     var designTicks = function (view, lane) {
-        var ticks = [];
         var height = window.innerHeight;
         var min = (0, exports.getValueAt)(lane, 0, view);
         var max = (0, exports.getValueAt)(lane, height, view);
+        var ticks = [];
+        switch (view.scaleMode) {
+            case "logarithmic":
+                {
+                    var logScale = Type.getNamedNumberValue(lane.logScale);
+                    for (var value = Math.pow(logScale, Math.ceil(Math.log(min) / Math.log(logScale))); value <= max; value *= logScale) {
+                        ticks.push({ value: value, type: "long", });
+                        for (var i = 2; i < logScale; ++i) {
+                            var minorValue = value * i;
+                            if (minorValue <= max) {
+                                ticks.push({ value: minorValue, type: "short", });
+                            }
+                        }
+                    }
+                }
+                break;
+            case "linear":
+                {
+                    var labelUnit = view.viewScale * 10;
+                    for (var value = Math.ceil(min / labelUnit) * labelUnit; value <= max; value += labelUnit) {
+                        ticks.push({ value: value, type: "long", });
+                        for (var i = 1; i < 10; ++i) {
+                            var minorValue = value + labelUnit * i / 10;
+                            if (minorValue <= max) {
+                                ticks.push({
+                                    value: minorValue,
+                                    type: 5 !== i ? "short" : "medium",
+                                });
+                            }
+                        }
+                    }
+                }
+                break;
+            default:
+                throw new Error("\uD83E\uDD8B FIXME: designTicks not implemented for scale mode: ".concat(view.scaleMode));
+        }
         Type.namedNumberList.forEach(function (value) {
             var actualNumber = Type.getNamedNumberValue(value);
             if (min <= actualNumber && actualNumber <= max) {
@@ -769,12 +804,12 @@ define("script/ruler", ["require", "exports", "script/type", "script/ui", "scrip
     config_json_3 = __importDefault(config_json_3);
     exports.scale = 1.0;
     exports.LaneWidths = [];
-    var renderer = function (model, _view, dirty) {
+    var renderer = function (model, view, dirty) {
         if (false !== dirty) {
             for (var _i = 0, _a = model.slides; _i < _a.length; _i++) {
                 var slide = _a[_i];
                 if ("boolean" === typeof dirty || dirty.has(Model.getSlideIndex(slide))) {
-                    (0, exports.drawSlide)(slide);
+                    (0, exports.drawSlide)(view, slide);
                 }
             }
             if (true === dirty || dirty.has(-1)) {
@@ -783,7 +818,7 @@ define("script/ruler", ["require", "exports", "script/type", "script/ui", "scrip
         }
     };
     exports.renderer = renderer;
-    var drawSlide = function (slide) {
+    var drawSlide = function (view, slide) {
         var slideIndex = Model.getSlideIndex(slide);
         var group = SVG.makeSure(UI.rulerSvg, {
             tag: "g",
@@ -793,11 +828,11 @@ define("script/ruler", ["require", "exports", "script/type", "script/ui", "scrip
         group.innerHTML = "";
         for (var _i = 0, _a = slide.lanes; _i < _a.length; _i++) {
             var lane = _a[_i];
-            (0, exports.drawLane)(group, lane);
+            (0, exports.drawLane)(view, group, lane);
         }
     };
     exports.drawSlide = drawSlide;
-    var drawLane = function (group, lane) {
+    var drawLane = function (view, group, lane) {
         var _a;
         var laneIndex = Model.getLaneIndex(lane);
         var left = exports.LaneWidths.slice(0, laneIndex).reduce(function (a, b) { return a + b; }, 0);
@@ -830,6 +865,7 @@ define("script/ruler", ["require", "exports", "script/type", "script/ui", "scrip
             stroke: config_json_3.default.render.ruler.laneSeparatorColor,
             "stroke-width": config_json_3.default.render.ruler.laneSeparatorWidth,
         }));
+        Model.designTicks(view, lane).forEach(function (tick) { return (0, exports.drawTick)(view, group, lane, tick.value, tick.type); });
     };
     exports.drawLane = drawLane;
     var drawTick = function (view, group, lane, value, type) {
