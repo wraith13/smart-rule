@@ -6,7 +6,7 @@ import config from "@resource/config.json";
 export const data: Type.View =
 {
     viewMode: "ruler",
-    viewScale: 1,
+    viewScale: 100,
     scaleMode: "logarithmic",
     baseOfLogarithm: 10,
 };
@@ -38,7 +38,7 @@ export const initialize = () =>
 {
     setViewMode(Url.get("view-mode") as Type.ViewMode ?? config.view?.defaultViewMode ?? "ruler");
     setScaleMode(Url.get("scale-mode") as Type.ScaleMode ?? config.view?.defaultScaleMode ?? "logarithmic");
-    data.viewScale = Number.parse(Url.get("view-scale")) ?? 1;
+    data.viewScale = Number.parse(Url.get("view-scale")) ?? data.viewScale;
     data.baseOfLogarithm = Number.orUndefined(Type.getNamedNumberValue(Url.get("base") as Type.NamedNumber)) ??
         config.view?.baseOfLogarithm?.default ??
         10;

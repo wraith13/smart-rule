@@ -640,7 +640,7 @@ define("script/view", ["require", "exports", "script/number", "script/type", "sc
     config_json_2 = __importDefault(config_json_2);
     exports.data = {
         viewMode: "ruler",
-        viewScale: 1,
+        viewScale: 100,
         scaleMode: "logarithmic",
         baseOfLogarithm: 10,
     };
@@ -679,7 +679,7 @@ define("script/view", ["require", "exports", "script/number", "script/type", "sc
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
         (0, exports.setViewMode)((_c = (_a = Url.get("view-mode")) !== null && _a !== void 0 ? _a : (_b = config_json_2.default.view) === null || _b === void 0 ? void 0 : _b.defaultViewMode) !== null && _c !== void 0 ? _c : "ruler");
         (0, exports.setScaleMode)((_f = (_d = Url.get("scale-mode")) !== null && _d !== void 0 ? _d : (_e = config_json_2.default.view) === null || _e === void 0 ? void 0 : _e.defaultScaleMode) !== null && _f !== void 0 ? _f : "logarithmic");
-        exports.data.viewScale = (_g = Number.parse(Url.get("view-scale"))) !== null && _g !== void 0 ? _g : 1;
+        exports.data.viewScale = (_g = Number.parse(Url.get("view-scale"))) !== null && _g !== void 0 ? _g : exports.data.viewScale;
         exports.data.baseOfLogarithm = (_l = (_h = Number.orUndefined(Type.getNamedNumberValue(Url.get("base")))) !== null && _h !== void 0 ? _h : (_k = (_j = config_json_2.default.view) === null || _j === void 0 ? void 0 : _j.baseOfLogarithm) === null || _k === void 0 ? void 0 : _k.default) !== null && _l !== void 0 ? _l : 10;
         console.log("View initialized: mode=".concat(exports.data.viewMode, ", scale=").concat(exports.data.viewScale, ", scaleMode=").concat(exports.data.scaleMode, ", base=").concat(exports.data.baseOfLogarithm));
     };
