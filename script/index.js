@@ -445,13 +445,44 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
         switch (view.scaleMode) {
             case "logarithmic":
                 {
-                    var logScale = Type.getNamedNumberValue(lane.logScale);
-                    for (var value = Math.pow(logScale, Math.ceil(Math.log(min) / Math.log(logScale))); value <= max; value *= logScale) {
-                        ticks.push({ value: value, type: "long", });
-                        for (var i = 2; i < logScale; ++i) {
-                            var minorValue = value * i;
-                            if (minorValue <= max) {
-                                ticks.push({ value: minorValue, type: "short", });
+                    //const logScale = Type.getNamedNumberValue(lane.logScale);
+                    var begin = Math.pow(10, Math.floor(Math.log10(min)));
+                    var end = Math.pow(10, Math.ceil(Math.log10(max)));
+                    for (var a = begin; a <= end; a *= 10) {
+                        for (var b = 1; b <= 9; ++b) {
+                            var value = a * b;
+                            if (a * b <= max) {
+                                switch (b) {
+                                    case 1:
+                                    case 2:
+                                    case 3:
+                                    case 4:
+                                        ticks.push({ value: value, type: "long", });
+                                        for (var c = 1; c <= 9; ++c) {
+                                            ticks.push({
+                                                value: a * (b + (c / 10)),
+                                                type: 5 !== c ? "short" : "medium",
+                                            });
+                                        }
+                                        break;
+                                    // case 2:
+                                    // case 3:
+                                    // case 4:
+                                    //     ticks.push({ value, type: "long", });
+                                    //     ticks.push({ value: a *(b + 0.5), type: "medium", });
+                                    //     break;
+                                    case 5:
+                                        ticks.push({ value: value, type: "long", });
+                                        ticks.push({ value: a * (b + 0.5), type: "short", });
+                                        break;
+                                    case 6:
+                                    case 7:
+                                    case 8:
+                                    case 9:
+                                        ticks.push({ value: value, type: "medium", });
+                                        ticks.push({ value: a * (b + 0.5), type: "short", });
+                                        break;
+                                }
                             }
                         }
                     }

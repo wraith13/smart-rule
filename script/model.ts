@@ -85,23 +85,57 @@ export const designTicks = (view: Type.View, lane: Type.Lane): { value: Type.Nam
     {
     case "logarithmic":
         {
-            const logScale = Type.getNamedNumberValue(lane.logScale);
-            for(let value = Math.pow(logScale, Math.ceil(Math.log(min) / Math.log(logScale))); value <= max; value *= logScale)
+            //const logScale = Type.getNamedNumberValue(lane.logScale);
+            const begin = Math.pow(10, Math.floor(Math.log10(min)));
+            const end = Math.pow(10, Math.ceil(Math.log10(max)));
+            for(let a = begin; a <= end; a *= 10)
             {
-                ticks.push({ value, type: "long", });
-                for(let i = 2; i < logScale; ++i)
+                for(let b = 1; b <= 9; ++b)
                 {
-                    const minorValue = value * i;
-                    if (minorValue <= max)
+                    const value = a * b;
+                    if (a *b <= max)
                     {
-                        ticks.push({ value: minorValue, type: "short", });
+                        switch(b)
+                        {
+                        case 1:
+                        case 2:
+                        case 3:
+                        case 4:
+                            ticks.push({ value, type: "long", });
+                            for(let c = 1; c <= 9; ++c)
+                            {
+                                ticks.push
+                                ({
+                                    value: a *(b + (c / 10)),
+                                    type: 5 !== c ? "short": "medium",
+                                });
+                            }
+                            break;
+                        // case 2:
+                        // case 3:
+                        // case 4:
+                        //     ticks.push({ value, type: "long", });
+                        //     ticks.push({ value: a *(b + 0.5), type: "medium", });
+                        //     break;
+                        case 5:
+                            ticks.push({ value, type: "long", });
+                            ticks.push({ value: a *(b + 0.5), type: "short", });
+                            break;
+                        case 6:
+                        case 7:
+                        case 8:
+                        case 9:
+                            ticks.push({ value, type: "medium", });
+                            ticks.push({ value: a *(b + 0.5), type: "short", });
+                            break;
+                        }
                     }
                 }
             }
         }
         break;
     case "linear":
-         {
+        {
             const labelUnit = view.viewScale * 10;
             for(let value = Math.ceil(min / labelUnit) * labelUnit; value <= max; value += labelUnit)
             {
