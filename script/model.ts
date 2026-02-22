@@ -85,15 +85,14 @@ export const designTicks = (view: Type.View, lane: Type.Lane): { value: Type.Nam
     {
     case "logarithmic":
         {
-            const scale = 10;
-            const halfScale = scale / 2;
-            const begin = Math.pow(scale, Math.floor(Math.log10(min)));
-            const end = Math.pow(scale, Math.ceil(Math.log10(max)));
             if (view.viewScale < 100)
             {
-                for(let a = begin; a <= end; a *= scale)
+                const scale = 10;
+                const begin = Math.floor(Math.log10(min));
+                const end = Math.ceil(Math.log10(max));
+                for(let a = begin; a <= end; ++a)
                 {
-                    ticks.push({ value: a, type: "long", });
+                    ticks.push({ value: Math.pow(scale, a), type: "long", });
                 }
             }
             else
@@ -103,6 +102,10 @@ export const designTicks = (view: Type.View, lane: Type.Lane): { value: Type.Nam
             }
             else
             {
+                const scale = 10;
+                const halfScale = scale / 2;
+                const begin = Math.pow(scale, Math.floor(Math.log10(min)));
+                const end = Math.pow(scale, Math.ceil(Math.log10(max)));
                 for(let a = begin; a <= end; a *= scale)
                 {
                     for(let b = 1; b < scale; ++b)

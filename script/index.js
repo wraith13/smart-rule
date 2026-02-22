@@ -445,18 +445,21 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
         switch (view.scaleMode) {
             case "logarithmic":
                 {
-                    var scale = 10;
-                    var halfScale = scale / 2;
-                    var begin = Math.pow(scale, Math.floor(Math.log10(min)));
-                    var end = Math.pow(scale, Math.ceil(Math.log10(max)));
                     if (view.viewScale < 100) {
-                        for (var a = begin; a <= end; a *= scale) {
-                            ticks.push({ value: a, type: "long", });
+                        var scale = 10;
+                        var begin = Math.floor(Math.log10(min));
+                        var end = Math.ceil(Math.log10(max));
+                        for (var a = begin; a <= end; ++a) {
+                            ticks.push({ value: Math.pow(scale, a), type: "long", });
                         }
                     }
                     else if (100 < view.viewScale) {
                     }
                     else {
+                        var scale = 10;
+                        var halfScale = scale / 2;
+                        var begin = Math.pow(scale, Math.floor(Math.log10(min)));
+                        var end = Math.pow(scale, Math.ceil(Math.log10(max)));
                         for (var a = begin; a <= end; a *= scale) {
                             for (var b = 1; b < scale; ++b) {
                                 var value = a * b;
