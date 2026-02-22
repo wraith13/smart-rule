@@ -89,36 +89,51 @@ export const designTicks = (view: Type.View, lane: Type.Lane): { value: Type.Nam
             const halfScale = scale / 2;
             const begin = Math.pow(scale, Math.floor(Math.log10(min)));
             const end = Math.pow(scale, Math.ceil(Math.log10(max)));
-            for(let a = begin; a <= end; a *= scale)
+            if (view.viewScale < 100)
             {
-                for(let b = 1; b < scale; ++b)
+                for(let a = begin; a <= end; a *= scale)
                 {
-                    const value = a * b;
-                    switch(true)
+                    ticks.push({ value: a, type: "long", });
+                }
+            }
+            else
+            if (100 < view.viewScale)
+            {
+
+            }
+            else
+            {
+                for(let a = begin; a <= end; a *= scale)
+                {
+                    for(let b = 1; b < scale; ++b)
                     {
-                    case b < halfScale:
-                        ticks.push({ value, type: "long", });
-                        for(let c = 1; c <= 9; ++c)
+                        const value = a * b;
+                        switch(true)
                         {
-                            const value = a *(b + (c / 10));
-                            if (value <= max)
+                        case b < halfScale:
+                            ticks.push({ value, type: "long", });
+                            for(let c = 1; c <= 9; ++c)
                             {
-                                ticks.push
-                                ({
-                                    value: a *(b + (c / 10)),
-                                    type: 5 !== c ? "short": "medium",
-                                });
+                                const value = a *(b + (c / 10));
+                                if (value <= max)
+                                {
+                                    ticks.push
+                                    ({
+                                        value: a *(b + (c / 10)),
+                                        type: 5 !== c ? "short": "medium",
+                                    });
+                                }
                             }
+                            break;
+                        case b === halfScale:
+                            ticks.push({ value, type: "long", });
+                            ticks.push({ value: a *(b + 0.5), type: "short", });
+                            break;
+                        case halfScale < b:
+                            ticks.push({ value, type: "medium", });
+                            ticks.push({ value: a *(b + 0.5), type: "short", });
+                            break;
                         }
-                        break;
-                    case b === halfScale:
-                        ticks.push({ value, type: "long", });
-                        ticks.push({ value: a *(b + 0.5), type: "short", });
-                        break;
-                    case halfScale < b:
-                        ticks.push({ value, type: "medium", });
-                        ticks.push({ value: a *(b + 0.5), type: "short", });
-                        break;
                     }
                 }
             }
@@ -148,17 +163,20 @@ export const designTicks = (view: Type.View, lane: Type.Lane): { value: Type.Nam
     default:
         throw new Error(`🦋 FIXME: designTicks not implemented for scale mode: ${view.scaleMode}`);
     }
-    Type.namedNumberList.forEach
-    (
-        value =>
-        {
-            const actualNumber = Type.getNamedNumberValue(value);
-            if (min <= actualNumber && actualNumber <= max)
+    if (100 < view.viewScale)
+    {
+        Type.namedNumberList.forEach
+        (
+            value =>
             {
-                ticks.push({ value, type: "long", });
+                const actualNumber = Type.getNamedNumberValue(value);
+                if (min <= actualNumber && actualNumber <= max)
+                {
+                    ticks.push({ value, type: "long", });
+                }
             }
-        }
-    );
+        );
+    }
     console.log(`designed ticks for lane: ${lane.name ?? "unnamed"}, ticks: ${ticks.map(tick => `${Type.getNamedNumberValue(tick.value)} (${tick.type})`).join(", ")}`);
     console.log(`min: ${min}, max: ${max}`);
     return ticks.filter(tick => min <= Type.getNamedNumberValue(tick.value) && Type.getNamedNumberValue(tick.value) <= max);

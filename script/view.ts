@@ -6,7 +6,7 @@ import config from "@resource/config.json";
 export const data: Type.View =
 {
     viewMode: "ruler",
-    viewScale: 100,
+    viewScale: 10,
     scaleMode: "logarithmic",
     baseOfLogarithm: 10,
 };

@@ -449,30 +449,39 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
                     var halfScale = scale / 2;
                     var begin = Math.pow(scale, Math.floor(Math.log10(min)));
                     var end = Math.pow(scale, Math.ceil(Math.log10(max)));
-                    for (var a = begin; a <= end; a *= scale) {
-                        for (var b = 1; b < scale; ++b) {
-                            var value = a * b;
-                            switch (true) {
-                                case b < halfScale:
-                                    ticks.push({ value: value, type: "long", });
-                                    for (var c = 1; c <= 9; ++c) {
-                                        var value_1 = a * (b + (c / 10));
-                                        if (value_1 <= max) {
-                                            ticks.push({
-                                                value: a * (b + (c / 10)),
-                                                type: 5 !== c ? "short" : "medium",
-                                            });
+                    if (view.viewScale < 100) {
+                        for (var a = begin; a <= end; a *= scale) {
+                            ticks.push({ value: a, type: "long", });
+                        }
+                    }
+                    else if (100 < view.viewScale) {
+                    }
+                    else {
+                        for (var a = begin; a <= end; a *= scale) {
+                            for (var b = 1; b < scale; ++b) {
+                                var value = a * b;
+                                switch (true) {
+                                    case b < halfScale:
+                                        ticks.push({ value: value, type: "long", });
+                                        for (var c = 1; c <= 9; ++c) {
+                                            var value_1 = a * (b + (c / 10));
+                                            if (value_1 <= max) {
+                                                ticks.push({
+                                                    value: a * (b + (c / 10)),
+                                                    type: 5 !== c ? "short" : "medium",
+                                                });
+                                            }
                                         }
-                                    }
-                                    break;
-                                case b === halfScale:
-                                    ticks.push({ value: value, type: "long", });
-                                    ticks.push({ value: a * (b + 0.5), type: "short", });
-                                    break;
-                                case halfScale < b:
-                                    ticks.push({ value: value, type: "medium", });
-                                    ticks.push({ value: a * (b + 0.5), type: "short", });
-                                    break;
+                                        break;
+                                    case b === halfScale:
+                                        ticks.push({ value: value, type: "long", });
+                                        ticks.push({ value: a * (b + 0.5), type: "short", });
+                                        break;
+                                    case halfScale < b:
+                                        ticks.push({ value: value, type: "medium", });
+                                        ticks.push({ value: a * (b + 0.5), type: "short", });
+                                        break;
+                                }
                             }
                         }
                     }
@@ -498,12 +507,14 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
             default:
                 throw new Error("\uD83E\uDD8B FIXME: designTicks not implemented for scale mode: ".concat(view.scaleMode));
         }
-        Type.namedNumberList.forEach(function (value) {
-            var actualNumber = Type.getNamedNumberValue(value);
-            if (min <= actualNumber && actualNumber <= max) {
-                ticks.push({ value: value, type: "long", });
-            }
-        });
+        if (100 < view.viewScale) {
+            Type.namedNumberList.forEach(function (value) {
+                var actualNumber = Type.getNamedNumberValue(value);
+                if (min <= actualNumber && actualNumber <= max) {
+                    ticks.push({ value: value, type: "long", });
+                }
+            });
+        }
         console.log("designed ticks for lane: ".concat((_a = lane.name) !== null && _a !== void 0 ? _a : "unnamed", ", ticks: ").concat(ticks.map(function (tick) { return "".concat(Type.getNamedNumberValue(tick.value), " (").concat(tick.type, ")"); }).join(", ")));
         console.log("min: ".concat(min, ", max: ").concat(max));
         return ticks.filter(function (tick) { return min <= Type.getNamedNumberValue(tick.value) && Type.getNamedNumberValue(tick.value) <= max; });
@@ -661,7 +672,7 @@ define("script/view", ["require", "exports", "script/number", "script/type", "sc
     config_json_2 = __importDefault(config_json_2);
     exports.data = {
         viewMode: "ruler",
-        viewScale: 100,
+        viewScale: 10,
         scaleMode: "logarithmic",
         baseOfLogarithm: 10,
     };
