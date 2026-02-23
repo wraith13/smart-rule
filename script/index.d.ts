@@ -115,6 +115,9 @@ declare module "script/view" {
     export const setScaleMode: (mode: Type.ScaleMode) => void;
     export const initialize: () => void;
 }
+declare module "script/environment" {
+    export const isApple: () => boolean;
+}
 declare module "script/render" {
     import * as Type from "script/type";
     let currentRenderer: (model: Type.Model, view: Type.View, dirty: boolean | Set<number>) => unknown;
@@ -182,6 +185,9 @@ declare module "script/graph" {
 declare module "script/event" {
     export const updateViewModeRoundBar: () => void;
     export const updateScaleModeRoundBar: () => void;
+    export const zoomIn: () => void;
+    export const zoomOut: () => void;
+    export const resetZoom: () => void;
     export const initialize: () => void;
 }
 declare module "script/index" { }

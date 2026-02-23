@@ -2,7 +2,7 @@
 <!--
     This file is genereted by build.js. このファイルは build.js によって生成されました。
     build options: ../build.json all
-    build at: Sun Feb 22 2026 16:01:59 GMT+0900 (日本標準時)
+    build at: Mon Feb 23 2026 08:36:15 GMT+0900 (日本標準時)
     repository: https://github.com/wraith13/slide-rule/
 -->
 <!-- license:
@@ -80,6 +80,7 @@ html, body
     margin: 0px;
     padding: 0px;
     overflow: visible;
+    touch-action: none;
 }
 .view, .screen
 {
@@ -239,8 +240,8 @@ button:focus
 </div>
 <script type="text/javascript">
 const build = {
-    at: "Sun Feb 22 2026 16:01:59 GMT+0900 (日本標準時)",
-    tick: 1771743719073
+    at: "Mon Feb 23 2026 08:36:15 GMT+0900 (日本標準時)",
+    tick: 1771803375321
 };
 const evilCommonjsConfig = {
     "log": {
@@ -1047,21 +1048,39 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
         switch (view.scaleMode) {
             case "logarithmic":
                 {
+                    var beginDigit = Math.floor(Math.log10(min));
+                    var endDigit = Math.ceil(Math.log10(max));
                     if (view.viewScale < 100) {
                         var scale = 10;
-                        var begin = Math.floor(Math.log10(min));
-                        var end = Math.ceil(Math.log10(max));
-                        for (var a = begin; a <= end; ++a) {
+                        for (var a = beginDigit; a <= endDigit; ++a) {
                             ticks.push({ value: Math.pow(scale, a), type: "long", });
                         }
                     }
                     else if (100 < view.viewScale) {
+                        var scale = 10;
+                        var begin = Math.pow(10, beginDigit);
+                        var end = Math.pow(10, endDigit);
+                        for (var a = begin; a <= end; a += begin / scale) {
+                            var value = a;
+                            if (value <= max) {
+                                ticks.push({ value: value, type: "long", });
+                                for (var b = 0; b < scale; ++b) {
+                                    var value_1 = a + (b * (begin / (scale * scale)));
+                                    if (value_1 <= max) {
+                                        ticks.push({
+                                            value: value_1,
+                                            type: 5 !== b ? "short" : "medium",
+                                        });
+                                    }
+                                }
+                            }
+                        }
                     }
                     else {
                         var scale = 10;
                         var halfScale = scale / 2;
-                        var begin = Math.pow(scale, Math.floor(Math.log10(min)));
-                        var end = Math.pow(scale, Math.ceil(Math.log10(max)));
+                        var begin = Math.pow(10, beginDigit);
+                        var end = Math.pow(10, endDigit);
                         for (var a = begin; a <= end; a *= scale) {
                             for (var b = 1; b < scale; ++b) {
                                 var value = a * b;
@@ -1069,8 +1088,8 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
                                     case b < halfScale:
                                         ticks.push({ value: value, type: "long", });
                                         for (var c = 1; c <= 9; ++c) {
-                                            var value_1 = a * (b + (c / 10));
-                                            if (value_1 <= max) {
+                                            var value_2 = a * (b + (c / 10));
+                                            if (value_2 <= max) {
                                                 ticks.push({
                                                     value: a * (b + (c / 10)),
                                                     type: 5 !== c ? "short" : "medium",
@@ -1277,7 +1296,7 @@ define("script/view", ["require", "exports", "script/number", "script/type", "sc
     config_json_2 = __importDefault(config_json_2);
     exports.data = {
         viewMode: "ruler",
-        viewScale: 10,
+        viewScale: 1000,
         scaleMode: "logarithmic",
         baseOfLogarithm: 10,
     };
@@ -1321,6 +1340,13 @@ define("script/view", ["require", "exports", "script/number", "script/type", "sc
         console.log("View initialized: mode=".concat(exports.data.viewMode, ", scale=").concat(exports.data.viewScale, ", scaleMode=").concat(exports.data.scaleMode, ", base=").concat(exports.data.baseOfLogarithm));
     };
     exports.initialize = initialize;
+});
+define("script/environment", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.isApple = void 0;
+    var isApple = function () { return /Mac|iPhone|iPad|iPod/.test(navigator.platform); };
+    exports.isApple = isApple;
 });
 define("script/render", ["require", "exports", "script/view", "script/model"], function (require, exports, View, Model) {
     "use strict";
@@ -1597,11 +1623,12 @@ define("script/graph", ["require", "exports"], function (require, exports) {
     };
     exports.renderer = renderer;
 });
-define("script/event", ["require", "exports", "script/type", "script/view", "script/ui", "script/render", "script/ruler", "script/grid", "script/graph"], function (require, exports, Type, View, UI, Render, Ruler, Grid, Graph) {
+define("script/event", ["require", "exports", "script/type", "script/environment", "script/view", "script/ui", "script/render", "script/ruler", "script/grid", "script/graph"], function (require, exports, Type, Environment, View, UI, Render, Ruler, Grid, Graph) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.updateScaleModeRoundBar = exports.updateViewModeRoundBar = void 0;
+    exports.initialize = exports.resetZoom = exports.zoomOut = exports.zoomIn = exports.updateScaleModeRoundBar = exports.updateViewModeRoundBar = void 0;
     Type = __importStar(Type);
+    Environment = __importStar(Environment);
     View = __importStar(View);
     UI = __importStar(UI);
     Render = __importStar(Render);
@@ -1620,11 +1647,110 @@ define("script/event", ["require", "exports", "script/type", "script/view", "scr
         rotate: Type.scaleModeList.indexOf(View.getScaleMode()) / Type.scaleModeList.length,
     }); };
     exports.updateScaleModeRoundBar = updateScaleModeRoundBar;
+    var zoomIn = function () {
+        var current = View.data.viewScale;
+        var next = current * 1.25;
+        View.data.viewScale = next;
+        Render.markDirty();
+        console.log("Zoomed in: ".concat(current, " -> ").concat(next));
+    };
+    exports.zoomIn = zoomIn;
+    var zoomOut = function () {
+        var current = View.data.viewScale;
+        var next = current / 1.25;
+        View.data.viewScale = next;
+        Render.markDirty();
+        console.log("Zoomed out: ".concat(current, " -> ").concat(next));
+    };
+    exports.zoomOut = zoomOut;
+    var resetZoom = function () {
+        var current = View.data.viewScale;
+        var next = 100;
+        View.data.viewScale = next;
+        Render.markDirty();
+        console.log("Zoom reset: ".concat(current, " -> ").concat(next));
+    };
+    exports.resetZoom = resetZoom;
+    var touchZoomPreviousDistance = null;
     var initialize = function () {
         console.log("Event initialized");
         window.addEventListener("resize", function () {
             Ruler.resize();
             Render.markDirty();
+        });
+        window.addEventListener("wheel", function (event) {
+            if (Environment.isApple() ? event.metaKey : event.ctrlKey) {
+                event.preventDefault();
+                if (0 < event.deltaY) {
+                    (0, exports.zoomOut)();
+                }
+                else if (event.deltaY < 0) {
+                    (0, exports.zoomIn)();
+                }
+            }
+        }, {
+            passive: false,
+        });
+        window.addEventListener("keydown", function (event) {
+            if (Environment.isApple() ? event.metaKey : event.ctrlKey) {
+                switch (event.key) {
+                    case "+":
+                    case ";":
+                    case "=":
+                        event.preventDefault();
+                        (0, exports.zoomIn)();
+                        break;
+                    case "-":
+                    case "_":
+                        event.preventDefault();
+                        (0, exports.zoomOut)();
+                        break;
+                    case "0":
+                        event.preventDefault();
+                        (0, exports.resetZoom)();
+                        break;
+                    default:
+                        console.log("Keydown event: key=".concat(event.key));
+                        break;
+                }
+            }
+        });
+        document.addEventListener("pointerup", function (event) {
+            if ("touch" === event.pointerType && event.isPrimary) {
+                touchZoomPreviousDistance = null;
+            }
+        }, {
+            passive: false,
+        });
+        document.addEventListener("pointercancel", function (event) {
+            if ("touch" === event.pointerType && event.isPrimary) {
+                touchZoomPreviousDistance = null;
+            }
+        }, {
+            passive: false,
+        });
+        document.addEventListener("pointermove", function (event) {
+            if ("touch" === event.pointerType) // && event.isPrimary)
+             {
+                var touches = Array.from(event.getCoalescedEvents()).filter(function (e) { return e.pointerType === "touch"; });
+                if (2 <= touches.length) {
+                    var touch1 = touches[0];
+                    var touch2 = touches[1];
+                    var currentDistance = Math.hypot(touch2.clientX - touch1.clientX, touch2.clientY - touch1.clientY);
+                    if (null !== touchZoomPreviousDistance) {
+                        var delta = currentDistance - touchZoomPreviousDistance;
+                        if (delta > 0) {
+                            (0, exports.zoomIn)();
+                        }
+                        else if (delta < 0) {
+                            (0, exports.zoomOut)();
+                        }
+                    }
+                    touchZoomPreviousDistance = currentDistance;
+                }
+            }
+        }, {
+            passive: true,
         });
         UI.viewModeButton.addEventListener("click", function () {
             var current = View.getViewMode();

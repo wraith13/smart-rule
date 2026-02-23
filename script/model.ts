@@ -85,12 +85,12 @@ export const designTicks = (view: Type.View, lane: Type.Lane): { value: Type.Nam
     {
     case "logarithmic":
         {
+            const beginDigit = Math.floor(Math.log10(min));
+            const endDigit = Math.ceil(Math.log10(max));
             if (view.viewScale < 100)
             {
                 const scale = 10;
-                const begin = Math.floor(Math.log10(min));
-                const end = Math.ceil(Math.log10(max));
-                for(let a = begin; a <= end; ++a)
+                for(let a = beginDigit; a <= endDigit; ++a)
                 {
                     ticks.push({ value: Math.pow(scale, a), type: "long", });
                 }
@@ -98,14 +98,36 @@ export const designTicks = (view: Type.View, lane: Type.Lane): { value: Type.Nam
             else
             if (100 < view.viewScale)
             {
-
+                const scale = 10;
+                const begin = Math.pow(10, beginDigit);
+                const end = Math.pow(10, endDigit);
+                for(let a = begin; a <= end; a += begin /scale)
+                {
+                    const value = a;
+                    if (value <= max)
+                    {
+                        ticks.push({ value, type: "long", });
+                        for(let b = 0; b < scale; ++b)
+                        {
+                            const value = a +(b *(begin /(scale *scale)));
+                            if (value <= max)
+                            {
+                                ticks.push
+                                ({
+                                    value,
+                                    type: 5 !== b ? "short": "medium",
+                                });
+                            }
+                        }
+                    }
+                }
             }
             else
             {
                 const scale = 10;
                 const halfScale = scale / 2;
-                const begin = Math.pow(scale, Math.floor(Math.log10(min)));
-                const end = Math.pow(scale, Math.ceil(Math.log10(max)));
+                const begin = Math.pow(10, beginDigit);
+                const end = Math.pow(10, endDigit);
                 for(let a = begin; a <= end; a *= scale)
                 {
                     for(let b = 1; b < scale; ++b)
