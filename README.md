@@ -1,4 +1,4 @@
-# Slide Rule
+# Smart Slide Rule
 
 > [!WARNING]
 > UNDERCONSTRUCTION

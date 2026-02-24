@@ -7,7 +7,6 @@ export const data: Type.View =
 {
     viewMode: "ruler",
     viewScaleExponent: 3,
-    viewScale: 1000,
     scaleMode: "logarithmic",
     baseOfLogarithm: 10,
 };
@@ -29,7 +28,7 @@ export const getViewScale = (): number => Math.pow(10, data.viewScaleExponent);
 export const setViewScaleExponent = (exponent: number): void =>
 {
     data.viewScaleExponent = exponent;
-    data.viewScale = Math.pow(10, exponent);
+    //data.viewScale = Math.pow(10, exponent);
     Url.addParameter("view-scale", exponent.toString());
 };
 export const getScaleMode = (): Type.ScaleMode => data.scaleMode;

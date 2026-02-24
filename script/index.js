@@ -80,7 +80,7 @@ define("script/url", ["require", "exports"], function (require, exports) {
 define("script/type", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.scaleModeList = exports.viewModeList = exports.getNext = exports.getNamedNumberLabel = exports.getNamedNumberValue = exports.phi = exports.namedNumberList = void 0;
+    exports.getViewScale = exports.scaleModeList = exports.viewModeList = exports.getNext = exports.getNamedNumberLabel = exports.getNamedNumberValue = exports.phi = exports.namedNumberList = void 0;
     exports.namedNumberList = ["phi", "e", "pi"];
     exports.phi = (1 + Math.sqrt(5)) / 2;
     // phi approximately 1.618033988749895
@@ -117,6 +117,8 @@ define("script/type", ["require", "exports"], function (require, exports) {
     exports.getNext = getNext;
     exports.viewModeList = ["ruler", "grid", "graph"];
     exports.scaleModeList = ["logarithmic", "linear"];
+    var getViewScale = function (view) { return Math.pow(10, view.viewScaleExponent); };
+    exports.getViewScale = getViewScale;
 });
 define("script/ui", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -377,18 +379,19 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
     exports.getAllLanes = getAllLanes;
     var getValueAt = function (lane, position, view) {
         var _a;
+        var viewScale = Type.getViewScale(view);
         switch (lane.type) {
             case "logarithmic":
                 if ("logarithmic" === view.scaleMode) {
                     var logScale = Type.getNamedNumberValue(lane.logScale);
-                    var value = Math.pow(logScale, position / view.viewScale);
+                    var value = Math.pow(logScale, position / viewScale);
                     console.log("getValueAt: lane: ".concat((_a = lane.name) !== null && _a !== void 0 ? _a : "unnamed", ", position: ").concat(position, ", value: ").concat(value));
-                    console.log("logScale: ".concat(logScale, ", viewScale: ").concat(view.viewScale));
+                    console.log("logScale: ".concat(logScale, ", viewScale: ").concat(viewScale));
                     return lane.isInverted ? (logScale - value) : value;
                 }
                 else // linear
                  {
-                    var value = position / view.viewScale;
+                    var value = position / viewScale;
                     return lane.isInverted ? (Type.getNamedNumberValue(lane.logScale) - value) : value;
                 }
             default:
@@ -397,17 +400,18 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
     };
     exports.getValueAt = getValueAt;
     var getPositionAt = function (lane, value, view) {
+        var viewScale = Type.getViewScale(view);
         switch (lane.type) {
             case "logarithmic":
                 if ("logarithmic" === view.scaleMode) {
                     var logScale = Type.getNamedNumberValue(lane.logScale);
-                    var position = Math.log(value) / Math.log(logScale) * view.viewScale;
-                    return lane.isInverted ? (Math.log(logScale - value) / Math.log(logScale) * view.viewScale) : position;
+                    var position = Math.log(value) / Math.log(logScale) * viewScale;
+                    return lane.isInverted ? (Math.log(logScale - value) / Math.log(logScale) * viewScale) : position;
                 }
                 else // linear
                  {
-                    var position = value * view.viewScale;
-                    return lane.isInverted ? ((Type.getNamedNumberValue(lane.logScale) - value) * view.viewScale) : position;
+                    var position = value * viewScale;
+                    return lane.isInverted ? ((Type.getNamedNumberValue(lane.logScale) - value) * viewScale) : position;
                 }
             default:
                 throw new Error("\uD83E\uDD8B FIXME: getPositionAt not implemented for lane type: ".concat(lane.type));
@@ -415,6 +419,7 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
     };
     exports.getPositionAt = getPositionAt;
     var getFirstLabelValue = function (lane, view) {
+        var viewScale = Type.getViewScale(view);
         var minValue = (0, exports.getValueAt)(lane, 0, view);
         //const maxValue = getValueAt(lane, config.render.ruler.tickLabel.maxInterval, view);
         switch (view.scaleMode) {
@@ -427,7 +432,7 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
                 }
             case "linear":
                 {
-                    var labelValueUnit = view.viewScale * 10;
+                    var labelValueUnit = viewScale * 10;
                     var firstLabelValue = Math.floor(minValue / labelValueUnit) * labelValueUnit;
                     return { firstLabelValue: firstLabelValue, labelValueUnit: labelValueUnit, };
                 }
@@ -438,6 +443,7 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
     exports.getFirstLabelValue = getFirstLabelValue;
     var designTicks = function (view, lane) {
         var _a;
+        var viewScale = Type.getViewScale(view);
         var height = window.innerHeight;
         var min = (0, exports.getValueAt)(lane, 0, view);
         var max = (0, exports.getValueAt)(lane, height, view);
@@ -447,13 +453,13 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
                 {
                     var beginDigit = Math.floor(Math.log10(min));
                     var endDigit = Math.ceil(Math.log10(max));
-                    if (view.viewScale < 100) {
+                    if (viewScale < 100) {
                         var scale = 10;
                         for (var a = beginDigit; a <= endDigit; ++a) {
                             ticks.push({ value: Math.pow(scale, a), type: "long", });
                         }
                     }
-                    else if (100 < view.viewScale) {
+                    else if (100 < viewScale) {
                         var scale = 10;
                         var begin = Math.pow(10, beginDigit);
                         var end = Math.pow(10, endDigit);
@@ -510,7 +516,7 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
                 break;
             case "linear":
                 {
-                    var labelUnit = view.viewScale * 10;
+                    var labelUnit = viewScale * 10;
                     for (var value = Math.ceil(min / labelUnit) * labelUnit; value <= max; value += labelUnit) {
                         ticks.push({ value: value, type: "long", });
                         for (var i = 1; i < 10; ++i) {
@@ -528,7 +534,7 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
             default:
                 throw new Error("\uD83E\uDD8B FIXME: designTicks not implemented for scale mode: ".concat(view.scaleMode));
         }
-        if (100 < view.viewScale) {
+        if (100 < viewScale) {
             Type.namedNumberList.forEach(function (value) {
                 var actualNumber = Type.getNamedNumberValue(value);
                 if (min <= actualNumber && actualNumber <= max) {
@@ -694,7 +700,6 @@ define("script/view", ["require", "exports", "script/number", "script/type", "sc
     exports.data = {
         viewMode: "ruler",
         viewScaleExponent: 3,
-        viewScale: 1000,
         scaleMode: "logarithmic",
         baseOfLogarithm: 10,
     };
@@ -720,7 +725,7 @@ define("script/view", ["require", "exports", "script/number", "script/type", "sc
     exports.getViewScale = getViewScale;
     var setViewScaleExponent = function (exponent) {
         exports.data.viewScaleExponent = exponent;
-        exports.data.viewScale = Math.pow(10, exponent);
+        //data.viewScale = Math.pow(10, exponent);
         Url.addParameter("view-scale", exponent.toString());
     };
     exports.setViewScaleExponent = setViewScaleExponent;

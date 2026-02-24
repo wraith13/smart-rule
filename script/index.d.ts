@@ -20,10 +20,10 @@ declare module "script/type" {
     export interface View {
         viewMode: ViewMode;
         viewScaleExponent: number;
-        viewScale: number;
         scaleMode: ScaleMode;
         baseOfLogarithm: NamedNumber;
     }
+    export const getViewScale: (view: View) => number;
     export type PrimaryLane = "logarithmic" | "sine" | "cosine" | "tangent" | "cotangent" | "linear";
     export interface LaneBase {
         type: PrimaryLane;

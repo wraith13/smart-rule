@@ -12,20 +12,21 @@ export const getAllLanes = (): Type.Lane[] =>
     data.slides.reduce((allLanes, slide) => allLanes.concat(slide.lanes), [] as Type.Lane[]);
 export const getValueAt = (lane: Type.Lane, position: number, view: Type.View): number =>
 {
+    const viewScale = Type.getViewScale(view);
     switch(lane.type)
     {
     case "logarithmic":
         if ("logarithmic" === view.scaleMode)
         {
             const logScale = Type.getNamedNumberValue(lane.logScale);
-            const value = Math.pow(logScale, position / view.viewScale);
+            const value = Math.pow(logScale, position / viewScale);
             console.log(`getValueAt: lane: ${lane.name ?? "unnamed"}, position: ${position}, value: ${value}`);
-            console.log(`logScale: ${logScale}, viewScale: ${view.viewScale}`);
+            console.log(`logScale: ${logScale}, viewScale: ${viewScale}`);
             return lane.isInverted ? (logScale - value) : value;
         }
         else // linear
         {
-            const value = position / view.viewScale;
+            const value = position / viewScale;
             return lane.isInverted ? (Type.getNamedNumberValue(lane.logScale) - value) : value;
         }
     default:
@@ -34,19 +35,20 @@ export const getValueAt = (lane: Type.Lane, position: number, view: Type.View): 
 };
 export const getPositionAt = (lane: Type.Lane, value: number, view: Type.View): number =>
 {
+    const viewScale = Type.getViewScale(view);
     switch(lane.type)
     {
     case "logarithmic":
         if ("logarithmic" === view.scaleMode)
         {
             const logScale = Type.getNamedNumberValue(lane.logScale);
-            const position = Math.log(value) / Math.log(logScale) * view.viewScale;
-            return lane.isInverted ? (Math.log(logScale - value) / Math.log(logScale) * view.viewScale) : position;
+            const position = Math.log(value) / Math.log(logScale) * viewScale;
+            return lane.isInverted ? (Math.log(logScale -value) / Math.log(logScale) *viewScale): position;
         }
         else // linear
         {
-            const position = value * view.viewScale;
-            return lane.isInverted ? ((Type.getNamedNumberValue(lane.logScale) - value) * view.viewScale) : position;
+            const position = value *viewScale;
+            return lane.isInverted ? ((Type.getNamedNumberValue(lane.logScale) -value) *viewScale): position;
         }
     default:
         throw new Error(`🦋 FIXME: getPositionAt not implemented for lane type: ${lane.type}`);
@@ -54,6 +56,7 @@ export const getPositionAt = (lane: Type.Lane, value: number, view: Type.View): 
 };
 export const getFirstLabelValue = (lane: Type.Lane, view: Type.View): { firstLabelValue: number, labelValueUnit: number, } =>
 {
+    const viewScale = Type.getViewScale(view);
     const minValue = getValueAt(lane, 0, view);
     //const maxValue = getValueAt(lane, config.render.ruler.tickLabel.maxInterval, view);
     switch(view.scaleMode)
@@ -67,7 +70,7 @@ export const getFirstLabelValue = (lane: Type.Lane, view: Type.View): { firstLab
         }
     case "linear":
         {
-            const labelValueUnit = view.viewScale *10;
+            const labelValueUnit = viewScale *10;
             const firstLabelValue = Math.floor(minValue / labelValueUnit) * labelValueUnit;
             return { firstLabelValue, labelValueUnit, };
         }
@@ -77,6 +80,7 @@ export const getFirstLabelValue = (lane: Type.Lane, view: Type.View): { firstLab
 }
 export const designTicks = (view: Type.View, lane: Type.Lane): { value: Type.NamedNumber, type: Type.TickType, }[] =>
 {
+    const viewScale = Type.getViewScale(view);
     const height = window.innerHeight;
     const min = getValueAt(lane, 0, view);
     const max = getValueAt(lane, height, view);
@@ -87,7 +91,7 @@ export const designTicks = (view: Type.View, lane: Type.Lane): { value: Type.Nam
         {
             const beginDigit = Math.floor(Math.log10(min));
             const endDigit = Math.ceil(Math.log10(max));
-            if (view.viewScale < 100)
+            if (viewScale < 100)
             {
                 const scale = 10;
                 for(let a = beginDigit; a <= endDigit; ++a)
@@ -96,7 +100,7 @@ export const designTicks = (view: Type.View, lane: Type.Lane): { value: Type.Nam
                 }
             }
             else
-            if (100 < view.viewScale)
+            if (100 < viewScale)
             {
                 const scale = 10;
                 const begin = Math.pow(10, beginDigit);
@@ -166,7 +170,7 @@ export const designTicks = (view: Type.View, lane: Type.Lane): { value: Type.Nam
         break;
     case "linear":
         {
-            const labelUnit = view.viewScale * 10;
+            const labelUnit = viewScale * 10;
             for(let value = Math.ceil(min / labelUnit) * labelUnit; value <= max; value += labelUnit)
             {
                 ticks.push({ value, type: "long", });
@@ -188,7 +192,7 @@ export const designTicks = (view: Type.View, lane: Type.Lane): { value: Type.Nam
     default:
         throw new Error(`🦋 FIXME: designTicks not implemented for scale mode: ${view.scaleMode}`);
     }
-    if (100 < view.viewScale)
+    if (100 < viewScale)
     {
         Type.namedNumberList.forEach
         (

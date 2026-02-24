@@ -45,10 +45,10 @@ export interface View
 {
     viewMode: ViewMode;
     viewScaleExponent: number;
-    viewScale: number;
     scaleMode: ScaleMode;
     baseOfLogarithm: NamedNumber;
 }
+export const getViewScale = (view: View): number => Math.pow(10, view.viewScaleExponent);
 export type PrimaryLane = "logarithmic" | "sine" | "cosine" | "tangent" | "cotangent" | "linear";
 export interface LaneBase // 🔥 後で evil-type.ts ベースに！
 {

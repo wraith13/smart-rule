@@ -1,7 +1,7 @@
 {
-    "name": "@wraith13/slide-rule",
+    "name": "@wraith13/smart-rule",
     "version": "0.0.0",
-    "description": "Slide Rule Web App",
+    "description": "Smart Slide Rule Web App",
     "scripts": {
         "build all": "node ./build.js ../build.json all",
         "build script": "tsc -p ./script/tsconfig.json",
@@ -9,14 +9,14 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/wraith13/slide-rule.git"
+        "url": "git+https://github.com/wraith13/smart-rule.git"
     },
     "author": "wraith13",
     "license": "BSL-1.0",
     "bugs": {
-        "url": "https://github.com/wraith13/slide-rule/issues"
+        "url": "https://github.com/wraith13/smart-rule/issues"
     },
-    "homepage": "https://github.com/wraith13/slide-rule/#readme",
+    "homepage": "https://github.com/wraith13/smart-rule/#readme",
     "devDependencies": {
         "@types/node": "^25.0.9",
         "typescript": "^5.9.3"
