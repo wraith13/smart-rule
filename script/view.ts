@@ -6,6 +6,7 @@ import config from "@resource/config.json";
 export const data: Type.View =
 {
     viewMode: "ruler",
+    viewScaleExponent: 3,
     viewScale: 1000,
     scaleMode: "logarithmic",
     baseOfLogarithm: 10,
@@ -24,6 +25,13 @@ export const setViewMode = (mode: Type.ViewMode): void =>
     UI.setAriaHidden(UI.rulerView, ! isRulerView());
     UI.setAriaHidden(UI.gridView, ! isGridView());
 };
+export const getViewScale = (): number => Math.pow(10, data.viewScaleExponent);
+export const setViewScaleExponent = (exponent: number): void =>
+{
+    data.viewScaleExponent = exponent;
+    data.viewScale = Math.pow(10, exponent);
+    Url.addParameter("view-scale", exponent.toString());
+};
 export const getScaleMode = (): Type.ScaleMode => data.scaleMode;
 export const isLogarithmicScale = (): boolean => data.scaleMode === "logarithmic";
 export const isLinearScale = (): boolean => data.scaleMode === "linear";
@@ -38,10 +46,10 @@ export const initialize = () =>
 {
     setViewMode(Url.get("view-mode") as Type.ViewMode ?? config.view?.defaultViewMode ?? "ruler");
     setScaleMode(Url.get("scale-mode") as Type.ScaleMode ?? config.view?.defaultScaleMode ?? "logarithmic");
-    data.viewScale = Number.parse(Url.get("view-scale")) ?? data.viewScale;
+    setViewScaleExponent(Number.parse(Url.get("view-scale")) ?? data.viewScaleExponent);
     data.baseOfLogarithm = Number.orUndefined(Type.getNamedNumberValue(Url.get("base") as Type.NamedNumber)) ??
         config.view?.baseOfLogarithm?.default ??
         10;
-    console.log(`View initialized: mode=${data.viewMode}, scale=${data.viewScale}, scaleMode=${data.scaleMode}, base=${data.baseOfLogarithm}`);
+    console.log(`View initialized: mode=${data.viewMode}, scale=${data.viewScaleExponent}, scaleMode=${data.scaleMode}, base=${data.baseOfLogarithm}`);
 };
 

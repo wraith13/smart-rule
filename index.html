@@ -2,7 +2,7 @@
 <!--
     This file is genereted by build.js. このファイルは build.js によって生成されました。
     build options: ../build.json all
-    build at: Mon Feb 23 2026 08:36:15 GMT+0900 (日本標準時)
+    build at: Mon Feb 23 2026 18:55:27 GMT+0900 (日本標準時)
     repository: https://github.com/wraith13/slide-rule/
 -->
 <!-- license:
@@ -240,8 +240,8 @@ button:focus
 </div>
 <script type="text/javascript">
 const build = {
-    at: "Mon Feb 23 2026 08:36:15 GMT+0900 (日本標準時)",
-    tick: 1771803375321
+    at: "Mon Feb 23 2026 18:55:27 GMT+0900 (日本標準時)",
+    tick: 1771840527006
 };
 const evilCommonjsConfig = {
     "log": {
@@ -1288,7 +1288,7 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
 define("script/view", ["require", "exports", "script/number", "script/type", "script/url", "script/ui", "resource/config"], function (require, exports, Number, Type, Url, UI, config_json_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.setScaleMode = exports.isLinearScale = exports.isLogarithmicScale = exports.getScaleMode = exports.setViewMode = exports.isGraphView = exports.isGridView = exports.isRulerView = exports.getViewMode = exports.data = void 0;
+    exports.initialize = exports.setScaleMode = exports.isLinearScale = exports.isLogarithmicScale = exports.getScaleMode = exports.setViewScaleExponent = exports.getViewScale = exports.setViewMode = exports.isGraphView = exports.isGridView = exports.isRulerView = exports.getViewMode = exports.data = void 0;
     Number = __importStar(Number);
     Type = __importStar(Type);
     Url = __importStar(Url);
@@ -1296,6 +1296,7 @@ define("script/view", ["require", "exports", "script/number", "script/type", "sc
     config_json_2 = __importDefault(config_json_2);
     exports.data = {
         viewMode: "ruler",
+        viewScaleExponent: 3,
         viewScale: 1000,
         scaleMode: "logarithmic",
         baseOfLogarithm: 10,
@@ -1318,6 +1319,14 @@ define("script/view", ["require", "exports", "script/number", "script/type", "sc
         UI.setAriaHidden(UI.gridView, !(0, exports.isGridView)());
     };
     exports.setViewMode = setViewMode;
+    var getViewScale = function () { return Math.pow(10, exports.data.viewScaleExponent); };
+    exports.getViewScale = getViewScale;
+    var setViewScaleExponent = function (exponent) {
+        exports.data.viewScaleExponent = exponent;
+        exports.data.viewScale = Math.pow(10, exponent);
+        Url.addParameter("view-scale", exponent.toString());
+    };
+    exports.setViewScaleExponent = setViewScaleExponent;
     var getScaleMode = function () { return exports.data.scaleMode; };
     exports.getScaleMode = getScaleMode;
     var isLogarithmicScale = function () { return exports.data.scaleMode === "logarithmic"; };
@@ -1335,9 +1344,9 @@ define("script/view", ["require", "exports", "script/number", "script/type", "sc
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
         (0, exports.setViewMode)((_c = (_a = Url.get("view-mode")) !== null && _a !== void 0 ? _a : (_b = config_json_2.default.view) === null || _b === void 0 ? void 0 : _b.defaultViewMode) !== null && _c !== void 0 ? _c : "ruler");
         (0, exports.setScaleMode)((_f = (_d = Url.get("scale-mode")) !== null && _d !== void 0 ? _d : (_e = config_json_2.default.view) === null || _e === void 0 ? void 0 : _e.defaultScaleMode) !== null && _f !== void 0 ? _f : "logarithmic");
-        exports.data.viewScale = (_g = Number.parse(Url.get("view-scale"))) !== null && _g !== void 0 ? _g : exports.data.viewScale;
+        (0, exports.setViewScaleExponent)((_g = Number.parse(Url.get("view-scale"))) !== null && _g !== void 0 ? _g : exports.data.viewScaleExponent);
         exports.data.baseOfLogarithm = (_l = (_h = Number.orUndefined(Type.getNamedNumberValue(Url.get("base")))) !== null && _h !== void 0 ? _h : (_k = (_j = config_json_2.default.view) === null || _j === void 0 ? void 0 : _j.baseOfLogarithm) === null || _k === void 0 ? void 0 : _k.default) !== null && _l !== void 0 ? _l : 10;
-        console.log("View initialized: mode=".concat(exports.data.viewMode, ", scale=").concat(exports.data.viewScale, ", scaleMode=").concat(exports.data.scaleMode, ", base=").concat(exports.data.baseOfLogarithm));
+        console.log("View initialized: mode=".concat(exports.data.viewMode, ", scale=").concat(exports.data.viewScaleExponent, ", scaleMode=").concat(exports.data.scaleMode, ", base=").concat(exports.data.baseOfLogarithm));
     };
     exports.initialize = initialize;
 });
@@ -1626,7 +1635,7 @@ define("script/graph", ["require", "exports"], function (require, exports) {
 define("script/event", ["require", "exports", "script/type", "script/environment", "script/view", "script/ui", "script/render", "script/ruler", "script/grid", "script/graph"], function (require, exports, Type, Environment, View, UI, Render, Ruler, Grid, Graph) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.resetZoom = exports.zoomOut = exports.zoomIn = exports.updateScaleModeRoundBar = exports.updateViewModeRoundBar = void 0;
+    exports.initialize = exports.resetZoom = exports.zoom = exports.zoomOut = exports.zoomIn = exports.updateScaleModeRoundBar = exports.updateViewModeRoundBar = void 0;
     Type = __importStar(Type);
     Environment = __importStar(Environment);
     View = __importStar(View);
@@ -1648,30 +1657,31 @@ define("script/event", ["require", "exports", "script/type", "script/environment
     }); };
     exports.updateScaleModeRoundBar = updateScaleModeRoundBar;
     var zoomIn = function () {
-        var current = View.data.viewScale;
-        var next = current * 1.25;
-        View.data.viewScale = next;
-        Render.markDirty();
-        console.log("Zoomed in: ".concat(current, " -> ").concat(next));
+        return (0, exports.zoom)(0.25);
     };
     exports.zoomIn = zoomIn;
     var zoomOut = function () {
-        var current = View.data.viewScale;
-        var next = current / 1.25;
-        View.data.viewScale = next;
-        Render.markDirty();
-        console.log("Zoomed out: ".concat(current, " -> ").concat(next));
+        return (0, exports.zoom)(-0.25);
     };
     exports.zoomOut = zoomOut;
+    var zoom = function (delta) {
+        var current = View.data.viewScaleExponent;
+        var next = current + delta;
+        View.setViewScaleExponent(next);
+        Render.markDirty();
+        console.log("Zoomed(".concat(delta, "): ").concat(current, " -> ").concat(next));
+    };
+    exports.zoom = zoom;
     var resetZoom = function () {
-        var current = View.data.viewScale;
-        var next = 100;
-        View.data.viewScale = next;
+        var current = View.data.viewScaleExponent;
+        var next = 3;
+        View.setViewScaleExponent(next);
         Render.markDirty();
         console.log("Zoom reset: ".concat(current, " -> ").concat(next));
     };
     exports.resetZoom = resetZoom;
     var touchZoomPreviousDistance = null;
+    var activeTouches = new Map();
     var initialize = function () {
         console.log("Event initialized");
         window.addEventListener("resize", function () {
@@ -1715,38 +1725,59 @@ define("script/event", ["require", "exports", "script/type", "script/environment
                 }
             }
         });
+        document.addEventListener("pointerdown", function (event) {
+            if ("touch" === event.pointerType) {
+                activeTouches.set(event.pointerId, { x: event.clientX, y: event.clientY });
+                // prevent default to avoid browser gestures interfering if desired
+                // keep passive false on pointerdown to allow preventDefault if necessary
+                event.preventDefault();
+            }
+        }, {
+            passive: false,
+        });
         document.addEventListener("pointerup", function (event) {
-            if ("touch" === event.pointerType && event.isPrimary) {
-                touchZoomPreviousDistance = null;
+            if ("touch" === event.pointerType) {
+                activeTouches.delete(event.pointerId);
+                if (activeTouches.size < 2) {
+                    touchZoomPreviousDistance = null;
+                }
             }
         }, {
             passive: false,
         });
         document.addEventListener("pointercancel", function (event) {
-            if ("touch" === event.pointerType && event.isPrimary) {
-                touchZoomPreviousDistance = null;
+            if ("touch" === event.pointerType) {
+                activeTouches.delete(event.pointerId);
+                if (activeTouches.size < 2) {
+                    touchZoomPreviousDistance = null;
+                }
             }
         }, {
             passive: false,
         });
         document.addEventListener("pointermove", function (event) {
-            if ("touch" === event.pointerType) // && event.isPrimary)
-             {
-                var touches = Array.from(event.getCoalescedEvents()).filter(function (e) { return e.pointerType === "touch"; });
-                if (2 <= touches.length) {
-                    var touch1 = touches[0];
-                    var touch2 = touches[1];
-                    var currentDistance = Math.hypot(touch2.clientX - touch1.clientX, touch2.clientY - touch1.clientY);
-                    if (null !== touchZoomPreviousDistance) {
-                        var delta = currentDistance - touchZoomPreviousDistance;
-                        if (delta > 0) {
-                            (0, exports.zoomIn)();
+            if ("touch" === event.pointerType) {
+                if (activeTouches.has(event.pointerId)) {
+                    activeTouches.set(event.pointerId, { x: event.clientX, y: event.clientY });
+                    if (2 <= activeTouches.size) {
+                        var iter = activeTouches.values();
+                        var a = iter.next().value;
+                        var b = iter.next().value;
+                        var currentDistance = Math.hypot(b.x - a.x, b.y - a.y);
+                        if (null !== touchZoomPreviousDistance) {
+                            var delta = currentDistance - touchZoomPreviousDistance;
+                            (0, exports.zoom)(delta * 0.01);
+                            // if (0 < delta)
+                            // {
+                            //     zoomIn();
+                            // }
+                            // else if (delta < 0)
+                            // {
+                            //     zoomOut();
+                            // }
                         }
-                        else if (delta < 0) {
-                            (0, exports.zoomOut)();
-                        }
+                        touchZoomPreviousDistance = currentDistance;
                     }
-                    touchZoomPreviousDistance = currentDistance;
                 }
             }
         }, {

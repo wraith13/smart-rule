@@ -26,30 +26,27 @@ export const updateScaleModeRoundBar = () => UI.updateRoundBar
     }
 );
 export const zoomIn = (): void =>
-{
-    const current = View.data.viewScale;
-    const next = current * 1.25;
-    View.data.viewScale = next;
-    Render.markDirty();
-    console.log(`Zoomed in: ${current} -> ${next}`);
-};
+    zoom(0.25);
 export const zoomOut = (): void =>
+    zoom(-0.25);
+export const zoom = (delta: number): void =>
 {
-    const current = View.data.viewScale;
-    const next = current / 1.25;
-    View.data.viewScale = next;
+    const current = View.data.viewScaleExponent;
+    const next = current +delta;
+    View.setViewScaleExponent(next);
     Render.markDirty();
-    console.log(`Zoomed out: ${current} -> ${next}`);
+    console.log(`Zoomed(${delta}): ${current} -> ${next}`);
 };
 export const resetZoom = (): void =>
 {
-    const current = View.data.viewScale;
-    const next = 100;
-    View.data.viewScale = next;
+    const current = View.data.viewScaleExponent;
+    const next = 3;
+    View.setViewScaleExponent(next);
     Render.markDirty();
     console.log(`Zoom reset: ${current} -> ${next}`);
 };
 let touchZoomPreviousDistance: number | null = null;
+const activeTouches = new Map<number, { x: number; y: number }>();
 export const initialize = () =>
 {
     console.log("Event initialized");
@@ -118,58 +115,91 @@ export const initialize = () =>
     );
     document.addEventListener
     (
-        "pointerup",
+        "pointerdown",
         event =>
         {
-            if ("touch" === event.pointerType && event.isPrimary)
+            if ("touch" === event.pointerType)
             {
-                touchZoomPreviousDistance = null;
+                activeTouches.set(event.pointerId, { x: event.clientX, y: event.clientY });
+                // prevent default to avoid browser gestures interfering if desired
+                // keep passive false on pointerdown to allow preventDefault if necessary
+                event.preventDefault();
             }
         },
         {
             passive: false,
         }
     );
+
+    document.addEventListener
+    (
+        "pointerup",
+        event =>
+        {
+            if ("touch" === event.pointerType)
+            {
+                activeTouches.delete(event.pointerId);
+                if (activeTouches.size < 2)
+                {
+                    touchZoomPreviousDistance = null;
+                }
+            }
+        },
+        {
+            passive: false,
+        }
+    );
+
     document.addEventListener
     (
         "pointercancel",
         event =>
         {
-            if ("touch" === event.pointerType && event.isPrimary)
+            if ("touch" === event.pointerType)
             {
-                touchZoomPreviousDistance = null;
+                activeTouches.delete(event.pointerId);
+                if (activeTouches.size < 2)
+                {
+                    touchZoomPreviousDistance = null;
+                }
             }
         },
         {
             passive: false,
         }
     );
+
     document.addEventListener
     (
         "pointermove",
         event =>
         {
-            if ("touch" === event.pointerType) // && event.isPrimary)
+            if ("touch" === event.pointerType)
             {
-                const touches = Array.from(event.getCoalescedEvents()).filter(e => e.pointerType === "touch");
-                if (2 <= touches.length)
+                if (activeTouches.has(event.pointerId))
                 {
-                    const touch1 = touches[0];
-                    const touch2 = touches[1];
-                    const currentDistance = Math.hypot(touch2.clientX - touch1.clientX, touch2.clientY - touch1.clientY);
-                    if (null !== touchZoomPreviousDistance)
+                    activeTouches.set(event.pointerId, { x: event.clientX, y: event.clientY });
+                    if (2 <= activeTouches.size)
                     {
-                        const delta = currentDistance - touchZoomPreviousDistance;
-                        if (delta > 0)
+                        const iter = activeTouches.values();
+                        const a = iter.next().value;
+                        const b = iter.next().value;
+                        const currentDistance = Math.hypot(b!.x - a!.x, b!.y - a!.y);
+                        if (null !== touchZoomPreviousDistance)
                         {
-                            zoomIn();
+                            const delta = currentDistance - touchZoomPreviousDistance;
+                            zoom(delta * 0.01);
+                            // if (0 < delta)
+                            // {
+                            //     zoomIn();
+                            // }
+                            // else if (delta < 0)
+                            // {
+                            //     zoomOut();
+                            // }
                         }
-                        else if (delta < 0)
-                        {
-                            zoomOut();
-                        }
+                        touchZoomPreviousDistance = currentDistance;
                     }
-                    touchZoomPreviousDistance = currentDistance;
                 }
             }
         },

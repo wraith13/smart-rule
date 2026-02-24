@@ -44,6 +44,7 @@ export type ScaleMode = typeof scaleModeList[number];
 export interface View
 {
     viewMode: ViewMode;
+    viewScaleExponent: number;
     viewScale: number;
     scaleMode: ScaleMode;
     baseOfLogarithm: NamedNumber;

@@ -19,6 +19,7 @@ declare module "script/type" {
     export type ScaleMode = typeof scaleModeList[number];
     export interface View {
         viewMode: ViewMode;
+        viewScaleExponent: number;
         viewScale: number;
         scaleMode: ScaleMode;
         baseOfLogarithm: NamedNumber;
@@ -109,6 +110,8 @@ declare module "script/view" {
     export const isGridView: () => boolean;
     export const isGraphView: () => boolean;
     export const setViewMode: (mode: Type.ViewMode) => void;
+    export const getViewScale: () => number;
+    export const setViewScaleExponent: (exponent: number) => void;
     export const getScaleMode: () => Type.ScaleMode;
     export const isLogarithmicScale: () => boolean;
     export const isLinearScale: () => boolean;
@@ -187,6 +190,7 @@ declare module "script/event" {
     export const updateScaleModeRoundBar: () => void;
     export const zoomIn: () => void;
     export const zoomOut: () => void;
+    export const zoom: (delta: number) => void;
     export const resetZoom: () => void;
     export const initialize: () => void;
 }
