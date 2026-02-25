@@ -2,6 +2,7 @@
 import * as Type from "./type";
 import * as Environment from "./environment";
 import * as View from "./view";
+import * as Model from "./model";
 import * as UI from "./ui";
 import * as Render from "./render";
 import * as Ruler from "./ruler";
@@ -36,6 +37,15 @@ export const zoom = (delta: number): void =>
     View.setViewScaleExponent(next);
     Render.markDirty();
     console.log(`Zoomed(${delta}): ${current} -> ${next}`);
+};
+export const scroll = (delta: number): void =>
+{
+    const rootLane = Model.getRootLane();
+    const current = rootLane.offset;
+    const next = current + delta;
+    rootLane.offset = next;
+    Render.markDirty();
+    console.log(`Scrolled(${delta}): ${current} -> ${next}`);
 };
 export const resetZoom = (): void =>
 {
@@ -77,6 +87,10 @@ export const initialize = () =>
                     zoomIn();
                 }
             }
+            else
+            {
+                scroll(event.deltaY);
+            }
         },
         {
             passive: false,
@@ -105,6 +119,23 @@ export const initialize = () =>
                 case "0":
                     event.preventDefault();
                     resetZoom();
+                    break;
+                default:
+                    console.log(`Keydown event: key=${event.key}`);
+                    break;
+                }
+            }
+            else
+            {
+                switch(event.key)
+                {
+                case "ArrowUp":
+                    event.preventDefault();
+                    scroll(-10);
+                    break;
+                case "ArrowDown":
+                    event.preventDefault();
+                    scroll(10);
                     break;
                 default:
                     console.log(`Keydown event: key=${event.key}`);
@@ -179,7 +210,11 @@ export const initialize = () =>
                 if (activeTouches.has(event.pointerId))
                 {
                     activeTouches.set(event.pointerId, { x: event.clientX, y: event.clientY });
-                    if (2 <= activeTouches.size)
+                    if (activeTouches.size <= 1)
+                    {
+                        scroll(-event.movementY);
+                    }
+                    else
                     {
                         const iter = activeTouches.values();
                         const a = iter.next().value;

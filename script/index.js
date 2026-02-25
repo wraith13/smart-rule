@@ -234,10 +234,10 @@ define("script/number", ["require", "exports"], function (require, exports) {
     exports.orUndefined = orUndefined;
 });
 define("resource/config", [], {
-    "applicationTitle": "Slide Rule",
+    "applicationTitle": "Smart Rule",
     "repositoryUrl": "https://github.com/wraith13/slide-rule/",
     "canonicalUrl": "https://wraith13.github.io/slide-rule/",
-    "description": "Slide Rule Web App",
+    "description": "Smart Slide Rule Web App",
     "noscriptMessage": "JavaScript is disabled. Please enable JavaScript.",
     "model": {
         "lane": {
@@ -363,7 +363,7 @@ define("resource/config", [], {
 define("script/model", ["require", "exports", "script/number", "script/type", "script/url", "resource/config"], function (require, exports, Number, Type, Url, config_json_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.makeSure = exports.removeLane = exports.makeLane = exports.addLane = exports.getSlideFromLane = exports.getLane = exports.getLaneAndSlide = exports.makeSureSlide = exports.makeSlide = exports.getLaneIndex = exports.getSlideIndex = exports.isRooeSlide = exports.isRootLane = exports.makeRootLane = exports.designTicks = exports.getFirstLabelValue = exports.getPositionAt = exports.getValueAt = exports.getAllLanes = exports.RootLaneIndex = exports.data = void 0;
+    exports.initialize = exports.makeSure = exports.removeLane = exports.makeLane = exports.addLane = exports.getSlideFromLane = exports.getLane = exports.getLaneAndSlide = exports.makeSureSlide = exports.makeSlide = exports.getLaneIndex = exports.getSlideIndex = exports.isRootSlide = exports.getRootSlide = exports.isRootLane = exports.getRootLane = exports.makeRootLane = exports.designTicks = exports.getFirstLabelValue = exports.getPositionAt = exports.getValueAt = exports.getAllLanes = exports.RootLaneIndex = exports.data = void 0;
     Number = __importStar(Number);
     Type = __importStar(Type);
     Url = __importStar(Url);
@@ -384,14 +384,14 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
             case "logarithmic":
                 if ("logarithmic" === view.scaleMode) {
                     var logScale = Type.getNamedNumberValue(lane.logScale);
-                    var value = Math.pow(logScale, position / viewScale);
-                    console.log("getValueAt: lane: ".concat((_a = lane.name) !== null && _a !== void 0 ? _a : "unnamed", ", position: ").concat(position, ", value: ").concat(value));
+                    var value = Math.pow(logScale, (position + lane.offset) / viewScale);
+                    console.log("getValueAt: lane: ".concat((_a = lane.name) !== null && _a !== void 0 ? _a : "unnamed", ", position: ").concat(position, ", offset: ").concat(lane.offset, ", value: ").concat(value));
                     console.log("logScale: ".concat(logScale, ", viewScale: ").concat(viewScale));
                     return lane.isInverted ? (logScale - value) : value;
                 }
                 else // linear
                  {
-                    var value = position / viewScale;
+                    var value = (position + lane.offset) / viewScale;
                     return lane.isInverted ? (Type.getNamedNumberValue(lane.logScale) - value) : value;
                 }
             default:
@@ -406,12 +406,12 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
                 if ("logarithmic" === view.scaleMode) {
                     var logScale = Type.getNamedNumberValue(lane.logScale);
                     var position = Math.log(value) / Math.log(logScale) * viewScale;
-                    return lane.isInverted ? (Math.log(logScale - value) / Math.log(logScale) * viewScale) : position;
+                    return (lane.isInverted ? (Math.log(logScale - value) / Math.log(logScale) * viewScale) : position) - lane.offset;
                 }
                 else // linear
                  {
                     var position = value * viewScale;
-                    return lane.isInverted ? ((Type.getNamedNumberValue(lane.logScale) - value) * viewScale) : position;
+                    return (lane.isInverted ? ((Type.getNamedNumberValue(lane.logScale) - value) * viewScale) : position) - lane.offset;
                 }
             default:
                 throw new Error("\uD83E\uDD8B FIXME: getPositionAt not implemented for lane type: ".concat(lane.type));
@@ -556,14 +556,22 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
         });
     };
     exports.makeRootLane = makeRootLane;
+    var getRootLane = function () {
+        return (0, exports.getLane)(exports.RootLaneIndex);
+    };
+    exports.getRootLane = getRootLane;
     var isRootLane = function (indexOrLane) {
         return (typeof indexOrLane === "number" ? exports.RootLaneIndex : (0, exports.getLane)(exports.RootLaneIndex)) === indexOrLane;
     };
     exports.isRootLane = isRootLane;
-    var isRooeSlide = function (indexOrSlide) {
+    var getRootSlide = function () {
+        return exports.data.slides[0];
+    };
+    exports.getRootSlide = getRootSlide;
+    var isRootSlide = function (indexOrSlide) {
         return (0 === (typeof indexOrSlide === "number" ? indexOrSlide : (0, exports.getSlideIndex)(indexOrSlide)));
     };
-    exports.isRooeSlide = isRooeSlide;
+    exports.isRootSlide = isRootSlide;
     var getSlideIndex = function (slide) {
         var index = exports.data.slides.indexOf(slide);
         if (0 <= index) {
@@ -951,7 +959,7 @@ define("script/ruler", ["require", "exports", "script/type", "script/ui", "scrip
     var drawTick = function (view, group, lane, value, type) {
         var laneIndex = Model.getLaneIndex(lane);
         var position = Model.getPositionAt(lane, Type.getNamedNumberValue(value), view);
-        var isRootSlide = Model.isRooeSlide(Model.getSlideFromLane(lane));
+        var isRootSlide = Model.isRootSlide(Model.getSlideFromLane(lane));
         var width = config_json_3.default.render.ruler.laneWidth;
         ;
         var left = exports.LaneWidths.slice(0, laneIndex).reduce(function (a, b) { return a + b; }, 0);
@@ -1034,13 +1042,14 @@ define("script/graph", ["require", "exports"], function (require, exports) {
     };
     exports.renderer = renderer;
 });
-define("script/event", ["require", "exports", "script/type", "script/environment", "script/view", "script/ui", "script/render", "script/ruler", "script/grid", "script/graph"], function (require, exports, Type, Environment, View, UI, Render, Ruler, Grid, Graph) {
+define("script/event", ["require", "exports", "script/type", "script/environment", "script/view", "script/model", "script/ui", "script/render", "script/ruler", "script/grid", "script/graph"], function (require, exports, Type, Environment, View, Model, UI, Render, Ruler, Grid, Graph) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.resetZoom = exports.zoom = exports.zoomOut = exports.zoomIn = exports.updateScaleModeRoundBar = exports.updateViewModeRoundBar = void 0;
+    exports.initialize = exports.resetZoom = exports.scroll = exports.zoom = exports.zoomOut = exports.zoomIn = exports.updateScaleModeRoundBar = exports.updateViewModeRoundBar = void 0;
     Type = __importStar(Type);
     Environment = __importStar(Environment);
     View = __importStar(View);
+    Model = __importStar(Model);
     UI = __importStar(UI);
     Render = __importStar(Render);
     Ruler = __importStar(Ruler);
@@ -1074,6 +1083,15 @@ define("script/event", ["require", "exports", "script/type", "script/environment
         console.log("Zoomed(".concat(delta, "): ").concat(current, " -> ").concat(next));
     };
     exports.zoom = zoom;
+    var scroll = function (delta) {
+        var rootLane = Model.getRootLane();
+        var current = rootLane.offset;
+        var next = current + delta;
+        rootLane.offset = next;
+        Render.markDirty();
+        console.log("Scrolled(".concat(delta, "): ").concat(current, " -> ").concat(next));
+    };
+    exports.scroll = scroll;
     var resetZoom = function () {
         var current = View.data.viewScaleExponent;
         var next = 3;
@@ -1100,6 +1118,9 @@ define("script/event", ["require", "exports", "script/type", "script/environment
                     (0, exports.zoomIn)();
                 }
             }
+            else {
+                (0, exports.scroll)(event.deltaY);
+            }
         }, {
             passive: false,
         });
@@ -1120,6 +1141,21 @@ define("script/event", ["require", "exports", "script/type", "script/environment
                     case "0":
                         event.preventDefault();
                         (0, exports.resetZoom)();
+                        break;
+                    default:
+                        console.log("Keydown event: key=".concat(event.key));
+                        break;
+                }
+            }
+            else {
+                switch (event.key) {
+                    case "ArrowUp":
+                        event.preventDefault();
+                        (0, exports.scroll)(-10);
+                        break;
+                    case "ArrowDown":
+                        event.preventDefault();
+                        (0, exports.scroll)(10);
                         break;
                     default:
                         console.log("Keydown event: key=".concat(event.key));
@@ -1161,7 +1197,10 @@ define("script/event", ["require", "exports", "script/type", "script/environment
             if ("touch" === event.pointerType) {
                 if (activeTouches.has(event.pointerId)) {
                     activeTouches.set(event.pointerId, { x: event.clientX, y: event.clientY });
-                    if (2 <= activeTouches.size) {
+                    if (activeTouches.size <= 1) {
+                        (0, exports.scroll)(-event.movementY);
+                    }
+                    else {
                         var iter = activeTouches.values();
                         var a = iter.next().value;
                         var b = iter.next().value;

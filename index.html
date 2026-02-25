@@ -2,7 +2,7 @@
 <!--
     This file is genereted by build.js. このファイルは build.js によって生成されました。
     build options: ../build.json all
-    build at: Tue Feb 24 2026 21:26:25 GMT+0900 (日本標準時)
+    build at: Tue Feb 24 2026 23:53:22 GMT+0900 (日本標準時)
     repository: https://github.com/wraith13/slide-rule/
 -->
 <!-- license:
@@ -33,32 +33,32 @@ DEALINGS IN THE SOFTWARE.
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Slide Rule</title>
+<title>Smart Rule</title>
 <link id="favicon" rel="shortcut icon" href="./image/favicon.png">
 <link rel="canonical" href="https://wraith13.github.io/slide-rule/">
 <link rel="apple-touch-icon" href="./image/favicon.png">
 <meta name="theme-color" content="black">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<meta name="description" lang="ja" content="Slide Rule Web App">
+<meta name="description" lang="ja" content="Smart Slide Rule Web App">
 <!-- link id="manifest" rel="manifest" href="web.manifest.json" / -->
-<meta name="apple-mobile-web-app-title" content="Slide Rule">
+<meta name="apple-mobile-web-app-title" content="Smart Rule">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@wraith13">
 <!-- meta name="twitter:creator" content="@wraith13" -->
-<meta name="twitter:title" content="Slide Rule">
-<meta name="twitter:description" lang="en" content="Slide Rule Web App">
+<meta name="twitter:title" content="Smart Rule">
+<meta name="twitter:description" lang="en" content="Smart Slide Rule Web App">
 <meta name="twitter:image" content="https://wraith13.github.io/slide-rule/image/twitter-card.png">
-<meta property="og:title" content="Slide Rule" />
-<meta property="og:description" content="Slide Rule Web App" />
+<meta property="og:title" content="Smart Rule" />
+<meta property="og:description" content="Smart Slide Rule Web App" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://wraith13.github.io/slide-rule/" />
 <meta property="og:image" content="https://wraith13.github.io/slide-rule/image/twitter-card.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:site_name" content="Slide Rule" />
+<meta property="og:site_name" content="Smart Rule" />
 <meta property="og:locale" content="en_US" />
 <link rel="image_src" href="https://wraith13.github.io/slide-rule/image/twitter-card.png" />
 <style>
@@ -240,8 +240,8 @@ button:focus
 </div>
 <script type="text/javascript">
 const build = {
-    at: "Tue Feb 24 2026 21:26:25 GMT+0900 (日本標準時)",
-    tick: 1771935985601
+    at: "Tue Feb 24 2026 23:53:22 GMT+0900 (日本標準時)",
+    tick: 1771944802342
 };
 const evilCommonjsConfig = {
     "log": {
@@ -837,10 +837,10 @@ define("script/number", ["require", "exports"], function (require, exports) {
     exports.orUndefined = orUndefined;
 });
 define("resource/config", [], {
-    "applicationTitle": "Slide Rule",
+    "applicationTitle": "Smart Rule",
     "repositoryUrl": "https://github.com/wraith13/slide-rule/",
     "canonicalUrl": "https://wraith13.github.io/slide-rule/",
-    "description": "Slide Rule Web App",
+    "description": "Smart Slide Rule Web App",
     "noscriptMessage": "JavaScript is disabled. Please enable JavaScript.",
     "model": {
         "lane": {
@@ -966,7 +966,7 @@ define("resource/config", [], {
 define("script/model", ["require", "exports", "script/number", "script/type", "script/url", "resource/config"], function (require, exports, Number, Type, Url, config_json_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.makeSure = exports.removeLane = exports.makeLane = exports.addLane = exports.getSlideFromLane = exports.getLane = exports.getLaneAndSlide = exports.makeSureSlide = exports.makeSlide = exports.getLaneIndex = exports.getSlideIndex = exports.isRooeSlide = exports.isRootLane = exports.makeRootLane = exports.designTicks = exports.getFirstLabelValue = exports.getPositionAt = exports.getValueAt = exports.getAllLanes = exports.RootLaneIndex = exports.data = void 0;
+    exports.initialize = exports.makeSure = exports.removeLane = exports.makeLane = exports.addLane = exports.getSlideFromLane = exports.getLane = exports.getLaneAndSlide = exports.makeSureSlide = exports.makeSlide = exports.getLaneIndex = exports.getSlideIndex = exports.isRootSlide = exports.getRootSlide = exports.isRootLane = exports.getRootLane = exports.makeRootLane = exports.designTicks = exports.getFirstLabelValue = exports.getPositionAt = exports.getValueAt = exports.getAllLanes = exports.RootLaneIndex = exports.data = void 0;
     Number = __importStar(Number);
     Type = __importStar(Type);
     Url = __importStar(Url);
@@ -987,14 +987,14 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
             case "logarithmic":
                 if ("logarithmic" === view.scaleMode) {
                     var logScale = Type.getNamedNumberValue(lane.logScale);
-                    var value = Math.pow(logScale, position / viewScale);
-                    console.log("getValueAt: lane: ".concat((_a = lane.name) !== null && _a !== void 0 ? _a : "unnamed", ", position: ").concat(position, ", value: ").concat(value));
+                    var value = Math.pow(logScale, (position + lane.offset) / viewScale);
+                    console.log("getValueAt: lane: ".concat((_a = lane.name) !== null && _a !== void 0 ? _a : "unnamed", ", position: ").concat(position, ", offset: ").concat(lane.offset, ", value: ").concat(value));
                     console.log("logScale: ".concat(logScale, ", viewScale: ").concat(viewScale));
                     return lane.isInverted ? (logScale - value) : value;
                 }
                 else // linear
                  {
-                    var value = position / viewScale;
+                    var value = (position + lane.offset) / viewScale;
                     return lane.isInverted ? (Type.getNamedNumberValue(lane.logScale) - value) : value;
                 }
             default:
@@ -1009,12 +1009,12 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
                 if ("logarithmic" === view.scaleMode) {
                     var logScale = Type.getNamedNumberValue(lane.logScale);
                     var position = Math.log(value) / Math.log(logScale) * viewScale;
-                    return lane.isInverted ? (Math.log(logScale - value) / Math.log(logScale) * viewScale) : position;
+                    return (lane.isInverted ? (Math.log(logScale - value) / Math.log(logScale) * viewScale) : position) - lane.offset;
                 }
                 else // linear
                  {
                     var position = value * viewScale;
-                    return lane.isInverted ? ((Type.getNamedNumberValue(lane.logScale) - value) * viewScale) : position;
+                    return (lane.isInverted ? ((Type.getNamedNumberValue(lane.logScale) - value) * viewScale) : position) - lane.offset;
                 }
             default:
                 throw new Error("\uD83E\uDD8B FIXME: getPositionAt not implemented for lane type: ".concat(lane.type));
@@ -1159,14 +1159,22 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
         });
     };
     exports.makeRootLane = makeRootLane;
+    var getRootLane = function () {
+        return (0, exports.getLane)(exports.RootLaneIndex);
+    };
+    exports.getRootLane = getRootLane;
     var isRootLane = function (indexOrLane) {
         return (typeof indexOrLane === "number" ? exports.RootLaneIndex : (0, exports.getLane)(exports.RootLaneIndex)) === indexOrLane;
     };
     exports.isRootLane = isRootLane;
-    var isRooeSlide = function (indexOrSlide) {
+    var getRootSlide = function () {
+        return exports.data.slides[0];
+    };
+    exports.getRootSlide = getRootSlide;
+    var isRootSlide = function (indexOrSlide) {
         return (0 === (typeof indexOrSlide === "number" ? indexOrSlide : (0, exports.getSlideIndex)(indexOrSlide)));
     };
-    exports.isRooeSlide = isRooeSlide;
+    exports.isRootSlide = isRootSlide;
     var getSlideIndex = function (slide) {
         var index = exports.data.slides.indexOf(slide);
         if (0 <= index) {
@@ -1554,7 +1562,7 @@ define("script/ruler", ["require", "exports", "script/type", "script/ui", "scrip
     var drawTick = function (view, group, lane, value, type) {
         var laneIndex = Model.getLaneIndex(lane);
         var position = Model.getPositionAt(lane, Type.getNamedNumberValue(value), view);
-        var isRootSlide = Model.isRooeSlide(Model.getSlideFromLane(lane));
+        var isRootSlide = Model.isRootSlide(Model.getSlideFromLane(lane));
         var width = config_json_3.default.render.ruler.laneWidth;
         ;
         var left = exports.LaneWidths.slice(0, laneIndex).reduce(function (a, b) { return a + b; }, 0);
@@ -1637,13 +1645,14 @@ define("script/graph", ["require", "exports"], function (require, exports) {
     };
     exports.renderer = renderer;
 });
-define("script/event", ["require", "exports", "script/type", "script/environment", "script/view", "script/ui", "script/render", "script/ruler", "script/grid", "script/graph"], function (require, exports, Type, Environment, View, UI, Render, Ruler, Grid, Graph) {
+define("script/event", ["require", "exports", "script/type", "script/environment", "script/view", "script/model", "script/ui", "script/render", "script/ruler", "script/grid", "script/graph"], function (require, exports, Type, Environment, View, Model, UI, Render, Ruler, Grid, Graph) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.resetZoom = exports.zoom = exports.zoomOut = exports.zoomIn = exports.updateScaleModeRoundBar = exports.updateViewModeRoundBar = void 0;
+    exports.initialize = exports.resetZoom = exports.scroll = exports.zoom = exports.zoomOut = exports.zoomIn = exports.updateScaleModeRoundBar = exports.updateViewModeRoundBar = void 0;
     Type = __importStar(Type);
     Environment = __importStar(Environment);
     View = __importStar(View);
+    Model = __importStar(Model);
     UI = __importStar(UI);
     Render = __importStar(Render);
     Ruler = __importStar(Ruler);
@@ -1677,6 +1686,15 @@ define("script/event", ["require", "exports", "script/type", "script/environment
         console.log("Zoomed(".concat(delta, "): ").concat(current, " -> ").concat(next));
     };
     exports.zoom = zoom;
+    var scroll = function (delta) {
+        var rootLane = Model.getRootLane();
+        var current = rootLane.offset;
+        var next = current + delta;
+        rootLane.offset = next;
+        Render.markDirty();
+        console.log("Scrolled(".concat(delta, "): ").concat(current, " -> ").concat(next));
+    };
+    exports.scroll = scroll;
     var resetZoom = function () {
         var current = View.data.viewScaleExponent;
         var next = 3;
@@ -1703,6 +1721,9 @@ define("script/event", ["require", "exports", "script/type", "script/environment
                     (0, exports.zoomIn)();
                 }
             }
+            else {
+                (0, exports.scroll)(event.deltaY);
+            }
         }, {
             passive: false,
         });
@@ -1723,6 +1744,21 @@ define("script/event", ["require", "exports", "script/type", "script/environment
                     case "0":
                         event.preventDefault();
                         (0, exports.resetZoom)();
+                        break;
+                    default:
+                        console.log("Keydown event: key=".concat(event.key));
+                        break;
+                }
+            }
+            else {
+                switch (event.key) {
+                    case "ArrowUp":
+                        event.preventDefault();
+                        (0, exports.scroll)(-10);
+                        break;
+                    case "ArrowDown":
+                        event.preventDefault();
+                        (0, exports.scroll)(10);
                         break;
                     default:
                         console.log("Keydown event: key=".concat(event.key));
@@ -1764,7 +1800,10 @@ define("script/event", ["require", "exports", "script/type", "script/environment
             if ("touch" === event.pointerType) {
                 if (activeTouches.has(event.pointerId)) {
                     activeTouches.set(event.pointerId, { x: event.clientX, y: event.clientY });
-                    if (2 <= activeTouches.size) {
+                    if (activeTouches.size <= 1) {
+                        (0, exports.scroll)(-event.movementY);
+                    }
+                    else {
                         var iter = activeTouches.values();
                         var a = iter.next().value;
                         var b = iter.next().value;

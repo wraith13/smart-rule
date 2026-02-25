@@ -84,8 +84,10 @@ declare module "script/model" {
         type: Type.TickType;
     }[];
     export const makeRootLane: () => Type.Lane;
+    export const getRootLane: () => Type.Lane;
     export const isRootLane: (indexOrLane: number | Type.Lane) => boolean;
-    export const isRooeSlide: (indexOrSlide: number | Type.SlideUnit) => boolean;
+    export const getRootSlide: () => Type.SlideUnit;
+    export const isRootSlide: (indexOrSlide: number | Type.SlideUnit) => boolean;
     export const getSlideIndex: (slide: Type.SlideUnit) => number;
     export const getLaneIndex: (lane: Type.Lane) => number;
     export const makeSlide: (anchor?: number) => Type.SlideUnit;
@@ -191,6 +193,7 @@ declare module "script/event" {
     export const zoomIn: () => void;
     export const zoomOut: () => void;
     export const zoom: (delta: number) => void;
+    export const scroll: (delta: number) => void;
     export const resetZoom: () => void;
     export const initialize: () => void;
 }

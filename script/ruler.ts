@@ -89,7 +89,7 @@ export const drawTick = (view: Type.View, group: SVGGElement, lane: Type.Lane, v
 {
     const laneIndex = Model.getLaneIndex(lane);
     const position = Model.getPositionAt(lane, Type.getNamedNumberValue(value), view);
-    const isRootSlide = Model.isRooeSlide(Model.getSlideFromLane(lane));
+    const isRootSlide = Model.isRootSlide(Model.getSlideFromLane(lane));
     const width = config.render.ruler.laneWidth;;
     const left = LaneWidths.slice(0, laneIndex).reduce((a, b) => a + b, 0);
     const right = left + width;

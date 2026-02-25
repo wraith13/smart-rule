@@ -19,14 +19,14 @@ export const getValueAt = (lane: Type.Lane, position: number, view: Type.View): 
         if ("logarithmic" === view.scaleMode)
         {
             const logScale = Type.getNamedNumberValue(lane.logScale);
-            const value = Math.pow(logScale, position / viewScale);
-            console.log(`getValueAt: lane: ${lane.name ?? "unnamed"}, position: ${position}, value: ${value}`);
+            const value = Math.pow(logScale, (position +lane.offset) / viewScale);
+            console.log(`getValueAt: lane: ${lane.name ?? "unnamed"}, position: ${position}, offset: ${lane.offset}, value: ${value}`);
             console.log(`logScale: ${logScale}, viewScale: ${viewScale}`);
             return lane.isInverted ? (logScale - value) : value;
         }
         else // linear
         {
-            const value = position / viewScale;
+            const value = (position +lane.offset) / viewScale;
             return lane.isInverted ? (Type.getNamedNumberValue(lane.logScale) - value) : value;
         }
     default:
@@ -43,12 +43,12 @@ export const getPositionAt = (lane: Type.Lane, value: number, view: Type.View): 
         {
             const logScale = Type.getNamedNumberValue(lane.logScale);
             const position = Math.log(value) / Math.log(logScale) * viewScale;
-            return lane.isInverted ? (Math.log(logScale -value) / Math.log(logScale) *viewScale): position;
+            return (lane.isInverted ? (Math.log(logScale -value) / Math.log(logScale) *viewScale): position) -lane.offset;
         }
         else // linear
         {
             const position = value *viewScale;
-            return lane.isInverted ? ((Type.getNamedNumberValue(lane.logScale) -value) *viewScale): position;
+            return (lane.isInverted ? ((Type.getNamedNumberValue(lane.logScale) -value) *viewScale): position) -lane.offset;
         }
     default:
         throw new Error(`🦋 FIXME: getPositionAt not implemented for lane type: ${lane.type}`);
@@ -220,9 +220,13 @@ export const makeRootLane = (): Type.Lane =>
         logScale,
     });
 };
+export const getRootLane = (): Type.Lane =>
+    getLane(RootLaneIndex);
 export const isRootLane = (indexOrLane: number | Type.Lane): boolean =>
     (typeof indexOrLane === "number" ? RootLaneIndex: getLane(RootLaneIndex)) === indexOrLane;
-export const isRooeSlide = (indexOrSlide: number | Type.SlideUnit): boolean =>
+export const getRootSlide = (): Type.SlideUnit =>
+    data.slides[0];
+export const isRootSlide = (indexOrSlide: number | Type.SlideUnit): boolean =>
     (0 === (typeof indexOrSlide === "number" ? indexOrSlide : getSlideIndex(indexOrSlide)));
 export const getSlideIndex = (slide: Type.SlideUnit): number =>
 {
