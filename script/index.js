@@ -321,7 +321,10 @@ define("resource/config", [], {
         "baseOfLogarithm": {
             "presets": ["phi", 2, "e", "pi", 10],
             "default": 10
-        }
+        },
+        "zoomRate": 0.01,
+        "zooomUnit": 0.25,
+        "scrollUnit": 10
     },
     "render": {
         "ruler": {
@@ -1042,7 +1045,7 @@ define("script/graph", ["require", "exports"], function (require, exports) {
     };
     exports.renderer = renderer;
 });
-define("script/event", ["require", "exports", "script/type", "script/environment", "script/view", "script/model", "script/ui", "script/render", "script/ruler", "script/grid", "script/graph"], function (require, exports, Type, Environment, View, Model, UI, Render, Ruler, Grid, Graph) {
+define("script/event", ["require", "exports", "script/type", "script/environment", "script/view", "script/model", "script/ui", "script/render", "script/ruler", "script/grid", "script/graph", "resource/config"], function (require, exports, Type, Environment, View, Model, UI, Render, Ruler, Grid, Graph, config_json_4) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.initialize = exports.resetZoom = exports.scroll = exports.zoom = exports.zoomOut = exports.zoomIn = exports.updateScaleModeRoundBar = exports.updateViewModeRoundBar = void 0;
@@ -1055,6 +1058,7 @@ define("script/event", ["require", "exports", "script/type", "script/environment
     Ruler = __importStar(Ruler);
     Grid = __importStar(Grid);
     Graph = __importStar(Graph);
+    config_json_4 = __importDefault(config_json_4);
     var updateViewModeRoundBar = function () { return UI.updateRoundBar(UI.viewModeButton, {
         low: 0 / Type.viewModeList.length,
         high: 1 / Type.viewModeList.length,
@@ -1068,11 +1072,11 @@ define("script/event", ["require", "exports", "script/type", "script/environment
     }); };
     exports.updateScaleModeRoundBar = updateScaleModeRoundBar;
     var zoomIn = function () {
-        return (0, exports.zoom)(0.25);
+        return (0, exports.zoom)(config_json_4.default.view.zooomUnit);
     };
     exports.zoomIn = zoomIn;
     var zoomOut = function () {
-        return (0, exports.zoom)(-0.25);
+        return (0, exports.zoom)(-config_json_4.default.view.zooomUnit);
     };
     exports.zoomOut = zoomOut;
     var zoom = function (delta) {
@@ -1151,11 +1155,11 @@ define("script/event", ["require", "exports", "script/type", "script/environment
                 switch (event.key) {
                     case "ArrowUp":
                         event.preventDefault();
-                        (0, exports.scroll)(-10);
+                        (0, exports.scroll)(-config_json_4.default.view.scrollUnit);
                         break;
                     case "ArrowDown":
                         event.preventDefault();
-                        (0, exports.scroll)(10);
+                        (0, exports.scroll)(config_json_4.default.view.scrollUnit);
                         break;
                     default:
                         console.log("Keydown event: key=".concat(event.key));
@@ -1164,63 +1168,59 @@ define("script/event", ["require", "exports", "script/type", "script/environment
             }
         });
         document.addEventListener("pointerdown", function (event) {
-            if ("touch" === event.pointerType) {
-                activeTouches.set(event.pointerId, { x: event.clientX, y: event.clientY });
-                // prevent default to avoid browser gestures interfering if desired
-                // keep passive false on pointerdown to allow preventDefault if necessary
-                event.preventDefault();
-            }
+            //if ("touch" === event.pointerType)
+            //{
+            activeTouches.set(event.pointerId, { x: event.clientX, y: event.clientY });
+            // prevent default to avoid browser gestures interfering if desired
+            // keep passive false on pointerdown to allow preventDefault if necessary
+            event.preventDefault();
+            //}
         }, {
             passive: false,
         });
         document.addEventListener("pointerup", function (event) {
-            if ("touch" === event.pointerType) {
-                activeTouches.delete(event.pointerId);
-                if (activeTouches.size < 2) {
-                    touchZoomPreviousDistance = null;
-                }
+            //if ("touch" === event.pointerType)
+            //{
+            activeTouches.delete(event.pointerId);
+            if (activeTouches.size < 2) {
+                touchZoomPreviousDistance = null;
             }
+            //}
         }, {
             passive: false,
         });
         document.addEventListener("pointercancel", function (event) {
-            if ("touch" === event.pointerType) {
-                activeTouches.delete(event.pointerId);
-                if (activeTouches.size < 2) {
-                    touchZoomPreviousDistance = null;
-                }
+            //if ("touch" === event.pointerType)
+            //{
+            activeTouches.delete(event.pointerId);
+            if (activeTouches.size < 2) {
+                touchZoomPreviousDistance = null;
             }
+            //}
         }, {
             passive: false,
         });
         document.addEventListener("pointermove", function (event) {
-            if ("touch" === event.pointerType) {
-                if (activeTouches.has(event.pointerId)) {
-                    activeTouches.set(event.pointerId, { x: event.clientX, y: event.clientY });
-                    if (activeTouches.size <= 1) {
-                        (0, exports.scroll)(-event.movementY);
+            //if ("touch" === event.pointerType)
+            //{
+            if (activeTouches.has(event.pointerId)) {
+                activeTouches.set(event.pointerId, { x: event.clientX, y: event.clientY });
+                if (activeTouches.size <= 1) {
+                    (0, exports.scroll)(-event.movementY);
+                }
+                else {
+                    var iter = activeTouches.values();
+                    var a = iter.next().value;
+                    var b = iter.next().value;
+                    var currentDistance = Math.hypot(b.x - a.x, b.y - a.y);
+                    if (null !== touchZoomPreviousDistance) {
+                        var delta = currentDistance - touchZoomPreviousDistance;
+                        (0, exports.zoom)(delta * config_json_4.default.view.zoomRate);
                     }
-                    else {
-                        var iter = activeTouches.values();
-                        var a = iter.next().value;
-                        var b = iter.next().value;
-                        var currentDistance = Math.hypot(b.x - a.x, b.y - a.y);
-                        if (null !== touchZoomPreviousDistance) {
-                            var delta = currentDistance - touchZoomPreviousDistance;
-                            (0, exports.zoom)(delta * 0.01);
-                            // if (0 < delta)
-                            // {
-                            //     zoomIn();
-                            // }
-                            // else if (delta < 0)
-                            // {
-                            //     zoomOut();
-                            // }
-                        }
-                        touchZoomPreviousDistance = currentDistance;
-                    }
+                    touchZoomPreviousDistance = currentDistance;
                 }
             }
+            //}
         }, {
             passive: true,
         });

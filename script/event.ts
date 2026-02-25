@@ -8,6 +8,7 @@ import * as Render from "./render";
 import * as Ruler from "./ruler";
 import * as Grid from "./grid";
 import * as Graph from "./graph";
+import config from "@resource/config.json";
 export const updateViewModeRoundBar = () => UI.updateRoundBar
 (
     UI.viewModeButton,
@@ -27,9 +28,9 @@ export const updateScaleModeRoundBar = () => UI.updateRoundBar
     }
 );
 export const zoomIn = (): void =>
-    zoom(0.25);
+    zoom(config.view.zooomUnit);
 export const zoomOut = (): void =>
-    zoom(-0.25);
+    zoom(-config.view.zooomUnit);
 export const zoom = (delta: number): void =>
 {
     const current = View.data.viewScaleExponent;
@@ -131,11 +132,11 @@ export const initialize = () =>
                 {
                 case "ArrowUp":
                     event.preventDefault();
-                    scroll(-10);
+                    scroll(-config.view.scrollUnit);
                     break;
                 case "ArrowDown":
                     event.preventDefault();
-                    scroll(10);
+                    scroll(config.view.scrollUnit);
                     break;
                 default:
                     console.log(`Keydown event: key=${event.key}`);
@@ -149,13 +150,13 @@ export const initialize = () =>
         "pointerdown",
         event =>
         {
-            if ("touch" === event.pointerType)
-            {
+            //if ("touch" === event.pointerType)
+            //{
                 activeTouches.set(event.pointerId, { x: event.clientX, y: event.clientY });
                 // prevent default to avoid browser gestures interfering if desired
                 // keep passive false on pointerdown to allow preventDefault if necessary
                 event.preventDefault();
-            }
+            //}
         },
         {
             passive: false,
@@ -167,14 +168,14 @@ export const initialize = () =>
         "pointerup",
         event =>
         {
-            if ("touch" === event.pointerType)
-            {
+            //if ("touch" === event.pointerType)
+            //{
                 activeTouches.delete(event.pointerId);
                 if (activeTouches.size < 2)
                 {
                     touchZoomPreviousDistance = null;
                 }
-            }
+            //}
         },
         {
             passive: false,
@@ -186,14 +187,14 @@ export const initialize = () =>
         "pointercancel",
         event =>
         {
-            if ("touch" === event.pointerType)
-            {
+            //if ("touch" === event.pointerType)
+            //{
                 activeTouches.delete(event.pointerId);
                 if (activeTouches.size < 2)
                 {
                     touchZoomPreviousDistance = null;
                 }
-            }
+            //}
         },
         {
             passive: false,
@@ -205,8 +206,8 @@ export const initialize = () =>
         "pointermove",
         event =>
         {
-            if ("touch" === event.pointerType)
-            {
+            //if ("touch" === event.pointerType)
+            //{
                 if (activeTouches.has(event.pointerId))
                 {
                     activeTouches.set(event.pointerId, { x: event.clientX, y: event.clientY });
@@ -223,20 +224,12 @@ export const initialize = () =>
                         if (null !== touchZoomPreviousDistance)
                         {
                             const delta = currentDistance - touchZoomPreviousDistance;
-                            zoom(delta * 0.01);
-                            // if (0 < delta)
-                            // {
-                            //     zoomIn();
-                            // }
-                            // else if (delta < 0)
-                            // {
-                            //     zoomOut();
-                            // }
+                            zoom(delta * config.view.zoomRate);
                         }
                         touchZoomPreviousDistance = currentDistance;
                     }
                 }
-            }
+            //}
         },
         {
             passive: true,
