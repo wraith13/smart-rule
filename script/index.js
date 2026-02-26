@@ -370,7 +370,7 @@ define("resource/config", [], {
 define("script/model", ["require", "exports", "script/number", "script/type", "script/url", "resource/config"], function (require, exports, Number, Type, Url, config_json_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.makeSure = exports.removeLane = exports.makeLane = exports.addLane = exports.getSlideFromLane = exports.getLane = exports.getLaneAndSlide = exports.makeSureSlide = exports.makeSlide = exports.getLaneIndex = exports.getSlideIndex = exports.isRootSlide = exports.getRootSlide = exports.isRootLane = exports.getRootLane = exports.makeRootLane = exports.designTicks = exports.designTicks10 = exports.getFirstLabelValue = exports.getPositionAt = exports.getValueAt = exports.getAllLanes = exports.RootLaneIndex = exports.data = void 0;
+    exports.initialize = exports.makeSure = exports.removeLane = exports.makeLane = exports.addLane = exports.getSlideFromLane = exports.getLane = exports.getLaneAndSlide = exports.makeSureSlide = exports.makeSlide = exports.getLaneIndex = exports.getSlideIndex = exports.isRootSlide = exports.getRootSlide = exports.isRootLane = exports.getRootLane = exports.makeRootLane = exports.designTicks = exports.designTicks10 = exports.getFirstLabelValue = exports.getWidth = exports.getPositionAt = exports.getValueAt = exports.getAllLanes = exports.RootLaneIndex = exports.data = void 0;
     Number = __importStar(Number);
     Type = __importStar(Type);
     Url = __importStar(Url);
@@ -425,6 +425,10 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
         }
     };
     exports.getPositionAt = getPositionAt;
+    var getWidth = function (lane, bottom, top, view) {
+        return (0, exports.getPositionAt)(lane, top, view) - (0, exports.getPositionAt)(lane, bottom, view);
+    };
+    exports.getWidth = getWidth;
     var getFirstLabelValue = function (lane, view) {
         var viewScale = Type.getViewScale(view);
         var minValue = (0, exports.getValueAt)(lane, 0, view);
@@ -455,9 +459,10 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
         for (var b = 1; b < 10; ++b) {
             var value = base + (unit * b);
             var nextValue = base + (unit * (b + 1));
-            var width = (0, exports.getPositionAt)(lane, nextValue, view) - (0, exports.getPositionAt)(lane, value, view);
+            var width = (0, exports.getWidth)(lane, value, nextValue, view);
             switch (true) {
                 case 50 < width:
+                    ticks.push({ value: value, type: "long", });
                     ticks.push.apply(ticks, (0, exports.designTicks10)(view, lane, value, unit / 10));
                     break;
                 case 25 < width:
@@ -498,126 +503,16 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
                 {
                     var beginDigit = Math.floor(Math.log10(min));
                     var endDigit = Math.ceil(Math.log10(max));
-                    // if (viewScale < 100)
-                    // {
-                    //     const scale = 10;
-                    //     for(let a = beginDigit; a <= endDigit; ++a)
-                    //     {
-                    //         ticks.push({ value: Math.pow(scale, a), type: "long", });
-                    //     }
-                    // }
-                    // else
-                    // if (100 < viewScale)
-                    // {
-                    //     const scale = 10;
-                    //     const begin = Math.pow(10, beginDigit);
-                    //     const end = Math.pow(10, endDigit);
-                    //     for(let a = begin; a <= end; a += begin /scale)
-                    //     {
-                    //         const value = a;
-                    //         if (value <= max)
-                    //         {
-                    //             ticks.push({ value, type: "long", });
-                    //             for(let b = 0; b < scale; ++b)
-                    //             {
-                    //                 const value = a +(b *(begin /(scale *scale)));
-                    //                 if (value <= max)
-                    //                 {
-                    //                     ticks.push
-                    //                     ({
-                    //                         value,
-                    //                         type: 5 !== b ? "short": "medium",
-                    //                     });
-                    //                 }
-                    //             }
-                    //         }
-                    //     }
-                    // }
-                    // else
-                    // {
-                    //     const scale = 10;
-                    //     const halfScale = scale / 2;
-                    //     const begin = Math.pow(10, beginDigit);
-                    //     const end = Math.pow(10, endDigit);
-                    //     for(let a = begin; a <= end; a *= scale)
-                    //     {
-                    //         for(let b = 1; b < scale; ++b)
-                    //         {
-                    //             const value = a * b;
-                    //             const nextValue = a * (b + 1);
-                    //             const width = getPositionAt(lane, nextValue, view) -getPositionAt(lane, value, view);
-                    //             switch(true)
-                    //             {
-                    //             case b < halfScale:
-                    //                 ticks.push({ value, type: "long", });
-                    //                 for(let c = 1; c <= 9; ++c)
-                    //                 {
-                    //                     const value = a *(b + (c / 10));
-                    //                     if (value <= max)
-                    //                     {
-                    //                         ticks.push
-                    //                         ({
-                    //                             value: a *(b + (c / 10)),
-                    //                             type: 5 !== c ? "short": "medium",
-                    //                         });
-                    //                     }
-                    //                 }
-                    //                 break;
-                    //             case b === halfScale:
-                    //                 ticks.push({ value, type: "long", });
-                    //                 ticks.push({ value: a *(b + 0.5), type: "short", });
-                    //                 break;
-                    //             case halfScale < b:
-                    //                 ticks.push({ value, type: "medium", });
-                    //                 ticks.push({ value: a *(b + 0.5), type: "short", });
-                    //                 break;
-                    //             }
-                    //         }
-                    //     }
-                    // }
                     var scale = 10;
                     var begin = Math.pow(10, beginDigit);
                     var end = Math.pow(10, endDigit);
                     for (var a = begin; a <= end; a *= scale) {
-                        var width = (0, exports.getPositionAt)(lane, a * scale, view) - (0, exports.getPositionAt)(lane, a, view);
+                        var width = (0, exports.getWidth)(lane, a, a * scale, view);
                         if (width < 25) {
                             ticks.push({ value: a, type: "long", });
                         }
                         else {
                             ticks.push.apply(ticks, (0, exports.designTicks10)(view, lane, 0, a));
-                            // for(let b = 1; b < scale; ++b)
-                            // {
-                            //     const value = a * b;
-                            //     const nextValue = a * (b + 1);
-                            //     const width = getPositionAt(lane, nextValue, view) -getPositionAt(lane, value, view);
-                            //     switch(true)
-                            //     {
-                            //     case 25 < width:
-                            //         ticks.push({ value, type: "long", });
-                            //         for(let c = 1; c <= 9; ++c)
-                            //         {
-                            //             const value = a *(b + (c / 10));
-                            //             if (value <= max)
-                            //             {
-                            //                 ticks.push
-                            //                 ({
-                            //                     value: a *(b + (c / 10)),
-                            //                     type: 5 !== c ? "short": "medium",
-                            //                 });
-                            //             }
-                            //         }
-                            //         break;
-                            //     case 12.5 < width || b === 1:
-                            //         ticks.push({ value, type: "long", });
-                            //         ticks.push({ value: a *(b + 0.5), type: "short", });
-                            //         break;
-                            //     //case 12.5 < width:
-                            //     default:
-                            //         ticks.push({ value, type: "medium", });
-                            //         ticks.push({ value: a *(b + 0.5), type: "short", });
-                            //         break;
-                            //     }
-                            // }
                         }
                     }
                 }

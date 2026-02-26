@@ -76,6 +76,7 @@ declare module "script/model" {
     export const getAllLanes: () => Type.Lane[];
     export const getValueAt: (lane: Type.Lane, position: number, view: Type.View) => number;
     export const getPositionAt: (lane: Type.Lane, value: number, view: Type.View) => number;
+    export const getWidth: (lane: Type.Lane, bottom: number, top: number, view: Type.View) => number;
     export const getFirstLabelValue: (lane: Type.Lane, view: Type.View) => {
         firstLabelValue: number;
         labelValueUnit: number;
