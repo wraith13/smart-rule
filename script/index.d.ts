@@ -80,6 +80,10 @@ declare module "script/model" {
         firstLabelValue: number;
         labelValueUnit: number;
     };
+    export const designTicks10: (view: Type.View, lane: Type.Lane, base: number, unit: number) => {
+        value: Type.NamedNumber;
+        type: Type.TickType;
+    }[];
     export const designTicks: (view: Type.View, lane: Type.Lane) => {
         value: Type.NamedNumber;
         type: Type.TickType;

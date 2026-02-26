@@ -2,7 +2,7 @@
 <!--
     This file is genereted by build.js. このファイルは build.js によって生成されました。
     build options: ../build.json all
-    build at: Wed Feb 25 2026 23:03:29 GMT+0900 (日本標準時)
+    build at: Thu Feb 26 2026 20:28:33 GMT+0900 (日本標準時)
     repository: https://github.com/wraith13/slide-rule/
 -->
 <!-- license:
@@ -240,8 +240,8 @@ button:focus
 </div>
 <script type="text/javascript">
 const build = {
-    at: "Wed Feb 25 2026 23:03:29 GMT+0900 (日本標準時)",
-    tick: 1772028209308
+    at: "Thu Feb 26 2026 20:28:33 GMT+0900 (日本標準時)",
+    tick: 1772105313194
 };
 const evilCommonjsConfig = {
     "log": {
@@ -973,7 +973,7 @@ define("resource/config", [], {
 define("script/model", ["require", "exports", "script/number", "script/type", "script/url", "resource/config"], function (require, exports, Number, Type, Url, config_json_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.makeSure = exports.removeLane = exports.makeLane = exports.addLane = exports.getSlideFromLane = exports.getLane = exports.getLaneAndSlide = exports.makeSureSlide = exports.makeSlide = exports.getLaneIndex = exports.getSlideIndex = exports.isRootSlide = exports.getRootSlide = exports.isRootLane = exports.getRootLane = exports.makeRootLane = exports.designTicks = exports.getFirstLabelValue = exports.getPositionAt = exports.getValueAt = exports.getAllLanes = exports.RootLaneIndex = exports.data = void 0;
+    exports.initialize = exports.makeSure = exports.removeLane = exports.makeLane = exports.addLane = exports.getSlideFromLane = exports.getLane = exports.getLaneAndSlide = exports.makeSureSlide = exports.makeSlide = exports.getLaneIndex = exports.getSlideIndex = exports.isRootSlide = exports.getRootSlide = exports.isRootLane = exports.getRootLane = exports.makeRootLane = exports.designTicks = exports.designTicks10 = exports.getFirstLabelValue = exports.getPositionAt = exports.getValueAt = exports.getAllLanes = exports.RootLaneIndex = exports.data = void 0;
     Number = __importStar(Number);
     Type = __importStar(Type);
     Url = __importStar(Url);
@@ -1051,6 +1051,44 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
         }
     };
     exports.getFirstLabelValue = getFirstLabelValue;
+    var designTicks10 = function (view, lane, base, unit) {
+        var height = window.innerHeight;
+        var max = (0, exports.getValueAt)(lane, height, view);
+        var ticks = [];
+        for (var b = 1; b < 10; ++b) {
+            var value = base + (unit * b);
+            var nextValue = base + (unit * (b + 1));
+            var width = (0, exports.getPositionAt)(lane, nextValue, view) - (0, exports.getPositionAt)(lane, value, view);
+            switch (true) {
+                case 50 < width:
+                    ticks.push.apply(ticks, (0, exports.designTicks10)(view, lane, value, unit / 10));
+                    break;
+                case 25 < width:
+                    ticks.push({ value: value, type: "long", });
+                    for (var c = 1; c <= 9; ++c) {
+                        var value_1 = base + (unit * (b + (c / 10)));
+                        if (value_1 <= max) {
+                            ticks.push({
+                                value: base + (unit * (b + (c / 10))),
+                                type: 5 !== c ? "short" : "medium",
+                            });
+                        }
+                    }
+                    break;
+                case 12.5 < width || b === 1:
+                    ticks.push({ value: value, type: "long", });
+                    ticks.push({ value: base + (unit * (b + 0.5)), type: "short", });
+                    break;
+                //case 12.5 < width:
+                default:
+                    ticks.push({ value: value, type: "medium", });
+                    ticks.push({ value: base + (unit * (b + 0.5)), type: "short", });
+                    break;
+            }
+        }
+        return ticks;
+    };
+    exports.designTicks10 = designTicks10;
     var designTicks = function (view, lane) {
         var _a;
         var viewScale = Type.getViewScale(view);
@@ -1149,34 +1187,40 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
                             ticks.push({ value: a, type: "long", });
                         }
                         else {
-                            for (var b = 1; b < scale; ++b) {
-                                var value = a * b;
-                                var nextValue = a * (b + 1);
-                                var width_1 = (0, exports.getPositionAt)(lane, nextValue, view) - (0, exports.getPositionAt)(lane, value, view);
-                                switch (true) {
-                                    case 25 < width_1:
-                                        ticks.push({ value: value, type: "long", });
-                                        for (var c = 1; c <= 9; ++c) {
-                                            var value_1 = a * (b + (c / 10));
-                                            if (value_1 <= max) {
-                                                ticks.push({
-                                                    value: a * (b + (c / 10)),
-                                                    type: 5 !== c ? "short" : "medium",
-                                                });
-                                            }
-                                        }
-                                        break;
-                                    case 12.5 < width_1 || b === 1:
-                                        ticks.push({ value: value, type: "long", });
-                                        ticks.push({ value: a * (b + 0.5), type: "short", });
-                                        break;
-                                    //case 12.5 < width:
-                                    default:
-                                        ticks.push({ value: value, type: "medium", });
-                                        ticks.push({ value: a * (b + 0.5), type: "short", });
-                                        break;
-                                }
-                            }
+                            ticks.push.apply(ticks, (0, exports.designTicks10)(view, lane, 0, a));
+                            // for(let b = 1; b < scale; ++b)
+                            // {
+                            //     const value = a * b;
+                            //     const nextValue = a * (b + 1);
+                            //     const width = getPositionAt(lane, nextValue, view) -getPositionAt(lane, value, view);
+                            //     switch(true)
+                            //     {
+                            //     case 25 < width:
+                            //         ticks.push({ value, type: "long", });
+                            //         for(let c = 1; c <= 9; ++c)
+                            //         {
+                            //             const value = a *(b + (c / 10));
+                            //             if (value <= max)
+                            //             {
+                            //                 ticks.push
+                            //                 ({
+                            //                     value: a *(b + (c / 10)),
+                            //                     type: 5 !== c ? "short": "medium",
+                            //                 });
+                            //             }
+                            //         }
+                            //         break;
+                            //     case 12.5 < width || b === 1:
+                            //         ticks.push({ value, type: "long", });
+                            //         ticks.push({ value: a *(b + 0.5), type: "short", });
+                            //         break;
+                            //     //case 12.5 < width:
+                            //     default:
+                            //         ticks.push({ value, type: "medium", });
+                            //         ticks.push({ value: a *(b + 0.5), type: "short", });
+                            //         break;
+                            //     }
+                            // }
                         }
                     }
                 }
