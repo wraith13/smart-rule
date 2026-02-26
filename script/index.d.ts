@@ -9,6 +9,7 @@ declare module "script/url" {
 declare module "script/type" {
     export type NamedNumber = number | "phi" | "e" | "pi";
     export const namedNumberList: NamedNumber[];
+    export const isNamedNumber: (value: unknown) => value is "phi" | "e" | "pi";
     export const phi: number;
     export const getNamedNumberValue: (value: NamedNumber) => number;
     export const getNamedNumberLabel: (value: NamedNumber, locales?: Intl.LocalesArgument, options?: Intl.NumberFormatOptions) => string;
@@ -174,6 +175,7 @@ declare module "script/ruler" {
     export const renderer: (model: Type.Model, view: Type.View, dirty: boolean | Set<number>) => void;
     export const drawSlide: (view: Type.View, slide: Type.SlideUnit) => void;
     export const drawLane: (view: Type.View, group: SVGGElement, lane: Type.Lane) => void;
+    export const makeNumberLabel: (value: Type.NamedNumber) => string;
     export const drawTick: (view: Type.View, group: SVGGElement, lane: Type.Lane, value: Type.NamedNumber, type: Type.TickType) => void;
     export const drawAnkorLine: (position: number) => void;
     export const resize: () => unknown;

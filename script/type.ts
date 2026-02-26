@@ -1,5 +1,7 @@
 export type NamedNumber = number | "phi" | "e" | "pi";
 export const namedNumberList: NamedNumber[] = [ "phi", "e", "pi" ];
+export const isNamedNumber = (value: unknown): value is "phi" | "e" | "pi" =>
+    namedNumberList.includes(value as NamedNumber);
 export const phi = (1 + Math.sqrt(5)) / 2;
 // phi approximately 1.618033988749895
 // e approximately 2.718281828459045

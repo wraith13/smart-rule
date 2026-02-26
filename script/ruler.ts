@@ -85,6 +85,24 @@ export const drawLane = (view: Type.View, group: SVGGElement, lane: Type.Lane): 
         tick => drawTick(view, group, lane, tick.value, tick.type)
     );
 };
+export const makeNumberLabel = (value: Type.NamedNumber): string =>
+{
+    if (Type.isNamedNumber(value))
+    {
+        return Type.getNamedNumberLabel(value);
+    }
+    else
+    {
+        if (value < 0.000001 || 1000000 <= value)
+        {
+            return Type.getNamedNumberLabel(value, undefined, { notation: "scientific", minimumSignificantDigits: 4, maximumSignificantDigits: 4, });
+        }
+        else
+        {
+            return Type.getNamedNumberLabel(value, undefined, { maximumFractionDigits: 8, });
+        }
+    }
+};
 export const drawTick = (view: Type.View, group: SVGGElement, lane: Type.Lane, value: Type.NamedNumber, type: Type.TickType): void =>
 {
     const laneIndex = Model.getLaneIndex(lane);
@@ -120,7 +138,7 @@ export const drawTick = (view: Type.View, group: SVGGElement, lane: Type.Lane, v
                 fill: "#000000",
                 "font-size": 12,
                 "text-anchor": isRootSlide ? "end" : "start",
-                textContent: Type.getNamedNumberLabel(value),
+                textContent: makeNumberLabel(value),
             })
         );
     }

@@ -2,7 +2,7 @@
 <!--
     This file is genereted by build.js. このファイルは build.js によって生成されました。
     build options: ../build.json all
-    build at: Wed Feb 25 2026 21:28:39 GMT+0900 (日本標準時)
+    build at: Wed Feb 25 2026 23:03:29 GMT+0900 (日本標準時)
     repository: https://github.com/wraith13/slide-rule/
 -->
 <!-- license:
@@ -240,8 +240,8 @@ button:focus
 </div>
 <script type="text/javascript">
 const build = {
-    at: "Wed Feb 25 2026 21:28:39 GMT+0900 (日本標準時)",
-    tick: 1772022519141
+    at: "Wed Feb 25 2026 23:03:29 GMT+0900 (日本標準時)",
+    tick: 1772028209308
 };
 const evilCommonjsConfig = {
     "log": {
@@ -683,8 +683,12 @@ define("script/url", ["require", "exports"], function (require, exports) {
 define("script/type", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.getViewScale = exports.scaleModeList = exports.viewModeList = exports.getNext = exports.getNamedNumberLabel = exports.getNamedNumberValue = exports.phi = exports.namedNumberList = void 0;
+    exports.getViewScale = exports.scaleModeList = exports.viewModeList = exports.getNext = exports.getNamedNumberLabel = exports.getNamedNumberValue = exports.phi = exports.isNamedNumber = exports.namedNumberList = void 0;
     exports.namedNumberList = ["phi", "e", "pi"];
+    var isNamedNumber = function (value) {
+        return exports.namedNumberList.includes(value);
+    };
+    exports.isNamedNumber = isNamedNumber;
     exports.phi = (1 + Math.sqrt(5)) / 2;
     // phi approximately 1.618033988749895
     // e approximately 2.718281828459045
@@ -1059,46 +1063,102 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
                 {
                     var beginDigit = Math.floor(Math.log10(min));
                     var endDigit = Math.ceil(Math.log10(max));
-                    if (viewScale < 100) {
-                        var scale = 10;
-                        for (var a = beginDigit; a <= endDigit; ++a) {
-                            ticks.push({ value: Math.pow(scale, a), type: "long", });
+                    // if (viewScale < 100)
+                    // {
+                    //     const scale = 10;
+                    //     for(let a = beginDigit; a <= endDigit; ++a)
+                    //     {
+                    //         ticks.push({ value: Math.pow(scale, a), type: "long", });
+                    //     }
+                    // }
+                    // else
+                    // if (100 < viewScale)
+                    // {
+                    //     const scale = 10;
+                    //     const begin = Math.pow(10, beginDigit);
+                    //     const end = Math.pow(10, endDigit);
+                    //     for(let a = begin; a <= end; a += begin /scale)
+                    //     {
+                    //         const value = a;
+                    //         if (value <= max)
+                    //         {
+                    //             ticks.push({ value, type: "long", });
+                    //             for(let b = 0; b < scale; ++b)
+                    //             {
+                    //                 const value = a +(b *(begin /(scale *scale)));
+                    //                 if (value <= max)
+                    //                 {
+                    //                     ticks.push
+                    //                     ({
+                    //                         value,
+                    //                         type: 5 !== b ? "short": "medium",
+                    //                     });
+                    //                 }
+                    //             }
+                    //         }
+                    //     }
+                    // }
+                    // else
+                    // {
+                    //     const scale = 10;
+                    //     const halfScale = scale / 2;
+                    //     const begin = Math.pow(10, beginDigit);
+                    //     const end = Math.pow(10, endDigit);
+                    //     for(let a = begin; a <= end; a *= scale)
+                    //     {
+                    //         for(let b = 1; b < scale; ++b)
+                    //         {
+                    //             const value = a * b;
+                    //             const nextValue = a * (b + 1);
+                    //             const width = getPositionAt(lane, nextValue, view) -getPositionAt(lane, value, view);
+                    //             switch(true)
+                    //             {
+                    //             case b < halfScale:
+                    //                 ticks.push({ value, type: "long", });
+                    //                 for(let c = 1; c <= 9; ++c)
+                    //                 {
+                    //                     const value = a *(b + (c / 10));
+                    //                     if (value <= max)
+                    //                     {
+                    //                         ticks.push
+                    //                         ({
+                    //                             value: a *(b + (c / 10)),
+                    //                             type: 5 !== c ? "short": "medium",
+                    //                         });
+                    //                     }
+                    //                 }
+                    //                 break;
+                    //             case b === halfScale:
+                    //                 ticks.push({ value, type: "long", });
+                    //                 ticks.push({ value: a *(b + 0.5), type: "short", });
+                    //                 break;
+                    //             case halfScale < b:
+                    //                 ticks.push({ value, type: "medium", });
+                    //                 ticks.push({ value: a *(b + 0.5), type: "short", });
+                    //                 break;
+                    //             }
+                    //         }
+                    //     }
+                    // }
+                    var scale = 10;
+                    var begin = Math.pow(10, beginDigit);
+                    var end = Math.pow(10, endDigit);
+                    for (var a = begin; a <= end; a *= scale) {
+                        var width = (0, exports.getPositionAt)(lane, a * scale, view) - (0, exports.getPositionAt)(lane, a, view);
+                        if (width < 25) {
+                            ticks.push({ value: a, type: "long", });
                         }
-                    }
-                    else if (100 < viewScale) {
-                        var scale = 10;
-                        var begin = Math.pow(10, beginDigit);
-                        var end = Math.pow(10, endDigit);
-                        for (var a = begin; a <= end; a += begin / scale) {
-                            var value = a;
-                            if (value <= max) {
-                                ticks.push({ value: value, type: "long", });
-                                for (var b = 0; b < scale; ++b) {
-                                    var value_1 = a + (b * (begin / (scale * scale)));
-                                    if (value_1 <= max) {
-                                        ticks.push({
-                                            value: value_1,
-                                            type: 5 !== b ? "short" : "medium",
-                                        });
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else {
-                        var scale = 10;
-                        var halfScale = scale / 2;
-                        var begin = Math.pow(10, beginDigit);
-                        var end = Math.pow(10, endDigit);
-                        for (var a = begin; a <= end; a *= scale) {
+                        else {
                             for (var b = 1; b < scale; ++b) {
                                 var value = a * b;
+                                var nextValue = a * (b + 1);
+                                var width_1 = (0, exports.getPositionAt)(lane, nextValue, view) - (0, exports.getPositionAt)(lane, value, view);
                                 switch (true) {
-                                    case b < halfScale:
+                                    case 25 < width_1:
                                         ticks.push({ value: value, type: "long", });
                                         for (var c = 1; c <= 9; ++c) {
-                                            var value_2 = a * (b + (c / 10));
-                                            if (value_2 <= max) {
+                                            var value_1 = a * (b + (c / 10));
+                                            if (value_1 <= max) {
                                                 ticks.push({
                                                     value: a * (b + (c / 10)),
                                                     type: 5 !== c ? "short" : "medium",
@@ -1106,11 +1166,12 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
                                             }
                                         }
                                         break;
-                                    case b === halfScale:
+                                    case 12.5 < width_1 || b === 1:
                                         ticks.push({ value: value, type: "long", });
                                         ticks.push({ value: a * (b + 0.5), type: "short", });
                                         break;
-                                    case halfScale < b:
+                                    //case 12.5 < width:
+                                    default:
                                         ticks.push({ value: value, type: "medium", });
                                         ticks.push({ value: a * (b + 0.5), type: "short", });
                                         break;
@@ -1490,7 +1551,7 @@ define("script/svg", ["require", "exports", "script/element"], function (require
 define("script/ruler", ["require", "exports", "script/type", "script/ui", "script/model", "script/svg", "resource/config"], function (require, exports, Type, UI, Model, SVG, config_json_3) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.resize = exports.drawAnkorLine = exports.drawTick = exports.drawLane = exports.drawSlide = exports.renderer = exports.LaneWidths = exports.scale = void 0;
+    exports.initialize = exports.resize = exports.drawAnkorLine = exports.drawTick = exports.makeNumberLabel = exports.drawLane = exports.drawSlide = exports.renderer = exports.LaneWidths = exports.scale = void 0;
     Type = __importStar(Type);
     UI = __importStar(UI);
     Model = __importStar(Model);
@@ -1562,6 +1623,20 @@ define("script/ruler", ["require", "exports", "script/type", "script/ui", "scrip
         Model.designTicks(view, lane).forEach(function (tick) { return (0, exports.drawTick)(view, group, lane, tick.value, tick.type); });
     };
     exports.drawLane = drawLane;
+    var makeNumberLabel = function (value) {
+        if (Type.isNamedNumber(value)) {
+            return Type.getNamedNumberLabel(value);
+        }
+        else {
+            if (value < 0.000001 || 1000000 <= value) {
+                return Type.getNamedNumberLabel(value, undefined, { notation: "scientific", minimumSignificantDigits: 4, maximumSignificantDigits: 4, });
+            }
+            else {
+                return Type.getNamedNumberLabel(value, undefined, { maximumFractionDigits: 8, });
+            }
+        }
+    };
+    exports.makeNumberLabel = makeNumberLabel;
     var drawTick = function (view, group, lane, value, type) {
         var laneIndex = Model.getLaneIndex(lane);
         var position = Model.getPositionAt(lane, Type.getNamedNumberValue(value), view);
@@ -1589,7 +1664,7 @@ define("script/ruler", ["require", "exports", "script/type", "script/ui", "scrip
                 fill: "#000000",
                 "font-size": 12,
                 "text-anchor": isRootSlide ? "end" : "start",
-                textContent: Type.getNamedNumberLabel(value),
+                textContent: (0, exports.makeNumberLabel)(value),
             }));
         }
     };
