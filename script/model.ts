@@ -83,46 +83,44 @@ export const getFirstLabelValue = (lane: Type.Lane, view: Type.View): { firstLab
 export const designTicks10 = (view: Type.View, lane: Type.Lane, base: number, unit: number): { value: Type.NamedNumber, type: Type.TickType, }[] =>
 {
     const height = window.innerHeight;
+    const min = getValueAt(lane, 0, view);
     const max = getValueAt(lane, height, view);
     const ticks: { value: Type.NamedNumber, type: Type.TickType, }[] = [];
-    for(let b = 1; b < 10; ++b)
+    if (0 < base && base <= max && min <= (base +unit) && 25 <= getWidth(lane, base, base + unit, view))
+    {
+        ticks.push(...designTicks10(view, lane, base, unit / 10));
+    }
+    for(let b = 1; b <= 9; ++b)
     {
         const value = base + (unit *b);
         const nextValue = base + (unit *(b +1));
-        const width = getWidth(lane, value, nextValue, view);
-        switch(true)
+        if (min < nextValue)
         {
-        case 50 < width:
-            ticks.push({ value, type: "long", });
-            ticks.push(...designTicks10(view, lane, value, unit / 10));
-            break;
-        case 25 < width:
-            ticks.push({ value, type: "long", });
-            for(let c = 1; c <= 9; ++c)
+            if (max < value)
             {
-                const value = base +(unit *(b + (c / 10)));
-                if (value <= max)
-                {
-                    ticks.push
-                    ({
-                        value: base +(unit *(b + (c / 10))),
-                        type: 5 !== c ? "short": "medium",
-                    });
-                }
+                break;
             }
-            break;
-        case 12.5 < width || b === 1:
-            ticks.push({ value, type: "long", });
-            ticks.push({ value: base +(unit *(b + 0.5)), type: "short", });
-            break;
-        //case 12.5 < width:
-        default:
-            ticks.push({ value, type: "medium", });
-            ticks.push({ value: base +(unit *(b + 0.5)), type: "short", });
-            break;
+            const width = getWidth(lane, value, nextValue, view);
+            switch(true)
+            {
+            case 25 <= width:
+                ticks.push({ value, type: "long", });
+                ticks.push(...designTicks10(view, lane, value, unit / 10));
+                break;
+            case 12.5 <= width:
+                ticks.push({ value, type: "long", });
+                ticks.push({ value: base +(unit *(b + 0.5)), type: "medium", });
+                break;
+            case 6.25 < width || 5 === b:
+                ticks.push({ value, type: "medium", });
+                break;
+            default:
+                ticks.push({ value, type: "short", });
+                break;
+            }
         }
     }
-    return ticks;
+    return ticks.filter(tick => min <= Type.getNamedNumberValue(tick.value) && Type.getNamedNumberValue(tick.value) <= max);
 };
 export const designTicks = (view: Type.View, lane: Type.Lane): { value: Type.NamedNumber, type: Type.TickType, }[] =>
 {

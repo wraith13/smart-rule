@@ -454,41 +454,39 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
     exports.getFirstLabelValue = getFirstLabelValue;
     var designTicks10 = function (view, lane, base, unit) {
         var height = window.innerHeight;
+        var min = (0, exports.getValueAt)(lane, 0, view);
         var max = (0, exports.getValueAt)(lane, height, view);
         var ticks = [];
-        for (var b = 1; b < 10; ++b) {
+        if (0 < base && base <= max && min <= (base + unit) && 25 <= (0, exports.getWidth)(lane, base, base + unit, view)) {
+            ticks.push.apply(ticks, (0, exports.designTicks10)(view, lane, base, unit / 10));
+        }
+        for (var b = 1; b <= 9; ++b) {
             var value = base + (unit * b);
             var nextValue = base + (unit * (b + 1));
-            var width = (0, exports.getWidth)(lane, value, nextValue, view);
-            switch (true) {
-                case 50 < width:
-                    ticks.push({ value: value, type: "long", });
-                    ticks.push.apply(ticks, (0, exports.designTicks10)(view, lane, value, unit / 10));
+            if (min < nextValue) {
+                if (max < value) {
                     break;
-                case 25 < width:
-                    ticks.push({ value: value, type: "long", });
-                    for (var c = 1; c <= 9; ++c) {
-                        var value_1 = base + (unit * (b + (c / 10)));
-                        if (value_1 <= max) {
-                            ticks.push({
-                                value: base + (unit * (b + (c / 10))),
-                                type: 5 !== c ? "short" : "medium",
-                            });
-                        }
-                    }
-                    break;
-                case 12.5 < width || b === 1:
-                    ticks.push({ value: value, type: "long", });
-                    ticks.push({ value: base + (unit * (b + 0.5)), type: "short", });
-                    break;
-                //case 12.5 < width:
-                default:
-                    ticks.push({ value: value, type: "medium", });
-                    ticks.push({ value: base + (unit * (b + 0.5)), type: "short", });
-                    break;
+                }
+                var width = (0, exports.getWidth)(lane, value, nextValue, view);
+                switch (true) {
+                    case 25 <= width:
+                        ticks.push({ value: value, type: "long", });
+                        ticks.push.apply(ticks, (0, exports.designTicks10)(view, lane, value, unit / 10));
+                        break;
+                    case 12.5 <= width:
+                        ticks.push({ value: value, type: "long", });
+                        ticks.push({ value: base + (unit * (b + 0.5)), type: "medium", });
+                        break;
+                    case 6.25 < width || 5 === b:
+                        ticks.push({ value: value, type: "medium", });
+                        break;
+                    default:
+                        ticks.push({ value: value, type: "short", });
+                        break;
+                }
             }
         }
-        return ticks;
+        return ticks.filter(function (tick) { return min <= Type.getNamedNumberValue(tick.value) && Type.getNamedNumberValue(tick.value) <= max; });
     };
     exports.designTicks10 = designTicks10;
     var designTicks = function (view, lane) {
