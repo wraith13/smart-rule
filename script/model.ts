@@ -80,23 +80,23 @@ export const getFirstLabelValue = (lane: Type.Lane, view: Type.View): { firstLab
         throw new Error(`🦋 FIXME: getFirstLabelValue not implemented for scale mode: ${view.scaleMode}`);
     }
 }
-export const designTicks10 = (view: Type.View, lane: Type.Lane, base: number, unit: number): { value: Type.NamedNumber, type: Type.TickType, }[] =>
+export const designTicks10 = (view: Type.View, lane: Type.Lane, base: number, unit: number, parent: { index: number, width: number }): Type.Tick[] =>
 {
     const height = window.innerHeight;
     const min = getValueAt(lane, 0, view);
     const max = getValueAt(lane, height, view);
-    const ticks: { value: Type.NamedNumber, type: Type.TickType, }[] = [];
+    const ticks: Type.Tick[] = [];
     if (0 < base && base <= max && min <= (base +unit))
     {
         const width = getWidth(lane, base, base + unit, view);
         switch(true)
         {
         case 25 <= width:
-            ticks.push(...designTicks10(view, lane, base, unit / 10));
+            ticks.push(...designTicks10(view, lane, base, unit / 10, { index: 0, width }));
             break;
-        case 12.5 <= width:
-            ticks.push({ value: base +(unit *0.5), type: "medium", });
-            break;
+        // case 12.5 <= width:
+        //     ticks.push({ value: base +(unit *0.5), type: "medium" });
+        //     break;
         }
     }
     for(let b = 1; b <= 9; ++b)
@@ -114,14 +114,17 @@ export const designTicks10 = (view: Type.View, lane: Type.Lane, base: number, un
             {
             case 25 <= width:
                 ticks.push({ value, type: "long", });
-                ticks.push(...designTicks10(view, lane, value, unit / 10));
+                ticks.push(...designTicks10(view, lane, value, unit / 10, { index: b, width }));
                 break;
-            case 12.5 <= width:
+            // case 12.5 <= width:
+                // ticks.push({ value, type: "long", });
+                // ticks.push({ value: base +(unit *(b + 0.5)), type: "medium" });
+                break;
+            case base <= 0 && 0 === parent.index && 1 === b:
                 ticks.push({ value, type: "long", });
-                ticks.push({ value: base +(unit *(b + 0.5)), type: "medium", });
                 break;
-            case 6.25 < width || 5 === b:
-                ticks.push({ value, type: "medium", });
+            case 5 === b:
+                ticks.push({ value, type: "medium" });
                 break;
             default:
                 ticks.push({ value, type: "short", });
@@ -131,13 +134,13 @@ export const designTicks10 = (view: Type.View, lane: Type.Lane, base: number, un
     }
     return ticks.filter(tick => min <= Type.getNamedNumberValue(tick.value) && Type.getNamedNumberValue(tick.value) <= max);
 };
-export const designTicks = (view: Type.View, lane: Type.Lane): { value: Type.NamedNumber, type: Type.TickType, }[] =>
+export const designTicks = (view: Type.View, lane: Type.Lane): Type.Tick[] =>
 {
     const viewScale = Type.getViewScale(view);
     const height = window.innerHeight;
     const min = getValueAt(lane, 0, view);
     const max = getValueAt(lane, height, view);
-    const ticks: { value: Type.NamedNumber, type: Type.TickType, }[] = [];
+    const ticks: Type.Tick[] = [];
     switch(view.scaleMode)
     {
     case "logarithmic":
@@ -156,7 +159,7 @@ export const designTicks = (view: Type.View, lane: Type.Lane): { value: Type.Nam
                 }
                 else
                 {
-                    ticks.push(...designTicks10(view, lane, 0, a));
+                    ticks.push(...designTicks10(view, lane, 0, a, { index: 0, width }));
                 }
             }
         }
@@ -194,7 +197,7 @@ export const designTicks = (view: Type.View, lane: Type.Lane): { value: Type.Nam
                 const actualNumber = Type.getNamedNumberValue(value);
                 if (min <= actualNumber && actualNumber <= max)
                 {
-                    ticks.push({ value, type: "long", });
+                    ticks.push({ value, type: "long", color: "blue" });
                 }
             }
         );

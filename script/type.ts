@@ -75,3 +75,9 @@ export interface Model // 🔥 後で evil-type.ts ベースに！
     anchor: number;
 }
 export type TickType = "short" | "medium" | "long";
+export interface Tick
+{
+    value: NamedNumber;
+    type: TickType;
+    color?: string;
+}

@@ -82,7 +82,7 @@ export const drawLane = (view: Type.View, group: SVGGElement, lane: Type.Lane): 
     );
     Model.designTicks(view, lane).forEach
     (
-        tick => drawTick(view, group, lane, tick.value, tick.type)
+        tick => drawTick(view, group, lane, tick)
     );
 };
 export const makeNumberLabel = (value: Type.NamedNumber): string =>
@@ -103,10 +103,10 @@ export const makeNumberLabel = (value: Type.NamedNumber): string =>
         }
     }
 };
-export const drawTick = (view: Type.View, group: SVGGElement, lane: Type.Lane, value: Type.NamedNumber, type: Type.TickType): void =>
+export const drawTick = (view: Type.View, group: SVGGElement, lane: Type.Lane, tick: Type.Tick): void =>
 {
     const laneIndex = Model.getLaneIndex(lane);
-    const position = Model.getPositionAt(lane, Type.getNamedNumberValue(value), view);
+    const position = Model.getPositionAt(lane, Type.getNamedNumberValue(tick.value), view);
     const isRootSlide = Model.isRootSlide(Model.getSlideFromLane(lane));
     const width = config.render.ruler.laneWidth;;
     const left = LaneWidths.slice(0, laneIndex).reduce((a, b) => a + b, 0);
@@ -116,16 +116,17 @@ export const drawTick = (view: Type.View, group: SVGGElement, lane: Type.Lane, v
         SVG.make
         ({
             tag: "line",
-            class: `tick tick-${type}`,
+            class: `tick tick-${tick.type}`,
             x1: isRootSlide ? right : left,
             y1: position,
-            x2: isRootSlide ? right - config.render.ruler.tick[type].length : left + config.render.ruler.tick[type].length,
+            x2: isRootSlide ? right - config.render.ruler.tick[tick.type].length : left + config.render.ruler.tick[tick.type].length,
             y2: position,
-            stroke: config.render.ruler.tick[type].color,
-            "stroke-width": config.render.ruler.tick[type].width,
+            // stroke: config.render.ruler.tick[tick.type].color,
+            stroke: tick.color ?? config.render.ruler.tick[tick.type].color,
+            "stroke-width": config.render.ruler.tick[tick.type].width,
         })
     );
-    if (type === "long")
+    if (tick.type === "long")
     {
         group.appendChild
         (
@@ -133,12 +134,12 @@ export const drawTick = (view: Type.View, group: SVGGElement, lane: Type.Lane, v
             ({
                 tag: "text",
                 class: "tick-label",
-                x: isRootSlide ? right - config.render.ruler.tick[type].length - 4 : left + config.render.ruler.tick[type].length + 4,
+                x: isRootSlide ? right - config.render.ruler.tick[tick.type].length - 4 : left + config.render.ruler.tick[tick.type].length + 4,
                 y: position + 4,
                 fill: "#000000",
                 "font-size": 12,
                 "text-anchor": isRootSlide ? "end" : "start",
-                textContent: makeNumberLabel(value),
+                textContent: makeNumberLabel(tick.value),
             })
         );
     }

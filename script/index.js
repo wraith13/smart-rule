@@ -452,7 +452,7 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
         }
     };
     exports.getFirstLabelValue = getFirstLabelValue;
-    var designTicks10 = function (view, lane, base, unit) {
+    var designTicks10 = function (view, lane, base, unit, parent) {
         var height = window.innerHeight;
         var min = (0, exports.getValueAt)(lane, 0, view);
         var max = (0, exports.getValueAt)(lane, height, view);
@@ -461,11 +461,11 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
             var width = (0, exports.getWidth)(lane, base, base + unit, view);
             switch (true) {
                 case 25 <= width:
-                    ticks.push.apply(ticks, (0, exports.designTicks10)(view, lane, base, unit / 10));
+                    ticks.push.apply(ticks, (0, exports.designTicks10)(view, lane, base, unit / 10, { index: 0, width: width }));
                     break;
-                case 12.5 <= width:
-                    ticks.push({ value: base + (unit * 0.5), type: "medium", });
-                    break;
+                // case 12.5 <= width:
+                //     ticks.push({ value: base +(unit *0.5), type: "medium" });
+                //     break;
             }
         }
         for (var b = 1; b <= 9; ++b) {
@@ -479,14 +479,17 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
                 switch (true) {
                     case 25 <= width:
                         ticks.push({ value: value, type: "long", });
-                        ticks.push.apply(ticks, (0, exports.designTicks10)(view, lane, value, unit / 10));
+                        ticks.push.apply(ticks, (0, exports.designTicks10)(view, lane, value, unit / 10, { index: b, width: width }));
                         break;
-                    case 12.5 <= width:
+                        // case 12.5 <= width:
+                        // ticks.push({ value, type: "long", });
+                        // ticks.push({ value: base +(unit *(b + 0.5)), type: "medium" });
+                        break;
+                    case base <= 0 && 0 === parent.index && 1 === b:
                         ticks.push({ value: value, type: "long", });
-                        ticks.push({ value: base + (unit * (b + 0.5)), type: "medium", });
                         break;
-                    case 6.25 < width || 5 === b:
-                        ticks.push({ value: value, type: "medium", });
+                    case 5 === b:
+                        ticks.push({ value: value, type: "medium" });
                         break;
                     default:
                         ticks.push({ value: value, type: "short", });
@@ -518,7 +521,7 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
                             ticks.push({ value: a, type: "long", });
                         }
                         else {
-                            ticks.push.apply(ticks, (0, exports.designTicks10)(view, lane, 0, a));
+                            ticks.push.apply(ticks, (0, exports.designTicks10)(view, lane, 0, a, { index: 0, width: width }));
                         }
                     }
                 }
@@ -547,7 +550,7 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
             Type.namedNumberList.forEach(function (value) {
                 var actualNumber = Type.getNamedNumberValue(value);
                 if (min <= actualNumber && actualNumber <= max) {
-                    ticks.push({ value: value, type: "long", });
+                    ticks.push({ value: value, type: "long", color: "blue" });
                 }
             });
         }
@@ -962,7 +965,7 @@ define("script/ruler", ["require", "exports", "script/type", "script/ui", "scrip
             stroke: config_json_3.default.render.ruler.laneSeparatorColor,
             "stroke-width": config_json_3.default.render.ruler.laneSeparatorWidth,
         }));
-        Model.designTicks(view, lane).forEach(function (tick) { return (0, exports.drawTick)(view, group, lane, tick.value, tick.type); });
+        Model.designTicks(view, lane).forEach(function (tick) { return (0, exports.drawTick)(view, group, lane, tick); });
     };
     exports.drawLane = drawLane;
     var makeNumberLabel = function (value) {
@@ -979,9 +982,10 @@ define("script/ruler", ["require", "exports", "script/type", "script/ui", "scrip
         }
     };
     exports.makeNumberLabel = makeNumberLabel;
-    var drawTick = function (view, group, lane, value, type) {
+    var drawTick = function (view, group, lane, tick) {
+        var _a;
         var laneIndex = Model.getLaneIndex(lane);
-        var position = Model.getPositionAt(lane, Type.getNamedNumberValue(value), view);
+        var position = Model.getPositionAt(lane, Type.getNamedNumberValue(tick.value), view);
         var isRootSlide = Model.isRootSlide(Model.getSlideFromLane(lane));
         var width = config_json_3.default.render.ruler.laneWidth;
         ;
@@ -989,24 +993,25 @@ define("script/ruler", ["require", "exports", "script/type", "script/ui", "scrip
         var right = left + width;
         group.appendChild(SVG.make({
             tag: "line",
-            class: "tick tick-".concat(type),
+            class: "tick tick-".concat(tick.type),
             x1: isRootSlide ? right : left,
             y1: position,
-            x2: isRootSlide ? right - config_json_3.default.render.ruler.tick[type].length : left + config_json_3.default.render.ruler.tick[type].length,
+            x2: isRootSlide ? right - config_json_3.default.render.ruler.tick[tick.type].length : left + config_json_3.default.render.ruler.tick[tick.type].length,
             y2: position,
-            stroke: config_json_3.default.render.ruler.tick[type].color,
-            "stroke-width": config_json_3.default.render.ruler.tick[type].width,
+            // stroke: config.render.ruler.tick[tick.type].color,
+            stroke: (_a = tick.color) !== null && _a !== void 0 ? _a : config_json_3.default.render.ruler.tick[tick.type].color,
+            "stroke-width": config_json_3.default.render.ruler.tick[tick.type].width,
         }));
-        if (type === "long") {
+        if (tick.type === "long") {
             group.appendChild(SVG.make({
                 tag: "text",
                 class: "tick-label",
-                x: isRootSlide ? right - config_json_3.default.render.ruler.tick[type].length - 4 : left + config_json_3.default.render.ruler.tick[type].length + 4,
+                x: isRootSlide ? right - config_json_3.default.render.ruler.tick[tick.type].length - 4 : left + config_json_3.default.render.ruler.tick[tick.type].length + 4,
                 y: position + 4,
                 fill: "#000000",
                 "font-size": 12,
                 "text-anchor": isRootSlide ? "end" : "start",
-                textContent: (0, exports.makeNumberLabel)(value),
+                textContent: (0, exports.makeNumberLabel)(tick.value),
             }));
         }
     };

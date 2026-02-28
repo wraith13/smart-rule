@@ -45,6 +45,11 @@ declare module "script/type" {
         anchor: number;
     }
     export type TickType = "short" | "medium" | "long";
+    export interface Tick {
+        value: NamedNumber;
+        type: TickType;
+        color?: string;
+    }
 }
 declare module "script/ui" {
     export const setAriaHidden: (element: HTMLElement | SVGElement, hidden: boolean) => void;
@@ -81,14 +86,11 @@ declare module "script/model" {
         firstLabelValue: number;
         labelValueUnit: number;
     };
-    export const designTicks10: (view: Type.View, lane: Type.Lane, base: number, unit: number) => {
-        value: Type.NamedNumber;
-        type: Type.TickType;
-    }[];
-    export const designTicks: (view: Type.View, lane: Type.Lane) => {
-        value: Type.NamedNumber;
-        type: Type.TickType;
-    }[];
+    export const designTicks10: (view: Type.View, lane: Type.Lane, base: number, unit: number, parent: {
+        index: number;
+        width: number;
+    }) => Type.Tick[];
+    export const designTicks: (view: Type.View, lane: Type.Lane) => Type.Tick[];
     export const makeRootLane: () => Type.Lane;
     export const getRootLane: () => Type.Lane;
     export const isRootLane: (indexOrLane: number | Type.Lane) => boolean;
@@ -181,7 +183,7 @@ declare module "script/ruler" {
     export const drawSlide: (view: Type.View, slide: Type.SlideUnit) => void;
     export const drawLane: (view: Type.View, group: SVGGElement, lane: Type.Lane) => void;
     export const makeNumberLabel: (value: Type.NamedNumber) => string;
-    export const drawTick: (view: Type.View, group: SVGGElement, lane: Type.Lane, value: Type.NamedNumber, type: Type.TickType) => void;
+    export const drawTick: (view: Type.View, group: SVGGElement, lane: Type.Lane, tick: Type.Tick) => void;
     export const drawAnkorLine: (position: number) => void;
     export const resize: () => unknown;
     export const initialize: () => void;
