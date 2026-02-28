@@ -457,8 +457,16 @@ define("script/model", ["require", "exports", "script/number", "script/type", "s
         var min = (0, exports.getValueAt)(lane, 0, view);
         var max = (0, exports.getValueAt)(lane, height, view);
         var ticks = [];
-        if (0 < base && base <= max && min <= (base + unit) && 25 <= (0, exports.getWidth)(lane, base, base + unit, view)) {
-            ticks.push.apply(ticks, (0, exports.designTicks10)(view, lane, base, unit / 10));
+        if (0 < base && base <= max && min <= (base + unit)) {
+            var width = (0, exports.getWidth)(lane, base, base + unit, view);
+            switch (true) {
+                case 25 <= width:
+                    ticks.push.apply(ticks, (0, exports.designTicks10)(view, lane, base, unit / 10));
+                    break;
+                case 12.5 <= width:
+                    ticks.push({ value: base + (unit * 0.5), type: "medium", });
+                    break;
+            }
         }
         for (var b = 1; b <= 9; ++b) {
             var value = base + (unit * b);

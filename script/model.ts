@@ -86,9 +86,18 @@ export const designTicks10 = (view: Type.View, lane: Type.Lane, base: number, un
     const min = getValueAt(lane, 0, view);
     const max = getValueAt(lane, height, view);
     const ticks: { value: Type.NamedNumber, type: Type.TickType, }[] = [];
-    if (0 < base && base <= max && min <= (base +unit) && 25 <= getWidth(lane, base, base + unit, view))
+    if (0 < base && base <= max && min <= (base +unit))
     {
-        ticks.push(...designTicks10(view, lane, base, unit / 10));
+        const width = getWidth(lane, base, base + unit, view);
+        switch(true)
+        {
+        case 25 <= width:
+            ticks.push(...designTicks10(view, lane, base, unit / 10));
+            break;
+        case 12.5 <= width:
+            ticks.push({ value: base +(unit *0.5), type: "medium", });
+            break;
+        }
     }
     for(let b = 1; b <= 9; ++b)
     {
