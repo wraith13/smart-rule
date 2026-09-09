@@ -578,6 +578,14 @@ export const getPrimaryValueAt = (lane: Type.Lane, position: number): Calculatio
         throw new Error(`🦋 FIXME: getPrimaryValueAt not implemented for lane type: ${lane.type}`);
     }
 };
+export const getProjectionValue = (lane: Type.Lane, value: Type.ExValue): number =>
+{
+    switch(lane.type)
+    {
+    default:
+        return Calculation.getNumberOrNaN(Type.getExValueNumber(value));
+    }
+};
 export const getPrimaryPositionAt = (lane: Type.Lane, value: Type.ValueType, quarter?: number): number =>
 {
     switch(lane.type)
