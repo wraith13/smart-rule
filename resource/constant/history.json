@@ -28,6 +28,21 @@
             }
         }
     ],
+    "areaOptions": {
+        "length": {
+            "show": true,
+            "unit": {
+                "value": 31557600,
+                "label": {
+                    "en": "years",
+                    "ja": "年間"
+                },
+                "$source-eval": {
+                    "value": "roundE(config.time.julianYearLength *24 *60 *60)"
+                }
+            }
+        }
+    },
     "areas": [
         {
             "lowerBound": null,

@@ -181,7 +181,8 @@ export const getNextTickType = (tickType: TickType, direction: "shorter" | "long
         throw new Error(`🦋 FIXME: getNextTickType: unknown direction: ${direction}`);
     }
 };
-export type ValueType = Calculation.NumberOrComplex;
+// export type ValueType = Calculation.NumberOrComplex;
+export type ValueType = number;
 export type ValueWithBasePosition = { value: ValueType; basePosition: number; quarter: number; };
 export const isValueWithBasePosition = (value: unknown): value is ValueWithBasePosition =>
     "object" === typeof value && null !== value &&
