@@ -125,6 +125,7 @@ export interface ContantTableArea extends SourceEval
     fill: string; // aarea color
     overlay?: AreaOverlayType;
     label?: MultiLanguageText;
+    subLabel?: MultiLanguageText;
     color?: ValueOrThemeTable<string>; // label color
     details?: ContantTableArea[];
 }
@@ -222,6 +223,7 @@ export interface Area
     fill: string; // aarea color
     overlay?: AreaOverlayType;
     label?: MultiLanguageText;
+    subLabel?: MultiLanguageText;
     color?: string; // label color
     details?: Area[];
 }

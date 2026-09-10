@@ -1361,11 +1361,10 @@ define("script/calculation", ["require", "exports", "script/settings", "resource
     const isNearlyEqual = (a, b, epsilon = 1E-6) => Math.abs((0, exports.diffRate)(a, b)) <= epsilon;
     exports.isNearlyEqual = isNearlyEqual;
 });
-define("script/type", ["require", "exports", "script/calculation"], function (require, exports, Calculation) {
+define("script/type", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.getTickValue = exports.getExValuePosition = exports.getExValueNumber = exports.isValueWithPosition = exports.isValueWithBasePosition = exports.getNextTickType = exports.getViewScale = exports.viewModeList = exports.isThemeTable = exports.getNext = void 0;
-    Calculation = __importStar(Calculation);
     const getNext = (list, current, isReverse) => {
         const currentIndex = list.indexOf(current);
         if (0 <= currentIndex) {
@@ -1429,7 +1428,7 @@ define("script/type", ["require", "exports", "script/calculation"], function (re
         "value" in value && "number" === typeof value.value &&
         "position" in value && "number" === typeof value.position;
     exports.isValueWithPosition = isValueWithPosition;
-    const getExValueNumber = (exValue) => undefined === exValue || null === exValue || "number" === typeof exValue || Calculation.isNumberOrComplex(exValue) ? exValue : exValue.value;
+    const getExValueNumber = (exValue) => undefined === exValue || null === exValue || "number" === typeof exValue ? exValue : exValue.value;
     exports.getExValueNumber = getExValueNumber;
     const getExValuePosition = (exValue) => "object" === typeof exValue && null !== exValue &&
         "position" in exValue && "number" === typeof exValue.position ?
@@ -6489,6 +6488,21 @@ define("resource/constant/history", [], {
             }
         }
     ],
+    "areaOptions": {
+        "length": {
+            "show": true,
+            "unit": {
+                "value": 31557600,
+                "label": {
+                    "en": "years",
+                    "ja": "年間"
+                },
+                "$source-eval": {
+                    "value": "roundE(config.time.julianYearLength *24 *60 *60)"
+                }
+            }
+        }
+    },
     "areas": [
         {
             "lowerBound": null,
@@ -6732,7 +6746,7 @@ define("resource/constant/history", [], {
 define("script/model", ["require", "exports", "script/locale", "script/calculation", "script/type", "script/url", "script/theme", "script/comparer", "script/settings", "resource/config", "resource/digit/$si", "resource/digit/en", "resource/digit/ja", "resource/angle/sin", "resource/angle/cos", "resource/angle/tan", "resource/angle/sec", "resource/angle/csc", "resource/angle/cot", "resource/constant/size", "resource/constant/area", "resource/constant/volume", "resource/constant/mass", "resource/constant/time", "resource/constant/speed", "resource/constant/energy", "resource/constant/temperature", "resource/constant/counting", "resource/constant/sound-frequency", "resource/constant/emw-wavelength", "resource/constant/emw-frequency", "resource/constant/emw-energy", "resource/constant/history"], function (require, exports, Locale, Calculation, Type, Url, Theme, Comparer, Settings, config_json_3, _si_json_1, en_json_2, ja_json_2, sin_json_1, cos_json_1, tan_json_1, sec_json_1, csc_json_1, cot_json_1, size_json_1, area_json_1, volume_json_1, mass_json_1, time_json_1, speed_json_1, energy_json_1, temperature_json_1, counting_json_1, sound_frequency_json_1, emw_wavelength_json_1, emw_frequency_json_1, emw_energy_json_1, history_json_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.hasDataArea = exports.getLaneContext = exports.getCursorValues = exports.getCursorValue = exports.getCursorPosition = exports.makeSure = exports.removeLane = exports.makeLane = exports.addConstantLane = exports.addDigitLane = exports.addLane = exports.getSlideFromLane = exports.getLane = exports.getLastSlideAndLastLane = exports.getSlideAndLane = exports.makeSureSlide = exports.makeSlide = exports.getLaneIndex = exports.getSlideIndexFromLane = exports.getSlideIndex = exports.isRootSlide = exports.getRootSlideAndRootLane = exports.getRootSlide = exports.isPrimaryLane = exports.isRootLane = exports.getRootLane = exports.makeRootLane = exports.designTicks = exports.complementMinMaxArea = exports.getBottomTick = exports.getTopTick = exports.designOscillatingTicks = exports.designPeriodicTicks = exports.getUnitList = exports.designConstantTicks = exports.makeConstantStandardTickUnit = exports.designConstantTickType = exports.designConstantTickColor = exports.designConstantAreas = exports.designDigitTicks = exports.makeDigitLabel = exports.designPrimeDecompositionTicks = exports.factorsToString = exports.designPrimeNumbersTicks = exports.designCurvedTicks = exports.designLinearTicks = exports.designLogarithmicTicks = exports.addConstTicks = exports.designAngleTicks360 = exports.designAngleTicks90 = exports.designAngleTicks30 = exports.getMajorRateFromAngle = exports.getMajorRateCore = exports.designAngleTicks10 = exports.designAngleTicksInverted10 = exports.designAngleTicksRegular10 = exports.makeTick = exports.getDigitIndexFromWidth = exports.designCurvedTicks10 = exports.designLinearTicks10 = exports.designLogarithmicTicks10 = exports.designTickType = exports.getLongTickSpaceWidth = exports.makePositionTickWindowFromPositionAndWidth = exports.makePositionTickWindowFromWindow = exports.ValueTickWindowToPositionTickWindow = exports.PositionTickWindowToValueTickWindow = exports.getSnapReferenceLaneIndex = exports.getConvenientWidth = exports.getWidth = exports.getPositionAt = exports.getSlideOffset = exports.getAnchorSlideAndLane = exports.getRawViewPositionAt = exports.logPositionToLinearPosition = exports.linearPositionToLogPosition = exports.getLinearPositionAt = exports.getValueAt = exports.getRawValueAt = exports.angleToQuarter = exports.getPrimaryPositionAt = exports.getPrimaryValueAt = exports.getRegionAt = exports.getMaxValue = exports.getMinValue = exports.getWidthValueRatioFromAngleTicks = exports.getAngleTick = exports.getAngleTable = exports.getPrimaryTick = exports.getSlidePositionAt = exports.isDiscreteLane = exports.isOscillatingLane = exports.isPeriodicLane = exports.getPrimaryPeriod = exports.getPrimaryPeriod360 = exports.getSlidePosition = exports.isInvertedSlide = exports.isInvertedLane = exports.getAllLanes = exports.getAllLaneCount = exports.RootLaneIndex = exports.RootSlideIndex = exports.ticksCache = exports.data = exports.getConstantTable = exports.constant = exports.getDigitTable = exports.digit = void 0;
+    exports.initialize = exports.hasDataArea = exports.getLaneContext = exports.getCursorValues = exports.getCursorValue = exports.getCursorPosition = exports.makeSure = exports.removeLane = exports.makeLane = exports.addConstantLane = exports.addDigitLane = exports.addLane = exports.getSlideFromLane = exports.getLane = exports.getLastSlideAndLastLane = exports.getSlideAndLane = exports.makeSureSlide = exports.makeSlide = exports.getLaneIndex = exports.getSlideIndexFromLane = exports.getSlideIndex = exports.isRootSlide = exports.getRootSlideAndRootLane = exports.getRootSlide = exports.isPrimaryLane = exports.isRootLane = exports.getRootLane = exports.makeRootLane = exports.designTicks = exports.complementMinMaxArea = exports.getBottomTick = exports.getTopTick = exports.designOscillatingTicks = exports.designPeriodicTicks = exports.getUnitList = exports.designConstantTicks = exports.makeConstantStandardTickUnit = exports.designConstantTickType = exports.designConstantTickColor = exports.designConstantAreas = exports.designDigitTicks = exports.makeDigitLabel = exports.designPrimeDecompositionTicks = exports.factorsToString = exports.designPrimeNumbersTicks = exports.designCurvedTicks = exports.designLinearTicks = exports.designLogarithmicTicks = exports.addConstTicks = exports.designAngleTicks360 = exports.designAngleTicks90 = exports.designAngleTicks30 = exports.getMajorRateFromAngle = exports.getMajorRateCore = exports.designAngleTicks10 = exports.designAngleTicksInverted10 = exports.designAngleTicksRegular10 = exports.makeTick = exports.getDigitIndexFromWidth = exports.designCurvedTicks10 = exports.designLinearTicks10 = exports.designLogarithmicTicks10 = exports.designTickType = exports.getLongTickSpaceWidth = exports.makePositionTickWindowFromPositionAndWidth = exports.makePositionTickWindowFromWindow = exports.ValueTickWindowToPositionTickWindow = exports.PositionTickWindowToValueTickWindow = exports.getSnapReferenceLaneIndex = exports.getConvenientWidth = exports.getWidth = exports.getPositionAt = exports.getSlideOffset = exports.getAnchorSlideAndLane = exports.getRawViewPositionAt = exports.logPositionToLinearPosition = exports.linearPositionToLogPosition = exports.getLinearPositionAt = exports.getValueAt = exports.getRawValueAt = exports.angleToQuarter = exports.getPrimaryPositionAt = exports.getProjectionValue = exports.getPrimaryValueAt = exports.getRegionAt = exports.getMaxValue = exports.getMinValue = exports.getWidthValueRatioFromAngleTicks = exports.getAngleTick = exports.getAngleTable = exports.getPrimaryTick = exports.getSlidePositionAt = exports.isDiscreteLane = exports.isOscillatingLane = exports.isPeriodicLane = exports.getPrimaryPeriod = exports.getPrimaryPeriod360 = exports.getSlidePosition = exports.isInvertedSlide = exports.isInvertedLane = exports.getAllLanes = exports.getAllLaneCount = exports.RootLaneIndex = exports.RootSlideIndex = exports.ticksCache = exports.data = exports.getConstantTable = exports.constant = exports.getDigitTable = exports.digit = void 0;
     Locale = __importStar(Locale);
     Calculation = __importStar(Calculation);
     Type = __importStar(Type);
@@ -7267,9 +7281,9 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
             case "cotangent":
                 return Calculation.cot(position);
             case "arcsine":
-                return Settings.getShowComplexSolutions() ? Calculation.asin(position) : Math.asin(position);
+                return Math.asin(position);
             case "arccosine":
-                return Settings.getShowComplexSolutions() ? Calculation.acos(position) : Math.acos(position);
+                return Math.acos(position);
             case "arctangent":
                 return Math.atan(position);
             case "arcsecant":
@@ -7283,6 +7297,13 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
         }
     };
     exports.getPrimaryValueAt = getPrimaryValueAt;
+    const getProjectionValue = (lane, value) => {
+        switch (lane.type) {
+            default:
+                return Calculation.getNumberOrNaN(Type.getExValueNumber(value));
+        }
+    };
+    exports.getProjectionValue = getProjectionValue;
     const getPrimaryPositionAt = (lane, value, quarter) => {
         var _a, _b, _c, _d;
         switch (lane.type) {

@@ -487,6 +487,7 @@ declare module "script/type" {
         fill: string;
         overlay?: AreaOverlayType;
         label?: MultiLanguageText;
+        subLabel?: MultiLanguageText;
         color?: ValueOrThemeTable<string>;
         details?: ContantTableArea[];
     }
@@ -505,7 +506,7 @@ declare module "script/type" {
     export type LaneContext = "left-end" | "center" | "right-end" | "single";
     export type TickType = "none" | "mini" | "short" | "medium" | "long";
     export const getNextTickType: (tickType: TickType, direction: "shorter" | "longer") => TickType;
-    export type ValueType = Calculation.NumberOrComplex;
+    export type ValueType = number;
     export type ValueWithBasePosition = {
         value: ValueType;
         basePosition: number;
@@ -518,7 +519,7 @@ declare module "script/type" {
     };
     export const isValueWithPosition: (value: unknown) => value is ValueWithPosition;
     export type ExValue = ValueType | ValueWithBasePosition | ValueWithPosition;
-    export const getExValueNumber: <T>(exValue: Extract<T, null | undefined> | ExValue) => Extract<T, null | undefined> | Calculation.NumberOrComplex;
+    export const getExValueNumber: <T>(exValue: Extract<T, null | undefined> | ExValue) => Extract<T, null | undefined> | number;
     export const getExValuePosition: (exValue: ExValue) => number | undefined;
     export interface Tick {
         value: ExValue;
@@ -530,7 +531,7 @@ declare module "script/type" {
         color?: string;
         minimumFractionDigits?: number;
     }
-    export const getTickValue: (tick: Tick) => Calculation.NumberOrComplex;
+    export const getTickValue: (tick: Tick) => number;
     export type AreaOverlayType = "none" | "top" | "bottom" | "center" | "edges";
     export interface Area {
         lowerBound: ExValue | undefined;
@@ -538,6 +539,7 @@ declare module "script/type" {
         fill: string;
         overlay?: AreaOverlayType;
         label?: MultiLanguageText;
+        subLabel?: MultiLanguageText;
         color?: string;
         details?: Area[];
     }
@@ -1348,6 +1350,21 @@ declare module "script/model" {
                     value: string;
                 };
             }[];
+            areaOptions: {
+                length: {
+                    show: boolean;
+                    unit: {
+                        value: number;
+                        label: {
+                            en: string;
+                            ja: string;
+                        };
+                        "$source-eval": {
+                            value: string;
+                        };
+                    };
+                };
+            };
             areas: ({
                 lowerBound: null;
                 upperBound: number;
@@ -1505,7 +1522,8 @@ declare module "script/model" {
     export const getMinValue: (lane: Type.Lane) => number;
     export const getMaxValue: (lane: Type.Lane) => number;
     export const getRegionAt: (lane: Type.Lane, position: number) => Type.Region;
-    export const getPrimaryValueAt: (lane: Type.Lane, position: number) => Calculation.NumberOrComplex;
+    export const getPrimaryValueAt: (lane: Type.Lane, position: number) => number;
+    export const getProjectionValue: (lane: Type.Lane, value: Type.ExValue) => number;
     export const getPrimaryPositionAt: (lane: Type.Lane, value: Type.ValueType, quarter?: number) => number;
     export const angleToQuarter: (angle: number) => number;
     export const getRawValueAt: (slide: Type.SlideUnit, lane: Type.Lane, rawPosition: number) => Type.ValueWithPosition | undefined;
