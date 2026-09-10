@@ -195,8 +195,8 @@ export const isValueWithPosition = (value: unknown): value is ValueWithPosition 
     "value" in value && "number" === typeof value.value &&
     "position" in value && "number" === typeof value.position;
 export type ExValue = ValueType | ValueWithBasePosition | ValueWithPosition;
-export const getExValueNumber = <T>(exValue: Extract<T, null | undefined> | ExValue): Extract<T, null | undefined> | Calculation.NumberOrComplex =>
-    undefined === exValue || null === exValue || "number" === typeof exValue || Calculation.isNumberOrComplex(exValue) ? exValue : exValue.value;
+export const getExValueNumber = <T>(exValue: Extract<T, null | undefined> | ExValue): Extract<T, null | undefined> | number =>
+    undefined === exValue || null === exValue || "number" === typeof exValue ? exValue: exValue.value;
 export const getExValuePosition = (exValue: ExValue): number | undefined =>
     "object" === typeof exValue && null !== exValue &&
     "position" in exValue && "number" === typeof exValue.position ?
@@ -212,7 +212,7 @@ export interface Tick
     color?: string;
     minimumFractionDigits?: number;
 }
-export const getTickValue = (tick: Tick): Calculation.NumberOrComplex =>
+export const getTickValue = (tick: Tick): number =>
     getExValueNumber(tick.value);
 export type AreaOverlayType = "none" | "top" | "bottom" | "center" | "edges";
 export interface Area

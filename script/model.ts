@@ -530,7 +530,7 @@ export const getRegionAt = (lane: Type.Lane, position: number): Type.Region =>
         return { };
     }
 };
-export const getPrimaryValueAt = (lane: Type.Lane, position: number): Calculation.NumberOrComplex =>
+export const getPrimaryValueAt = (lane: Type.Lane, position: number): number =>
 {
     switch(lane.type)
     {
@@ -563,9 +563,9 @@ export const getPrimaryValueAt = (lane: Type.Lane, position: number): Calculatio
     case "cotangent":
         return Calculation.cot(position);
     case "arcsine":
-        return Settings.getShowComplexSolutions() ? Calculation.asin(position): Math.asin(position);
+        return Math.asin(position);
     case "arccosine":
-        return Settings.getShowComplexSolutions() ? Calculation.acos(position): Math.acos(position);
+        return Math.acos(position);
     case "arctangent":
         return Math.atan(position);
     case "arcsecant":
