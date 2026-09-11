@@ -2580,6 +2580,7 @@ export const designConstantAreas = (slide: Type.SlideUnit, view: Type.View, lane
             fill: area.fill,
             overlay: area.overlay,
             label: (threshold <= width *1.5 || isGreatPressed) ? area.label : undefined,
+            subLabel: (threshold <= width *3.0 || isGreatPressed) ? area.subLabel : undefined,
             color: Theme.resolve(area.color),
             details,
         });
