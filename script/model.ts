@@ -1,6 +1,7 @@
 import * as Locale from "./locale";
 import * as Calculation from "./calculation";
 import * as Type from "./type";
+import * as Time from "./time";
 import * as Url from "./url";
 import * as Theme from "./theme";
 import * as Comparer from "./comparer";
@@ -2553,7 +2554,16 @@ export const designDigitTicks = (slide: Type.SlideUnit, view: Type.View, lane: T
     };
     return result;
 };
-export const designConstantAreas = (slide: Type.SlideUnit, view: Type.View, lane: Type.Lane, tickWindow: ValueTickWindow, area: Type.ContantTableArea): Type.Area[] =>
+export const makeAreaSpanLabel = (constantTable: Type.ConstantTable, area: Type.ConstantTableArea) =>
+{
+    if (Calculation.isRegularNumber(area.lowerBound) && Calculation.isRegularNumber(area.upperBound))
+    {
+        const span = area.upperBound -area.lowerBound;
+        return Time.formatUniverseEpochDuration(span);
+    }
+    return undefined;
+}
+export const designConstantAreas = (slide: Type.SlideUnit, view: Type.View, lane: Type.Lane, tickWindow: ValueTickWindow, area: Type.ConstantTableArea): Type.Area[] =>
 {
     const { topValue, bottomValue } = tickWindow;
     const result: Type.Area[] = [];
@@ -2587,7 +2597,7 @@ export const designConstantAreas = (slide: Type.SlideUnit, view: Type.View, lane
     }
     return result;
 };
-export const designConstantTickColor = (tick: Type.ContantTableTick) =>
+export const designConstantTickColor = (tick: Type.ConstantTableTick) =>
 {
     const color = Theme.resolve(tick.color);
     switch(color)

@@ -101,10 +101,10 @@ export interface ConstantTable extends SourceEval
 {
     label: MultiLanguageText;
     unit?: { symbol: string; label: MultiLanguageText; };
-    ticks: ContantTableTick[];
-    areas: ContantTableArea[];
+    ticks: ConstantTableTick[];
+    areas: ConstantTableArea[];
 }
-export interface ContantTableTick extends SourceEval
+export interface ConstantTableTick extends SourceEval
 {
     value: number;
     label: MultiLanguageText;
@@ -118,7 +118,7 @@ export interface Unit
     label: MultiLanguageText;
     value: number;
 };
-export interface ContantTableArea extends SourceEval
+export interface ConstantTableArea extends SourceEval
 {
     lowerBound: number | null;
     upperBound: number | null;
@@ -127,7 +127,7 @@ export interface ContantTableArea extends SourceEval
     label?: MultiLanguageText;
     subLabel?: MultiLanguageText;
     color?: ValueOrThemeTable<string>; // label color
-    details?: ContantTableArea[];
+    details?: ConstantTableArea[];
 }
 export interface SlideUnit // 🔥 後で evil-type.ts ベースに！
 {
