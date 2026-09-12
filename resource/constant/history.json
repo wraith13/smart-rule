@@ -15,21 +15,8 @@
             "ja": "秒"
         }
     },
-    "ticks": [
-        {
-            "label": {
-                "en": "BP 0 = 1950 CE",
-                "ja": "BP基準年(1950年)"
-            },
-            "value": 435494880000000000,
-            "priority": 0,
-            "$source-eval": {
-                "value": "Time.parseRelativeUniverseEpoch(\"0 second ago\")"
-            }
-        }
-    ],
     "areaOptions": {
-        "length": {
+        "span": {
             "show": true,
             "unit": {
                 "value": 31557600,
@@ -43,6 +30,19 @@
             }
         }
     },
+    "ticks": [
+        {
+            "label": {
+                "en": "BP 0 = 1950 CE",
+                "ja": "BP基準年(1950年)"
+            },
+            "value": 435494880000000000,
+            "priority": 0,
+            "$source-eval": {
+                "value": "Time.parseRelativeUniverseEpoch(\"0 second ago\")"
+            }
+        }
+    ],
     "areas": [
         {
             "lowerBound": null,

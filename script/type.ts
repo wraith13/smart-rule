@@ -101,8 +101,18 @@ export interface ConstantTable extends SourceEval
 {
     label: MultiLanguageText;
     unit?: { symbol: string; label: MultiLanguageText; };
+    areaOptions?: ConstantTableAreaOptions;
     ticks: ConstantTableTick[];
     areas: ConstantTableArea[];
+}
+export interface ConstantTableAreaOptions extends SourceEval
+{
+    span?: ConstantTableAreaOptionsSpan;
+}
+export interface ConstantTableAreaOptionsSpan extends SourceEval
+{
+    show?: boolean;
+    unit?: { value: number; label: MultiLanguageText; };
 }
 export interface ConstantTableTick extends SourceEval
 {

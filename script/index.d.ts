@@ -463,10 +463,21 @@ declare module "script/type" {
             symbol: string;
             label: MultiLanguageText;
         };
-        ticks: ContantTableTick[];
-        areas: ContantTableArea[];
+        areaOptions?: ConstantTableAreaOptions;
+        ticks: ConstantTableTick[];
+        areas: ConstantTableArea[];
     }
-    export interface ContantTableTick extends SourceEval {
+    export interface ConstantTableAreaOptions extends SourceEval {
+        span?: ConstantTableAreaOptionsSpan;
+    }
+    export interface ConstantTableAreaOptionsSpan extends SourceEval {
+        show?: boolean;
+        unit?: {
+            value: number;
+            label: MultiLanguageText;
+        };
+    }
+    export interface ConstantTableTick extends SourceEval {
         value: number;
         label: MultiLanguageText;
         priority?: number;
@@ -481,7 +492,7 @@ declare module "script/type" {
         label: MultiLanguageText;
         value: number;
     }
-    export interface ContantTableArea extends SourceEval {
+    export interface ConstantTableArea extends SourceEval {
         lowerBound: number | null;
         upperBound: number | null;
         fill: string;
@@ -489,7 +500,7 @@ declare module "script/type" {
         label?: MultiLanguageText;
         subLabel?: MultiLanguageText;
         color?: ValueOrThemeTable<string>;
-        details?: ContantTableArea[];
+        details?: ConstantTableArea[];
     }
     export interface SlideUnit {
         lanes: Lane[];
@@ -1339,19 +1350,8 @@ declare module "script/model" {
                     ja: string;
                 };
             };
-            ticks: {
-                label: {
-                    en: string;
-                    ja: string;
-                };
-                value: number;
-                priority: number;
-                "$source-eval": {
-                    value: string;
-                };
-            }[];
             areaOptions: {
-                length: {
+                span: {
                     show: boolean;
                     unit: {
                         value: number;
@@ -1365,6 +1365,17 @@ declare module "script/model" {
                     };
                 };
             };
+            ticks: {
+                label: {
+                    en: string;
+                    ja: string;
+                };
+                value: number;
+                priority: number;
+                "$source-eval": {
+                    value: string;
+                };
+            }[];
             areas: ({
                 lowerBound: null;
                 upperBound: number;
@@ -1588,8 +1599,9 @@ declare module "script/model" {
     export const designPrimeDecompositionTicks: (slide: Type.SlideUnit, view: Type.View, lane: Type.Lane, tickWindow: ValueTickWindow) => Type.LaneContent;
     export const makeDigitLabel: (digit: Type.DigitTableDigit) => Type.MultiLanguageText;
     export const designDigitTicks: (slide: Type.SlideUnit, view: Type.View, lane: Type.Lane, tickWindow: ValueTickWindow) => Type.LaneContent;
-    export const designConstantAreas: (slide: Type.SlideUnit, view: Type.View, lane: Type.Lane, tickWindow: ValueTickWindow, area: Type.ContantTableArea) => Type.Area[];
-    export const designConstantTickColor: (tick: Type.ContantTableTick) => string;
+    export const makeAreaSpanLabel: (constantTable: Type.ConstantTable, area: Type.ConstantTableArea) => string | undefined;
+    export const designConstantAreas: (slide: Type.SlideUnit, view: Type.View, lane: Type.Lane, tickWindow: ValueTickWindow, area: Type.ConstantTableArea) => Type.Area[];
+    export const designConstantTickColor: (tick: Type.ConstantTableTick) => string;
     export const designConstantTickType: (slide: Type.SlideUnit, lane: Type.Lane, view: Type.View, ticks: Type.Tick[], value: number) => Type.TickType;
     export const makeConstantStandardTickUnit: <T>(unit: Extract<T, undefined> | {
         symbol: string;

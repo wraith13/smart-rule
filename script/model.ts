@@ -2556,10 +2556,13 @@ export const designDigitTicks = (slide: Type.SlideUnit, view: Type.View, lane: T
 };
 export const makeAreaSpanLabel = (constantTable: Type.ConstantTable, area: Type.ConstantTableArea) =>
 {
-    if (Calculation.isRegularNumber(area.lowerBound) && Calculation.isRegularNumber(area.upperBound))
+    if (constantTable.areaOptions?.span?.show)
     {
-        const span = area.upperBound -area.lowerBound;
-        return Time.formatUniverseEpochDuration(span);
+        if (Calculation.isRegularNumber(area.lowerBound) && Calculation.isRegularNumber(area.upperBound))
+        {
+            const span = area.upperBound -area.lowerBound;
+            return Time.formatUniverseEpochDuration(span);
+        }
     }
     return undefined;
 }
