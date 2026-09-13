@@ -247,10 +247,3 @@ export interface LeveledText
     text: string;
     level: number; // 1: upper, 0: normal, -1: lower
 }
-export type RegionType = "none" | "angle" | "curve" | "linear" | "constant";
-export interface Region
-{
-    lowerBound?: number | undefined; // linear position
-    upperBound?: number | undefined; // linear position
-    type?: RegionType | undefined;
-}

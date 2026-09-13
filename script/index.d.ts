@@ -562,12 +562,6 @@ declare module "script/type" {
         text: string;
         level: number;
     }
-    export type RegionType = "none" | "angle" | "curve" | "linear" | "constant";
-    export interface Region {
-        lowerBound?: number | undefined;
-        upperBound?: number | undefined;
-        type?: RegionType | undefined;
-    }
 }
 declare module "script/time" {
     import * as Type from "script/type";
@@ -1532,9 +1526,7 @@ declare module "script/model" {
     }) => number;
     export const getMinValue: (lane: Type.Lane) => number;
     export const getMaxValue: (lane: Type.Lane) => number;
-    export const getRegionAt: (lane: Type.Lane, position: number) => Type.Region;
     export const getPrimaryValueAt: (lane: Type.Lane, position: number) => number;
-    export const getProjectionValue: (lane: Type.Lane, value: Type.ExValue) => number;
     export const getPrimaryPositionAt: (lane: Type.Lane, value: Type.ValueType, quarter?: number) => number;
     export const angleToQuarter: (angle: number) => number;
     export const getRawValueAt: (slide: Type.SlideUnit, lane: Type.Lane, rawPosition: number) => Type.ValueWithPosition | undefined;
