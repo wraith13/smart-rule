@@ -376,7 +376,7 @@ export const getAngleTick = (lane: Type.Lane, angle: number, position: number): 
         };
         // console.log(`getAngleTick: lane: ${lane.type}, angle: ${angle}, position: ${position}, angleTick: ${JSON.stringify(result)}`);
         const primaryValueAt = getPrimaryValueAt(lane, (angle360 /180) *Math.PI);
-        if (! Calculation.isNearlyEqual(result.value.value, primaryValueAt))
+        if ((Calculation.isRegularNumber(value) || Calculation.absComplexNumber(primaryValueAt) <= 1E15) && ! Calculation.isNearlyEqual(value, primaryValueAt))
         {
             console.error(`🦋 FIXME: lane: ${lane.type}, angle: ${angle}, position: ${position}, angleTick: ${JSON.stringify(result)}, primaryValueAt: ${primaryValueAt}`);
         }

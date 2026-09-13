@@ -7102,7 +7102,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
             };
             // console.log(`getAngleTick: lane: ${lane.type}, angle: ${angle}, position: ${position}, angleTick: ${JSON.stringify(result)}`);
             const primaryValueAt = (0, exports.getPrimaryValueAt)(lane, (angle360 / 180) * Math.PI);
-            if (!Calculation.isNearlyEqual(result.value.value, primaryValueAt)) {
+            if ((Calculation.isRegularNumber(value) || Calculation.absComplexNumber(primaryValueAt) <= 1E15) && !Calculation.isNearlyEqual(value, primaryValueAt)) {
                 console.error(`🦋 FIXME: lane: ${lane.type}, angle: ${angle}, position: ${position}, angleTick: ${JSON.stringify(result)}, primaryValueAt: ${primaryValueAt}`);
             }
             return result;
