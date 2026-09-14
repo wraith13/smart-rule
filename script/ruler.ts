@@ -563,19 +563,51 @@ export const drawAreas = (view: Type.View, group: SVGGElement, slide: Type.Slide
                 }
                 if (undefined !== area.label)
                 {
-                    group.appendChild
-                    (
-                        SVG.make
-                        ({
-                            tag: "text",
-                            class: "area-label",
-                            x: left + 8,
-                            y: y +(height /2) +4,
-                            fill: area.color ?? Theme.resolve(config.render.ruler.foregroundColor),
-                            "font-size": 12,
-                            textContent: Locale.resolve(area.label),
-                        })
-                    );
+                    if (undefined !== area.subLabel)
+                    {
+                        group.appendChild
+                        (
+                            SVG.make
+                            ({
+                                tag: "text",
+                                class: "area-label",
+                                x: left + 8,
+                                y: y +(height /2) +4 -8,
+                                fill: area.color ?? Theme.resolve(config.render.ruler.foregroundColor),
+                                "font-size": 12,
+                                textContent: Locale.resolve(area.label),
+                            })
+                        );
+                        group.appendChild
+                        (
+                            SVG.make
+                            ({
+                                tag: "text",
+                                class: "area-label",
+                                x: left + 8,
+                                y: y +(height /2) +4 +8,
+                                fill: area.color ?? Theme.resolve(config.render.ruler.foregroundColor),
+                                "font-size": 12,
+                                textContent: Locale.resolve(area.subLabel),
+                            })
+                        );
+                    }
+                    else
+                    {
+                        group.appendChild
+                        (
+                            SVG.make
+                            ({
+                                tag: "text",
+                                class: "area-label",
+                                x: left + 8,
+                                y: y +(height /2) +4,
+                                fill: area.color ?? Theme.resolve(config.render.ruler.foregroundColor),
+                                "font-size": 12,
+                                textContent: Locale.resolve(area.label),
+                            })
+                        );
+                    }
                 }
             }
         }

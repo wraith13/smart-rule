@@ -8888,8 +8888,8 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
         return undefined;
     };
     exports.makeAreaSpanLabel = makeAreaSpanLabel;
-    const designConstantAreas = (slide, view, lane, tickWindow, area) => {
-        var _a, _b, _c, _d, _e, _f;
+    const designConstantAreas = (slide, view, lane, tickWindow, constantTable, area) => {
+        var _a, _b, _c, _d, _e, _f, _g;
         const { topValue, bottomValue } = tickWindow;
         const result = [];
         const isInverted = (0, exports.isInvertedLane)(lane);
@@ -8905,7 +8905,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
         if ((lowwerBoundValue <= upperBound && lowerBound <= upperBoundValue) || (lowerBound <= upperBoundValue && lowwerBoundValue <= upperBound)) {
             const detailsCount = ((_c = area.details) !== null && _c !== void 0 ? _c : []).length;
             const details = 0 < detailsCount && threshold * Math.max(5, detailsCount * 1.25) <= width ?
-                ((_d = area.details) !== null && _d !== void 0 ? _d : []).map(detail => (0, exports.designConstantAreas)(slide, view, lane, tickWindow, detail)).reduce((a, b) => a.concat(b), []) :
+                ((_d = area.details) !== null && _d !== void 0 ? _d : []).map(detail => (0, exports.designConstantAreas)(slide, view, lane, tickWindow, constantTable, detail)).reduce((a, b) => a.concat(b), []) :
                 undefined;
             result.push({
                 lowerBound: (_e = area.lowerBound) !== null && _e !== void 0 ? _e : undefined,
@@ -8913,7 +8913,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                 fill: area.fill,
                 overlay: area.overlay,
                 label: (threshold <= width * 1.5 || isGreatPressed) ? area.label : undefined,
-                subLabel: (threshold <= width * 3.0 || isGreatPressed) ? area.subLabel : undefined,
+                subLabel: (threshold <= width * 0.25 || isGreatPressed) ? ((_g = area.subLabel) !== null && _g !== void 0 ? _g : (0, exports.makeAreaSpanLabel)(constantTable, area)) : undefined,
                 color: Theme.resolve(area.color),
                 details,
             });
@@ -9019,7 +9019,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                     }
                 }
                 for (const i of table.areas) {
-                    areas.push(...(0, exports.designConstantAreas)(slide, view, lane, tickWindow, i));
+                    areas.push(...(0, exports.designConstantAreas)(slide, view, lane, tickWindow, table, i));
                 }
             }
             else {
@@ -10229,7 +10229,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
     };
     exports.getAreaFill = getAreaFill;
     const drawAreas = (view, group, slide, lane, areas, indent = 0) => {
-        var _a, _b, _c, _d, _e;
+        var _a, _b, _c, _d, _e, _f, _g;
         const indentUnit = 20;
         const laneIndex = Model.getLaneIndex(lane);
         const left = (0, exports.getLeftOfLane)(laneIndex) + indent;
@@ -10304,15 +10304,37 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                         }));
                     }
                     if (undefined !== area.label) {
-                        group.appendChild(SVG.make({
-                            tag: "text",
-                            class: "area-label",
-                            x: left + 8,
-                            y: y + (height / 2) + 4,
-                            fill: (_e = area.color) !== null && _e !== void 0 ? _e : Theme.resolve(config_json_6.default.render.ruler.foregroundColor),
-                            "font-size": 12,
-                            textContent: Locale.resolve(area.label),
-                        }));
+                        if (undefined !== area.subLabel) {
+                            group.appendChild(SVG.make({
+                                tag: "text",
+                                class: "area-label",
+                                x: left + 8,
+                                y: y + (height / 2) + 4 - 8,
+                                fill: (_e = area.color) !== null && _e !== void 0 ? _e : Theme.resolve(config_json_6.default.render.ruler.foregroundColor),
+                                "font-size": 12,
+                                textContent: Locale.resolve(area.label),
+                            }));
+                            group.appendChild(SVG.make({
+                                tag: "text",
+                                class: "area-label",
+                                x: left + 8,
+                                y: y + (height / 2) + 4 + 8,
+                                fill: (_f = area.color) !== null && _f !== void 0 ? _f : Theme.resolve(config_json_6.default.render.ruler.foregroundColor),
+                                "font-size": 12,
+                                textContent: Locale.resolve(area.subLabel),
+                            }));
+                        }
+                        else {
+                            group.appendChild(SVG.make({
+                                tag: "text",
+                                class: "area-label",
+                                x: left + 8,
+                                y: y + (height / 2) + 4,
+                                fill: (_g = area.color) !== null && _g !== void 0 ? _g : Theme.resolve(config_json_6.default.render.ruler.foregroundColor),
+                                "font-size": 12,
+                                textContent: Locale.resolve(area.label),
+                            }));
+                        }
                     }
                 }
             }

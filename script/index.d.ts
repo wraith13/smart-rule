@@ -1592,7 +1592,7 @@ declare module "script/model" {
     export const makeDigitLabel: (digit: Type.DigitTableDigit) => Type.MultiLanguageText;
     export const designDigitTicks: (slide: Type.SlideUnit, view: Type.View, lane: Type.Lane, tickWindow: ValueTickWindow) => Type.LaneContent;
     export const makeAreaSpanLabel: (constantTable: Type.ConstantTable, area: Type.ConstantTableArea) => string | undefined;
-    export const designConstantAreas: (slide: Type.SlideUnit, view: Type.View, lane: Type.Lane, tickWindow: ValueTickWindow, area: Type.ConstantTableArea) => Type.Area[];
+    export const designConstantAreas: (slide: Type.SlideUnit, view: Type.View, lane: Type.Lane, tickWindow: ValueTickWindow, constantTable: Type.ConstantTable, area: Type.ConstantTableArea) => Type.Area[];
     export const designConstantTickColor: (tick: Type.ConstantTableTick) => string;
     export const designConstantTickType: (slide: Type.SlideUnit, lane: Type.Lane, view: Type.View, ticks: Type.Tick[], value: number) => Type.TickType;
     export const makeConstantStandardTickUnit: <T>(unit: Extract<T, undefined> | {

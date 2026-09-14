@@ -2529,7 +2529,7 @@ export const makeAreaSpanLabel = (constantTable: Type.ConstantTable, area: Type.
     }
     return undefined;
 }
-export const designConstantAreas = (slide: Type.SlideUnit, view: Type.View, lane: Type.Lane, tickWindow: ValueTickWindow, area: Type.ConstantTableArea): Type.Area[] =>
+export const designConstantAreas = (slide: Type.SlideUnit, view: Type.View, lane: Type.Lane, tickWindow: ValueTickWindow, constantTable: Type.ConstantTable, area: Type.ConstantTableArea): Type.Area[] =>
 {
     const { topValue, bottomValue } = tickWindow;
     const result: Type.Area[] = [];
@@ -2547,7 +2547,7 @@ export const designConstantAreas = (slide: Type.SlideUnit, view: Type.View, lane
     {
         const detailsCount = (area.details ?? []).length;
         const details = 0 < detailsCount && threshold *Math.max(5, detailsCount *1.25) <= width ?
-            (area.details ?? []).map(detail => designConstantAreas(slide, view, lane, tickWindow, detail)).reduce((a, b) => a.concat(b), [] as Type.Area[]):
+            (area.details ?? []).map(detail => designConstantAreas(slide, view, lane, tickWindow, constantTable, detail)).reduce((a, b) => a.concat(b), [] as Type.Area[]):
             undefined;
         result.push
         ({
@@ -2555,8 +2555,8 @@ export const designConstantAreas = (slide: Type.SlideUnit, view: Type.View, lane
             upperBound: area.upperBound ?? undefined,
             fill: area.fill,
             overlay: area.overlay,
-            label: (threshold <= width *1.5 || isGreatPressed) ? area.label : undefined,
-            subLabel: (threshold <= width *3.0 || isGreatPressed) ? area.subLabel : undefined,
+            label: (threshold <= width *1.5 || isGreatPressed) ? area.label: undefined,
+            subLabel: (threshold <= width *0.25 || isGreatPressed) ? (area.subLabel ?? makeAreaSpanLabel(constantTable, area)): undefined,
             color: Theme.resolve(area.color),
             details,
         });
@@ -2677,7 +2677,7 @@ export const designConstantTicks = (slide: Type.SlideUnit, view: Type.View, lane
             }
             for(const i of table.areas)
             {
-                areas.push(...designConstantAreas(slide, view, lane, tickWindow, i));
+                areas.push(...designConstantAreas(slide, view, lane, tickWindow, table, i));
             }
         }
         else
