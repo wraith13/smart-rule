@@ -513,20 +513,52 @@ export const drawAreas = (view: Type.View, group: SVGGElement, slide: Type.Slide
                 }
                 if (undefined !== area.label)
                 {
-                    group.appendChild
-                    (
-                        SVG.make
-                        ({
-                            tag: "text",
-                            class: "area-label",
-                            x: left +16,
-                            y: y +height -8,
-                            transform: `rotate(-90, ${left +16}, ${y +height -8})`,
-                            fill: area.color ?? Theme.resolve(config.render.ruler.foregroundColor),
-                            "font-size": 12,
-                            textContent: Locale.resolve(area.label),
-                        })
-                    );
+                    if (undefined !== area.subLabel)
+                    {
+                        group.appendChild
+                        (
+                            SVG.make
+                            ({
+                                tag: "text",
+                                class: "area-label",
+                                x: left +16,
+                                y: y +height -8,
+                                transform: `rotate(-90, ${left +16}, ${y +height -8})`,
+                                children: [
+                                    {
+                                        tag: "tspan",
+                                        fill: area.color ?? Theme.resolve(config.render.ruler.foregroundColor),
+                                        "font-size": 12,
+                                        textContent: Locale.resolve(area.label),
+                                    },
+                                    {
+                                        tag: "tspan",
+                                        fill: "#888888",
+                                        "font-size": 12,
+                                        dx: 8,
+                                        textContent: Locale.resolve(area.subLabel),
+                                    }
+                                ]
+                            })
+                        );
+                    }
+                    else
+                    {
+                        group.appendChild
+                        (
+                            SVG.make
+                            ({
+                                tag: "text",
+                                class: "area-label",
+                                x: left +16,
+                                y: y +height -8,
+                                transform: `rotate(-90, ${left +16}, ${y +height -8})`,
+                                fill: area.color ?? Theme.resolve(config.render.ruler.foregroundColor),
+                                "font-size": 12,
+                                textContent: Locale.resolve(area.label),
+                            })
+                        );
+                    }
                 }
                 drawAreas(view, group, slide, lane, area.details!, indent +indentUnit);
             }
@@ -586,7 +618,7 @@ export const drawAreas = (view: Type.View, group: SVGGElement, slide: Type.Slide
                                 class: "area-label",
                                 x: left + 8,
                                 y: y +(height /2) +4 +8,
-                                fill: area.color ?? Theme.resolve(config.render.ruler.foregroundColor),
+                                fill: "#888888",
                                 "font-size": 12,
                                 textContent: Locale.resolve(area.subLabel),
                             })

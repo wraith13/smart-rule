@@ -10269,16 +10269,42 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                         }));
                     }
                     if (undefined !== area.label) {
-                        group.appendChild(SVG.make({
-                            tag: "text",
-                            class: "area-label",
-                            x: left + 16,
-                            y: y + height - 8,
-                            transform: `rotate(-90, ${left + 16}, ${y + height - 8})`,
-                            fill: (_c = area.color) !== null && _c !== void 0 ? _c : Theme.resolve(config_json_6.default.render.ruler.foregroundColor),
-                            "font-size": 12,
-                            textContent: Locale.resolve(area.label),
-                        }));
+                        if (undefined !== area.subLabel) {
+                            group.appendChild(SVG.make({
+                                tag: "text",
+                                class: "area-label",
+                                x: left + 16,
+                                y: y + height - 8,
+                                transform: `rotate(-90, ${left + 16}, ${y + height - 8})`,
+                                children: [
+                                    {
+                                        tag: "tspan",
+                                        fill: (_c = area.color) !== null && _c !== void 0 ? _c : Theme.resolve(config_json_6.default.render.ruler.foregroundColor),
+                                        "font-size": 12,
+                                        textContent: Locale.resolve(area.label),
+                                    },
+                                    {
+                                        tag: "tspan",
+                                        fill: "#888888",
+                                        "font-size": 12,
+                                        dx: 8,
+                                        textContent: Locale.resolve(area.subLabel),
+                                    }
+                                ]
+                            }));
+                        }
+                        else {
+                            group.appendChild(SVG.make({
+                                tag: "text",
+                                class: "area-label",
+                                x: left + 16,
+                                y: y + height - 8,
+                                transform: `rotate(-90, ${left + 16}, ${y + height - 8})`,
+                                fill: (_d = area.color) !== null && _d !== void 0 ? _d : Theme.resolve(config_json_6.default.render.ruler.foregroundColor),
+                                "font-size": 12,
+                                textContent: Locale.resolve(area.label),
+                            }));
+                        }
                     }
                     (0, exports.drawAreas)(view, group, slide, lane, area.details, indent + indentUnit);
                 }
@@ -10292,7 +10318,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                         height,
                         fill: (0, exports.getAreaFill)(isInvert, area),
                     }));
-                    if ("none" !== ((_d = area.overlay) !== null && _d !== void 0 ? _d : "none")) {
+                    if ("none" !== ((_e = area.overlay) !== null && _e !== void 0 ? _e : "none")) {
                         group.appendChild(SVG.make({
                             tag: "rect",
                             class: "area",
@@ -10310,7 +10336,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                                 class: "area-label",
                                 x: left + 8,
                                 y: y + (height / 2) + 4 - 8,
-                                fill: (_e = area.color) !== null && _e !== void 0 ? _e : Theme.resolve(config_json_6.default.render.ruler.foregroundColor),
+                                fill: (_f = area.color) !== null && _f !== void 0 ? _f : Theme.resolve(config_json_6.default.render.ruler.foregroundColor),
                                 "font-size": 12,
                                 textContent: Locale.resolve(area.label),
                             }));
@@ -10319,7 +10345,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                                 class: "area-label",
                                 x: left + 8,
                                 y: y + (height / 2) + 4 + 8,
-                                fill: (_f = area.color) !== null && _f !== void 0 ? _f : Theme.resolve(config_json_6.default.render.ruler.foregroundColor),
+                                fill: "#888888",
                                 "font-size": 12,
                                 textContent: Locale.resolve(area.subLabel),
                             }));
