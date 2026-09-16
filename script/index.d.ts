@@ -1779,6 +1779,11 @@ declare module "script/json-eval-updater" {
             canonicalUrl: string;
             description: string;
             noscriptMessage: string;
+            physicalConstants: {
+                c: number;
+                h: number;
+                ev: number;
+            };
             time: {
                 anchor: {
                     humanEpoch: string;

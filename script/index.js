@@ -670,6 +670,11 @@ define("resource/config", [], {
     "canonicalUrl": "https://wraith13.github.io/smart-rule/",
     "description": "Smart Slide Rule Web Application",
     "noscriptMessage": "JavaScript is disabled. Please enable JavaScript.",
+    "physicalConstants": {
+        "c": 299792458,
+        "h": 6.62607015e-34,
+        "ev": 1.602176634e-19
+    },
     "time": {
         "anchor": {
             "humanEpoch": "1950-01-01T00:00:00Z",
@@ -11013,9 +11018,9 @@ define("script/json-eval-updater", ["require", "exports", "script/url", "script/
     exports.nestEvalUpdate = nestEvalUpdate;
     const midiNoteToFrequency = (midiNote) => 440 * Math.pow(2, (midiNote - 69) / 12);
     exports.midiNoteToFrequency = midiNoteToFrequency;
-    const c = 299792458; // 光速 / EN: speed of light in vacuum (m/s)
-    const h = 6.62607015e-34; // プランク定数 / EN: Planck constant (J·s)
-    const ev = 1.602176634e-19; // 電子ボルト / EN: electron volt (J)
+    const c = config_json_7.default.physicalConstants.c; // 光速 / EN: speed of light in vacuum (m/s)
+    const h = config_json_7.default.physicalConstants.h; // プランク定数 / EN: Planck constant (J·s)
+    const ev = config_json_7.default.physicalConstants.ev; // 電子ボルト / EN: electron volt (J)
     const waveLengthToFrequency = (wavelength) => "number" === typeof wavelength ? c / wavelength : wavelength;
     exports.waveLengthToFrequency = waveLengthToFrequency;
     const frequencyToWaveLength = (frequency) => "number" === typeof frequency ? c / frequency : frequency;

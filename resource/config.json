@@ -4,6 +4,11 @@
     "canonicalUrl": "https://wraith13.github.io/smart-rule/",
     "description": "Smart Slide Rule Web Application",
     "noscriptMessage": "JavaScript is disabled. Please enable JavaScript.",
+    "physicalConstants": {
+        "c": 299792458,
+        "h": 6.62607015e-34,
+        "ev": 1.602176634e-19
+    },
     "time": {
         "anchor": {
             "humanEpoch": "1950-01-01T00:00:00Z",

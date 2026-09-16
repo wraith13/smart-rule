@@ -40,9 +40,9 @@ export const nestEvalUpdate = <Source, Target>(obj: Source, getList: (obj: Sourc
 };
 export const midiNoteToFrequency = (midiNote: number): number =>
     440 * Math.pow(2, (midiNote - 69) / 12);
-const c = 299792458; // 光速 / EN: speed of light in vacuum (m/s)
-const h = 6.62607015e-34; // プランク定数 / EN: Planck constant (J·s)
-const ev = 1.602176634e-19; // 電子ボルト / EN: electron volt (J)
+const c = config.physicalConstants.c; // 光速 / EN: speed of light in vacuum (m/s)
+const h = config.physicalConstants.h; // プランク定数 / EN: Planck constant (J·s)
+const ev = config.physicalConstants.ev; // 電子ボルト / EN: electron volt (J)
 export const waveLengthToFrequency = <T>(wavelength: Extract<T, null | undefined> | number): Extract<T, null | undefined> | number =>
     "number" === typeof wavelength ? c / wavelength: wavelength;
 export const frequencyToWaveLength = <T>(frequency: Extract<T, null | undefined> | number): Extract<T, null | undefined> | number =>
