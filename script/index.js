@@ -8913,7 +8913,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                 fill: area.fill,
                 overlay: area.overlay,
                 label: (threshold <= width * 1.5 || isGreatPressed) ? area.label : undefined,
-                subLabel: (threshold <= width * 0.25 || isGreatPressed) ? ((_g = area.subLabel) !== null && _g !== void 0 ? _g : (0, exports.makeAreaSpanLabel)(constantTable, area)) : undefined,
+                subLabel: (threshold <= width * (undefined === details ? 0.25 : 0.075) || isGreatPressed) ? ((_g = area.subLabel) !== null && _g !== void 0 ? _g : (0, exports.makeAreaSpanLabel)(constantTable, area)) : undefined,
                 color: Theme.resolve(area.color),
                 details,
             });

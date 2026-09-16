@@ -2556,7 +2556,7 @@ export const designConstantAreas = (slide: Type.SlideUnit, view: Type.View, lane
             fill: area.fill,
             overlay: area.overlay,
             label: (threshold <= width *1.5 || isGreatPressed) ? area.label: undefined,
-            subLabel: (threshold <= width *0.25 || isGreatPressed) ? (area.subLabel ?? makeAreaSpanLabel(constantTable, area)): undefined,
+            subLabel: (threshold <= width * (undefined === details ? 0.25 : 0.075) || isGreatPressed) ? (area.subLabel ?? makeAreaSpanLabel(constantTable, area)): undefined,
             color: Theme.resolve(area.color),
             details,
         });

@@ -2,7 +2,7 @@
 <!--
     This file is genereted by build.js. このファイルは build.js によって生成されました。
     build options: ../build.json all
-    build at: Mon Sep 14 2026 18:27:46 GMT+0900 (日本標準時)
+    build at: Tue Sep 15 2026 08:14:13 GMT+0900 (日本標準時)
     repository: https://github.com/wraith13/smart-rule/
 -->
 <!-- license:
@@ -627,8 +627,8 @@ button:focus
 <div id="toast-panel"></div>
 <script type="text/javascript">
 const build = {
-    at: "Mon Sep 14 2026 18:27:46 GMT+0900 (日本標準時)",
-    tick: 1789378066729
+    at: "Tue Sep 15 2026 08:14:13 GMT+0900 (日本標準時)",
+    tick: 1789427653143
 };
 const evilCommonjsConfig = {
     "log": {
@@ -9903,7 +9903,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                 fill: area.fill,
                 overlay: area.overlay,
                 label: (threshold <= width * 1.5 || isGreatPressed) ? area.label : undefined,
-                subLabel: (threshold <= width * 0.25 || isGreatPressed) ? ((_g = area.subLabel) !== null && _g !== void 0 ? _g : (0, exports.makeAreaSpanLabel)(constantTable, area)) : undefined,
+                subLabel: (threshold <= width * (undefined === details ? 0.25 : 0.075) || isGreatPressed) ? ((_g = area.subLabel) !== null && _g !== void 0 ? _g : (0, exports.makeAreaSpanLabel)(constantTable, area)) : undefined,
                 color: Theme.resolve(area.color),
                 details,
             });
