@@ -99,6 +99,10 @@
                 "light": "#000000",
                 "dark": "#FFFFFF"
             },
+            "paleForegroundColor": {
+                "light": "#606060",
+                "dark": "#BFBFBF"
+            },
             "backgroundColor": {
                 "light": "#FFFFFF",
                 "dark": "#000000"

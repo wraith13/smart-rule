@@ -27,6 +27,11 @@ declare module "script/locale" {
             "NNN CE": string;
             "NNN years ago ( from BP 0 )": string;
             "in NNN years ( from BP 0 )": string;
+            "NNN seconds": string;
+            "NNN minutes": string;
+            "NNN hours": string;
+            "NNN days": string;
+            "NNN years": string;
             "GitHub repository": string;
         };
         ja: {
@@ -56,6 +61,11 @@ declare module "script/locale" {
             "NNN CE": string;
             "NNN years ago ( from BP 0 )": string;
             "in NNN years ( from BP 0 )": string;
+            "NNN seconds": string;
+            "NNN minutes": string;
+            "NNN hours": string;
+            "NNN days": string;
+            "NNN years": string;
             "GitHub repository": string;
         };
     };
@@ -1591,6 +1601,9 @@ declare module "script/model" {
     export const designPrimeDecompositionTicks: (slide: Type.SlideUnit, view: Type.View, lane: Type.Lane, tickWindow: ValueTickWindow) => Type.LaneContent;
     export const makeDigitLabel: (digit: Type.DigitTableDigit) => Type.MultiLanguageText;
     export const designDigitTicks: (slide: Type.SlideUnit, view: Type.View, lane: Type.Lane, tickWindow: ValueTickWindow) => Type.LaneContent;
+    export const getLocaleDigitTable: (locale: string) => Type.DigitTable;
+    export const numberToLocaleString: (value: number, locale?: string) => string;
+    export const formatUniverseEpochDuration: (duration: number, locale?: string) => string;
     export const makeAreaSpanLabel: (constantTable: Type.ConstantTable, area: Type.ConstantTableArea) => string | undefined;
     export const designConstantAreas: (slide: Type.SlideUnit, view: Type.View, lane: Type.Lane, tickWindow: ValueTickWindow, constantTable: Type.ConstantTable, area: Type.ConstantTableArea) => Type.Area[];
     export const designConstantTickColor: (tick: Type.ConstantTableTick) => string;
@@ -1865,6 +1878,10 @@ declare module "script/json-eval-updater" {
                 ruler: {
                     frameRenderTimeLimit: number;
                     foregroundColor: {
+                        light: string;
+                        dark: string;
+                    };
+                    paleForegroundColor: {
                         light: string;
                         dark: string;
                     };

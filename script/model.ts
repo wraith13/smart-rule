@@ -1,7 +1,7 @@
 import * as Locale from "./locale";
 import * as Calculation from "./calculation";
 import * as Type from "./type";
-import * as Time from "./time";
+// import * as Time from "./time";
 import * as Url from "./url";
 import * as Theme from "./theme";
 import * as Comparer from "./comparer";
@@ -2517,6 +2517,71 @@ export const designDigitTicks = (slide: Type.SlideUnit, view: Type.View, lane: T
     };
     return result;
 };
+export const getLocaleDigitTable = (locale: string) =>
+{
+    switch(locale)
+    {
+    case "ja":
+        return digitJA as Type.DigitTable;
+    case "en":
+        return digitEN as Type.DigitTable;
+    default:
+        return digitSI as Type.DigitTable;
+    }
+};
+export const numberToLocaleString = (value: number, locale: string = Locale.getLocale()): string =>
+{
+    if (1 <= value)
+    {
+        const exponent = Math.floor(Math.log10(value));
+        return Calculation.groupDigits(value.toLocaleString(locale, { maximumFractionDigits: Math.max(3 -exponent, 0) }), locale);
+    }
+    else
+    {
+        return `${value}`;
+    }
+};
+export const formatUniverseEpochDuration = (duration: number, locale: string = Locale.getLocale()): string =>
+{
+    if (duration < 60)
+    {
+        return Locale.map("NNN seconds").replace("NNN", `${numberToLocaleString(duration, locale)}`);
+    }
+    else if (duration < 3600)
+    {
+        return Locale.map("NNN minutes").replace("NNN", `${numberToLocaleString(duration / 60, locale)}`);
+    }
+    else if (duration < 3600 *24)
+    {
+        return Locale.map("NNN hours").replace("NNN", `${numberToLocaleString(duration / 3600, locale)}`);
+    }
+    else if (duration < 3600 *24 *config.time.gregorianYearLength)
+    {
+        return Locale.map("NNN days").replace("NNN", `${numberToLocaleString(duration / (3600 * 24), locale)}`);
+    }
+    else if (duration < 3600 *24 *config.time.gregorianYearLength *100) // Up to 100 years, use Gregorian calendar year
+    {
+        return Locale.map("NNN years").replace("NNN", `${numberToLocaleString(duration / (3600 * 24 * config.time.gregorianYearLength), locale)}`);
+    }
+    else
+    {
+        const digitTable = getLocaleDigitTable(locale);
+        const years = duration / (3600 * 24 * config.time.julianYearLength);
+        const yearsExponent = Math.floor(Math.log10(years));
+        const digit = digitTable.digits
+            .filter(digit => 1 < digit.exponent && digit.exponent <= yearsExponent)
+            .sort((a, b) => b.exponent -a.exponent)[0];
+        if (digit)
+        {
+            const digitYears = years / Math.pow(10, digit.exponent);
+            return Locale.map("NNN years").replace("NNN", `${numberToLocaleString(digitYears, locale)} ${digit.label}`);
+        }
+        else
+        {
+            return Locale.map("NNN years").replace("NNN", `${numberToLocaleString(years, locale)}`);
+        }
+    }
+};
 export const makeAreaSpanLabel = (constantTable: Type.ConstantTable, area: Type.ConstantTableArea) =>
 {
     if (constantTable.areaOptions?.span?.show)
@@ -2524,7 +2589,7 @@ export const makeAreaSpanLabel = (constantTable: Type.ConstantTable, area: Type.
         if (Calculation.isRegularNumber(area.lowerBound) && Calculation.isRegularNumber(area.upperBound))
         {
             const span = area.upperBound -area.lowerBound;
-            return Time.formatUniverseEpochDuration(span);
+            return formatUniverseEpochDuration(span);
         }
     }
     return undefined;

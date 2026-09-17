@@ -533,7 +533,7 @@ export const drawAreas = (view: Type.View, group: SVGGElement, slide: Type.Slide
                                     },
                                     {
                                         tag: "tspan",
-                                        fill: "#888888",
+                                        fill: Theme.resolve(config.render.ruler.paleForegroundColor),
                                         "font-size": 12,
                                         dx: 8,
                                         textContent: Locale.resolve(area.subLabel),
@@ -618,7 +618,7 @@ export const drawAreas = (view: Type.View, group: SVGGElement, slide: Type.Slide
                                 class: "area-label",
                                 x: left + 8,
                                 y: y +(height /2) +4 +8,
-                                fill: "#888888",
+                                fill: Theme.resolve(config.render.ruler.paleForegroundColor),
                                 "font-size": 12,
                                 textContent: Locale.resolve(area.subLabel),
                             })
