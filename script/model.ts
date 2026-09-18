@@ -2531,14 +2531,14 @@ export const getLocaleDigitTable = (locale: string) =>
 };
 export const numberToLocaleString = (value: number, locale: string = Locale.getLocale()): string =>
 {
-    if (1 <= value)
+    if (value < 0.1)
     {
-        const exponent = Math.floor(Math.log10(value));
-        return Calculation.groupDigits(value.toLocaleString(locale, { maximumFractionDigits: Math.max(3 -exponent, 0) }), locale);
+        return Calculation.groupDigits(value.toLocaleString(locale, { notation: "scientific" } as Intl.NumberFormatOptions), locale);
     }
     else
     {
-        return `${value}`;
+        const exponent = Math.floor(Math.log10(value));
+        return Calculation.groupDigits(value.toLocaleString(locale, { maximumFractionDigits: Math.max(3 -exponent, 0) }), locale);
     }
 };
 export const formatUniverseEpochDuration = (duration: number, locale: string = Locale.getLocale()): string =>
@@ -2586,10 +2586,14 @@ export const makeAreaSpanLabel = (constantTable: Type.ConstantTable, area: Type.
 {
     if (constantTable.areaOptions?.span?.show)
     {
-        if (Calculation.isRegularNumber(area.lowerBound) && Calculation.isRegularNumber(area.upperBound))
+        if (Calculation.isRegularNumber(area.upperBound))
         {
-            const span = area.upperBound -area.lowerBound;
+            const span = area.upperBound -(area.lowerBound ?? 0);
             return formatUniverseEpochDuration(span);
+        }
+        else
+        {
+            return Locale.map("NNN years").replace("NNN", "∞");
         }
     }
     return undefined;

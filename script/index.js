@@ -8907,12 +8907,12 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
     };
     exports.getLocaleDigitTable = getLocaleDigitTable;
     const numberToLocaleString = (value, locale = Locale.getLocale()) => {
-        if (1 <= value) {
-            const exponent = Math.floor(Math.log10(value));
-            return Calculation.groupDigits(value.toLocaleString(locale, { maximumFractionDigits: Math.max(3 - exponent, 0) }), locale);
+        if (value < 0.1) {
+            return Calculation.groupDigits(value.toLocaleString(locale, { notation: "scientific" }), locale);
         }
         else {
-            return `${value}`;
+            const exponent = Math.floor(Math.log10(value));
+            return Calculation.groupDigits(value.toLocaleString(locale, { maximumFractionDigits: Math.max(3 - exponent, 0) }), locale);
         }
     };
     exports.numberToLocaleString = numberToLocaleString;
@@ -8951,11 +8951,14 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
     };
     exports.formatUniverseEpochDuration = formatUniverseEpochDuration;
     const makeAreaSpanLabel = (constantTable, area) => {
-        var _a, _b;
+        var _a, _b, _c;
         if ((_b = (_a = constantTable.areaOptions) === null || _a === void 0 ? void 0 : _a.span) === null || _b === void 0 ? void 0 : _b.show) {
-            if (Calculation.isRegularNumber(area.lowerBound) && Calculation.isRegularNumber(area.upperBound)) {
-                const span = area.upperBound - area.lowerBound;
+            if (Calculation.isRegularNumber(area.upperBound)) {
+                const span = area.upperBound - ((_c = area.lowerBound) !== null && _c !== void 0 ? _c : 0);
                 return (0, exports.formatUniverseEpochDuration)(span);
+            }
+            else {
+                return Locale.map("NNN years").replace("NNN", "∞");
             }
         }
         return undefined;
