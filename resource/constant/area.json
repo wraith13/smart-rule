@@ -77,5 +77,11 @@
             "priority": 2
         }
     ],
-    "areas": []
+    "areas": [
+        {
+            "lowerBound": null,
+            "upperBound": 2.6121e-70,
+            "fill": "$MIN"
+        }
+    ]
 }

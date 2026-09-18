@@ -681,7 +681,15 @@ declare module "script/model" {
                 priority: number;
                 unit?: undefined;
             })[];
-            areas: never[];
+            areas: ({
+                lowerBound: null;
+                upperBound: number;
+                fill: string;
+            } | {
+                lowerBound: number;
+                upperBound: null;
+                fill: string;
+            })[];
         };
         area: {
             "$file-name": string;
@@ -704,7 +712,11 @@ declare module "script/model" {
                 };
                 priority: number;
             }[];
-            areas: never[];
+            areas: {
+                lowerBound: null;
+                upperBound: number;
+                fill: string;
+            }[];
         };
         volume: {
             "$file-name": string;
@@ -736,7 +748,15 @@ declare module "script/model" {
                 priority: number;
                 color: string;
             })[];
-            areas: never[];
+            areas: ({
+                lowerBound: null;
+                upperBound: number;
+                fill: string;
+            } | {
+                lowerBound: number;
+                upperBound: null;
+                fill: string;
+            })[];
         };
         mass: {
             "$file-name": string;

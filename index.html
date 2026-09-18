@@ -2,7 +2,7 @@
 <!--
     This file is genereted by build.js. このファイルは build.js によって生成されました。
     build options: ../build.json all
-    build at: Fri Sep 18 2026 00:29:18 GMT+0900 (日本標準時)
+    build at: Fri Sep 18 2026 21:02:17 GMT+0900 (日本標準時)
     repository: https://github.com/wraith13/smart-rule/
 -->
 <!-- license:
@@ -627,8 +627,8 @@ button:focus
 <div id="toast-panel"></div>
 <script type="text/javascript">
 const build = {
-    at: "Fri Sep 18 2026 00:29:18 GMT+0900 (日本標準時)",
-    tick: 1789658958570
+    at: "Fri Sep 18 2026 21:02:17 GMT+0900 (日本標準時)",
+    tick: 1789732937828
 };
 const evilCommonjsConfig = {
     "log": {
@@ -4643,7 +4643,18 @@ define("resource/constant/size", [], {
             "priority": 1
         }
     ],
-    "areas": []
+    "areas": [
+        {
+            "lowerBound": null,
+            "upperBound": 1.616255e-35,
+            "fill": "$MIN"
+        },
+        {
+            "lowerBound": 8.8e26,
+            "upperBound": null,
+            "fill": "$MAX"
+        }
+    ]
 });
 define("resource/constant/area", [], {
     "$file-name": "area.json",
@@ -4724,7 +4735,13 @@ define("resource/constant/area", [], {
             "priority": 2
         }
     ],
-    "areas": []
+    "areas": [
+        {
+            "lowerBound": null,
+            "upperBound": 2.6121e-70,
+            "fill": "$MIN"
+        }
+    ]
 });
 define("resource/constant/volume", [], {
     "$file-name": "volume.json",
@@ -4814,7 +4831,18 @@ define("resource/constant/volume", [], {
             "color": "$ESTIMATED"
         }
     ],
-    "areas": []
+    "areas": [
+        {
+            "lowerBound": null,
+            "upperBound": 4.222e-105,
+            "fill": "$MIN"
+        },
+        {
+            "lowerBound": 3.566e80,
+            "upperBound": null,
+            "fill": "$MAX"
+        }
+    ]
 });
 define("resource/constant/mass", [], {
     "$file-name": "mass.json",

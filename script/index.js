@@ -3653,7 +3653,18 @@ define("resource/constant/size", [], {
             "priority": 1
         }
     ],
-    "areas": []
+    "areas": [
+        {
+            "lowerBound": null,
+            "upperBound": 1.616255e-35,
+            "fill": "$MIN"
+        },
+        {
+            "lowerBound": 8.8e26,
+            "upperBound": null,
+            "fill": "$MAX"
+        }
+    ]
 });
 define("resource/constant/area", [], {
     "$file-name": "area.json",
@@ -3734,7 +3745,13 @@ define("resource/constant/area", [], {
             "priority": 2
         }
     ],
-    "areas": []
+    "areas": [
+        {
+            "lowerBound": null,
+            "upperBound": 2.6121e-70,
+            "fill": "$MIN"
+        }
+    ]
 });
 define("resource/constant/volume", [], {
     "$file-name": "volume.json",
@@ -3824,7 +3841,18 @@ define("resource/constant/volume", [], {
             "color": "$ESTIMATED"
         }
     ],
-    "areas": []
+    "areas": [
+        {
+            "lowerBound": null,
+            "upperBound": 4.222e-105,
+            "fill": "$MIN"
+        },
+        {
+            "lowerBound": 3.566e80,
+            "upperBound": null,
+            "fill": "$MAX"
+        }
+    ]
 });
 define("resource/constant/mass", [], {
     "$file-name": "mass.json",

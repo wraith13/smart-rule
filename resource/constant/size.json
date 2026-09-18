@@ -427,5 +427,15 @@
         }
     ],
     "areas": [
+        {
+            "lowerBound": null,
+            "upperBound": 1.616255e-35,
+            "fill": "$MIN"
+        },
+        {
+            "lowerBound": 8.8e26,
+            "upperBound": null,
+            "fill": "$MAX"
+        }
     ]
 }
