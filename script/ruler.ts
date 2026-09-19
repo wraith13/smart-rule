@@ -205,11 +205,12 @@ export const makeSureSlide = (slideIndex: number): SVGGElement => SVG.makeSure
 // };
 export const getLeftOfLane = (laneIndex: number): number =>
     LaneWidths.slice(0, laneIndex).reduce((a, b) => a + b, 0) -Model.data.offset.x;
-export const drawLeveledText = (label: SVGTextElement, text: string) =>
+export const drawLeveledText = (label: SVGTextElement, text: string, option: { dx: number; } = { dx: 0, }) =>
 {
+    let currentDx = option.dx;
     let currentDy = 0;
     const leveledText = Render.parseLeveledText(text);
-    if (leveledText.length <= 1)
+    if (leveledText.length <= 1 && label.childNodes.length <= 0)
     {
         label.textContent = text;
     }
@@ -218,16 +219,19 @@ export const drawLeveledText = (label: SVGTextElement, text: string) =>
         for(const i of leveledText)
         {
             const baseDy = i.level *-4.5;
+            const dx = currentDx;
             const dy = baseDy - currentDy;
             const tspan = SVG.make
             ({
                 tag: "tspan",
                 class: `leveled-text-${Render.getLevelName(i)}`,
+                dx,
                 dy,
                 "font-size": Render.isRegularSizeText(i) ? 12 : 9,
                 textContent: i.text,
             });
             label.appendChild(tspan);
+            currentDx = 0;
             currentDy += dy;
         }
     }
@@ -515,32 +519,33 @@ export const drawAreas = (view: Type.View, group: SVGGElement, slide: Type.Slide
                 {
                     if (undefined !== area.subLabel)
                     {
-                        group.appendChild
-                        (
-                            SVG.make
-                            ({
-                                tag: "text",
-                                class: "area-label",
-                                x: left +16,
-                                y: y +height -8,
-                                transform: `rotate(-90, ${left +16}, ${y +height -8})`,
-                                children: [
-                                    {
-                                        tag: "tspan",
-                                        fill: area.color ?? Theme.resolve(config.render.ruler.foregroundColor),
-                                        "font-size": 12,
-                                        textContent: Locale.resolve(area.label),
-                                    },
-                                    {
-                                        tag: "tspan",
-                                        fill: Theme.resolve(config.render.ruler.paleForegroundColor),
-                                        "font-size": 12,
-                                        dx: 8,
-                                        textContent: Locale.resolve(area.subLabel),
-                                    }
-                                ]
-                            })
-                        );
+                        const label = SVG.make
+                        ({
+                            tag: "text",
+                            class: "area-label",
+                            x: left +16,
+                            y: y +height -8,
+                            transform: `rotate(-90, ${left +16}, ${y +height -8})`,
+                            fill: Theme.resolve(config.render.ruler.paleForegroundColor),
+                            "font-size": 12,
+                            children: [
+                                {
+                                    tag: "tspan",
+                                    fill: area.color ?? Theme.resolve(config.render.ruler.foregroundColor),
+                                    "font-size": 12,
+                                    textContent: Locale.resolve(area.label),
+                                },
+                                // {
+                                //     tag: "tspan",
+                                //     fill: Theme.resolve(config.render.ruler.paleForegroundColor),
+                                //     "font-size": 12,
+                                //     dx: 8,
+                                //     textContent: Locale.resolve(area.subLabel),
+                                // }
+                            ]
+                        });
+                        group.appendChild(label);
+                        drawLeveledText(label, Locale.resolve(area.subLabel), { dx: 8, });
                     }
                     else
                     {
@@ -610,19 +615,17 @@ export const drawAreas = (view: Type.View, group: SVGGElement, slide: Type.Slide
                                 textContent: Locale.resolve(area.label),
                             })
                         );
-                        group.appendChild
-                        (
-                            SVG.make
-                            ({
-                                tag: "text",
-                                class: "area-label",
-                                x: left + 8,
-                                y: y +(height /2) +4 +8,
-                                fill: Theme.resolve(config.render.ruler.paleForegroundColor),
-                                "font-size": 12,
-                                textContent: Locale.resolve(area.subLabel),
-                            })
-                        );
+                        const subLabel = SVG.make
+                        ({
+                            tag: "text",
+                            class: "area-label",
+                            x: left + 8,
+                            y: y +(height /2) +4 +8,
+                            fill: Theme.resolve(config.render.ruler.paleForegroundColor),
+                            "font-size": 12,
+                        });
+                        group.appendChild(subLabel);
+                        drawLeveledText(subLabel, Locale.resolve(area.subLabel));
                     }
                     else
                     {

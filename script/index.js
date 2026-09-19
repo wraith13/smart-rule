@@ -10153,24 +10153,28 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
     // };
     const getLeftOfLane = (laneIndex) => exports.LaneWidths.slice(0, laneIndex).reduce((a, b) => a + b, 0) - Model.data.offset.x;
     exports.getLeftOfLane = getLeftOfLane;
-    const drawLeveledText = (label, text) => {
+    const drawLeveledText = (label, text, option = { dx: 0, }) => {
+        let currentDx = option.dx;
         let currentDy = 0;
         const leveledText = Render.parseLeveledText(text);
-        if (leveledText.length <= 1) {
+        if (leveledText.length <= 1 && label.childNodes.length <= 0) {
             label.textContent = text;
         }
         else {
             for (const i of leveledText) {
                 const baseDy = i.level * -4.5;
+                const dx = currentDx;
                 const dy = baseDy - currentDy;
                 const tspan = SVG.make({
                     tag: "tspan",
                     class: `leveled-text-${Render.getLevelName(i)}`,
+                    dx,
                     dy,
                     "font-size": Render.isRegularSizeText(i) ? 12 : 9,
                     textContent: i.text,
                 });
                 label.appendChild(tspan);
+                currentDx = 0;
                 currentDy += dy;
             }
         }
@@ -10386,12 +10390,14 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                     }
                     if (undefined !== area.label) {
                         if (undefined !== area.subLabel) {
-                            group.appendChild(SVG.make({
+                            const label = SVG.make({
                                 tag: "text",
                                 class: "area-label",
                                 x: left + 16,
                                 y: y + height - 8,
                                 transform: `rotate(-90, ${left + 16}, ${y + height - 8})`,
+                                fill: Theme.resolve(config_json_6.default.render.ruler.paleForegroundColor),
+                                "font-size": 12,
                                 children: [
                                     {
                                         tag: "tspan",
@@ -10399,15 +10405,17 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                                         "font-size": 12,
                                         textContent: Locale.resolve(area.label),
                                     },
-                                    {
-                                        tag: "tspan",
-                                        fill: Theme.resolve(config_json_6.default.render.ruler.paleForegroundColor),
-                                        "font-size": 12,
-                                        dx: 8,
-                                        textContent: Locale.resolve(area.subLabel),
-                                    }
+                                    // {
+                                    //     tag: "tspan",
+                                    //     fill: Theme.resolve(config.render.ruler.paleForegroundColor),
+                                    //     "font-size": 12,
+                                    //     dx: 8,
+                                    //     textContent: Locale.resolve(area.subLabel),
+                                    // }
                                 ]
-                            }));
+                            });
+                            group.appendChild(label);
+                            (0, exports.drawLeveledText)(label, Locale.resolve(area.subLabel), { dx: 8, });
                         }
                         else {
                             group.appendChild(SVG.make({
@@ -10456,15 +10464,16 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                                 "font-size": 12,
                                 textContent: Locale.resolve(area.label),
                             }));
-                            group.appendChild(SVG.make({
+                            const subLabel = SVG.make({
                                 tag: "text",
                                 class: "area-label",
                                 x: left + 8,
                                 y: y + (height / 2) + 4 + 8,
                                 fill: Theme.resolve(config_json_6.default.render.ruler.paleForegroundColor),
                                 "font-size": 12,
-                                textContent: Locale.resolve(area.subLabel),
-                            }));
+                            });
+                            group.appendChild(subLabel);
+                            (0, exports.drawLeveledText)(subLabel, Locale.resolve(area.subLabel));
                         }
                         else {
                             group.appendChild(SVG.make({
