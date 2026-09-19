@@ -4016,7 +4016,13 @@ define("resource/constant/mass", [], {
             "color": "$ESTIMATED"
         }
     ],
-    "areas": []
+    "areas": [
+        {
+            "lowerBound": 1.5e56,
+            "upperBound": null,
+            "fill": "$MAX"
+        }
+    ]
 });
 define("resource/constant/time", [], {
     "$file-name": "time.json",
@@ -4228,7 +4234,13 @@ define("resource/constant/time", [], {
             }
         }
     ],
-    "areas": []
+    "areas": [
+        {
+            "lowerBound": null,
+            "upperBound": 5.391246366844893e-44,
+            "fill": "$MIN"
+        }
+    ]
 });
 define("resource/constant/speed", [], {
     "$file-name": "speed.json",
@@ -8986,7 +8998,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                 return (0, exports.formatUniverseEpochDuration)(span);
             }
             else {
-                return Locale.map("NNN years").replace("NNN", "∞");
+                return "∞";
             }
         }
         return undefined;

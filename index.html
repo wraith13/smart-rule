@@ -2,7 +2,7 @@
 <!--
     This file is genereted by build.js. このファイルは build.js によって生成されました。
     build options: ../build.json all
-    build at: Fri Sep 18 2026 21:02:17 GMT+0900 (日本標準時)
+    build at: Fri Sep 18 2026 23:55:20 GMT+0900 (日本標準時)
     repository: https://github.com/wraith13/smart-rule/
 -->
 <!-- license:
@@ -627,8 +627,8 @@ button:focus
 <div id="toast-panel"></div>
 <script type="text/javascript">
 const build = {
-    at: "Fri Sep 18 2026 21:02:17 GMT+0900 (日本標準時)",
-    tick: 1789732937828
+    at: "Fri Sep 18 2026 23:55:20 GMT+0900 (日本標準時)",
+    tick: 1789743320002
 };
 const evilCommonjsConfig = {
     "log": {
@@ -5006,7 +5006,13 @@ define("resource/constant/mass", [], {
             "color": "$ESTIMATED"
         }
     ],
-    "areas": []
+    "areas": [
+        {
+            "lowerBound": 1.5e56,
+            "upperBound": null,
+            "fill": "$MAX"
+        }
+    ]
 });
 define("resource/constant/time", [], {
     "$file-name": "time.json",
@@ -5218,7 +5224,13 @@ define("resource/constant/time", [], {
             }
         }
     ],
-    "areas": []
+    "areas": [
+        {
+            "lowerBound": null,
+            "upperBound": 5.391246366844893e-44,
+            "fill": "$MIN"
+        }
+    ]
 });
 define("resource/constant/speed", [], {
     "$file-name": "speed.json",
@@ -9976,7 +9988,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                 return (0, exports.formatUniverseEpochDuration)(span);
             }
             else {
-                return Locale.map("NNN years").replace("NNN", "∞");
+                return "∞";
             }
         }
         return undefined;

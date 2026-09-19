@@ -788,7 +788,11 @@ declare module "script/model" {
                 priority: number;
                 color?: undefined;
             })[];
-            areas: never[];
+            areas: {
+                lowerBound: number;
+                upperBound: null;
+                fill: string;
+            }[];
         };
         time: {
             "$file-name": string;
@@ -856,7 +860,11 @@ declare module "script/model" {
                     value: string;
                 };
             })[];
-            areas: never[];
+            areas: {
+                lowerBound: null;
+                upperBound: number;
+                fill: string;
+            }[];
         };
         speed: {
             "$file-name": string;

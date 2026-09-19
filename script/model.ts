@@ -2593,7 +2593,7 @@ export const makeAreaSpanLabel = (constantTable: Type.ConstantTable, area: Type.
         }
         else
         {
-            return Locale.map("NNN years").replace("NNN", "∞");
+            return "∞";
         }
     }
     return undefined;
