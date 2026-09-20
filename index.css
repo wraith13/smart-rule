@@ -7,6 +7,10 @@ html, body, .view, .wallpaper, .screen
     max-height: 100lvh;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
 }
+svg text
+{
+    font-family: "Consolas", "Liberation Mono", "Courier New", monospace;
+}
 html, body, .view, .wallpaper
 {
     width: 100%;

@@ -66,6 +66,7 @@ define("resource/lang/en", [], {
     "NNN hours": "NNN hours",
     "NNN days": "NNN days",
     "NNN years": "NNN years",
+    "NNN PPP years": "NNN PPP years",
     "GitHub repository": "GitHub repository"
 });
 define("resource/lang/ja", [], {
@@ -100,6 +101,7 @@ define("resource/lang/ja", [], {
     "NNN hours": "NNN 時間",
     "NNN days": "NNN 日間",
     "NNN years": "NNN 年間",
+    "NNN PPP years": "NNN PPP年間",
     "GitHub repository": "GitHub リポジトリ"
 });
 define("script/locale", ["require", "exports", "resource/lang/en", "resource/lang/ja"], function (require, exports, en_json_1, ja_json_1) {
@@ -8982,10 +8984,13 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                 .sort((a, b) => b.exponent - a.exponent)[0];
             if (digit) {
                 const digitYears = years / Math.pow(10, digit.exponent);
-                return Locale.map("NNN years").replace("NNN", `${(0, exports.numberToLocaleString)(digitYears, locale)} ${digit.label}`);
+                return Locale.map("NNN PPP years")
+                    .replace("NNN", (0, exports.numberToLocaleString)(digitYears, locale))
+                    .replace("PPP", Locale.resolve(digit.label));
             }
             else {
-                return Locale.map("NNN years").replace("NNN", `${(0, exports.numberToLocaleString)(years, locale)}`);
+                return Locale.map("NNN years")
+                    .replace("NNN", (0, exports.numberToLocaleString)(years, locale));
             }
         }
     };

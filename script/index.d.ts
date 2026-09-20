@@ -32,6 +32,7 @@ declare module "script/locale" {
             "NNN hours": string;
             "NNN days": string;
             "NNN years": string;
+            "NNN PPP years": string;
             "GitHub repository": string;
         };
         ja: {
@@ -66,6 +67,7 @@ declare module "script/locale" {
             "NNN hours": string;
             "NNN days": string;
             "NNN years": string;
+            "NNN PPP years": string;
             "GitHub repository": string;
         };
     };

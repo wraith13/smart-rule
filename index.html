@@ -2,7 +2,7 @@
 <!--
     This file is genereted by build.js. このファイルは build.js によって生成されました。
     build options: ../build.json all
-    build at: Sat Sep 19 2026 22:53:52 GMT+0900 (日本標準時)
+    build at: Sun Sep 20 2026 04:46:23 GMT+0900 (日本標準時)
     repository: https://github.com/wraith13/smart-rule/
 -->
 <!-- license:
@@ -70,6 +70,10 @@ html, body, .view, .wallpaper, .screen
     max-height: 100vh;
     max-height: 100lvh;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+}
+svg text
+{
+    font-family: "Consolas", "Liberation Mono", "Courier New", monospace;
 }
 html, body, .view, .wallpaper
 {
@@ -627,8 +631,8 @@ button:focus
 <div id="toast-panel"></div>
 <script type="text/javascript">
 const build = {
-    at: "Sat Sep 19 2026 22:53:52 GMT+0900 (日本標準時)",
-    tick: 1789826032049
+    at: "Sun Sep 20 2026 04:46:23 GMT+0900 (日本標準時)",
+    tick: 1789847183304
 };
 const evilCommonjsConfig = {
     "log": {
@@ -1056,6 +1060,7 @@ define("resource/lang/en", [], {
     "NNN hours": "NNN hours",
     "NNN days": "NNN days",
     "NNN years": "NNN years",
+    "NNN PPP years": "NNN PPP years",
     "GitHub repository": "GitHub repository"
 });
 define("resource/lang/ja", [], {
@@ -1090,6 +1095,7 @@ define("resource/lang/ja", [], {
     "NNN hours": "NNN 時間",
     "NNN days": "NNN 日間",
     "NNN years": "NNN 年間",
+    "NNN PPP years": "NNN PPP年間",
     "GitHub repository": "GitHub リポジトリ"
 });
 define("script/locale", ["require", "exports", "resource/lang/en", "resource/lang/ja"], function (require, exports, en_json_1, ja_json_1) {
@@ -9972,10 +9978,13 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                 .sort((a, b) => b.exponent - a.exponent)[0];
             if (digit) {
                 const digitYears = years / Math.pow(10, digit.exponent);
-                return Locale.map("NNN years").replace("NNN", `${(0, exports.numberToLocaleString)(digitYears, locale)} ${digit.label}`);
+                return Locale.map("NNN PPP years")
+                    .replace("NNN", (0, exports.numberToLocaleString)(digitYears, locale))
+                    .replace("PPP", Locale.resolve(digit.label));
             }
             else {
-                return Locale.map("NNN years").replace("NNN", `${(0, exports.numberToLocaleString)(years, locale)}`);
+                return Locale.map("NNN years")
+                    .replace("NNN", (0, exports.numberToLocaleString)(years, locale));
             }
         }
     };

@@ -2574,11 +2574,14 @@ export const formatUniverseEpochDuration = (duration: number, locale: string = L
         if (digit)
         {
             const digitYears = years / Math.pow(10, digit.exponent);
-            return Locale.map("NNN years").replace("NNN", `${numberToLocaleString(digitYears, locale)} ${digit.label}`);
+            return Locale.map("NNN PPP years")
+                .replace("NNN", numberToLocaleString(digitYears, locale))
+                .replace("PPP", Locale.resolve(digit.label));
         }
         else
         {
-            return Locale.map("NNN years").replace("NNN", `${numberToLocaleString(years, locale)}`);
+            return Locale.map("NNN years")
+                .replace("NNN", numberToLocaleString(years, locale));
         }
     }
 };
