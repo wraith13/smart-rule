@@ -502,6 +502,37 @@ export const getMaxValue = (lane: Type.Lane): number =>
         throw new Error(`🦋 FIXME: getMaxValue not implemented for lane type: ${lane.type}`);
     }
 };
+export const getDenseLabel = (lane: Type.Lane): Type.MultiLanguageText | undefined =>
+{
+    switch(lane.type)
+    {
+    // case "primary":
+    // case "prime":
+    // case "prime-decomposition":
+    // case "digit":
+    // case "constant":
+    // case "invert":
+    // case "power":
+    // case "root":
+    // case "exponential":
+    // case "logarithmic":
+    case "sine":
+        return "-1 ... +1";
+    // case "cosine":
+    // case "tangent":
+    // case "secant":
+    // case "cosecant":
+    // case "cotangent":
+    // case "arcsine":
+    // case "arccosine":
+    // case "arctangent":
+    // case "arcsecant":
+    // case "arccosecant":
+    // case "arccotangent":
+    default:
+        return undefined;
+    }
+};
 export const getPrimaryValueAt = (lane: Type.Lane, position: number): number =>
 {
     switch(lane.type)
@@ -2841,6 +2872,7 @@ export const designPeriodicTicks = (slide: Type.SlideUnit, view: Type.View, lane
                     },
                     upperBound: undefined,
                     fill: "$DENSE",
+                    label: getDenseLabel(lane),
                 });
                 break;
             }
@@ -2961,11 +2993,13 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
                 lowerBound: undefined,
                 upperBound: { value: 0, position: Calculation.MIN_VALUE, },
                 fill: "$MIN",
+                label: "≈0"
             }:
             {
                 upperBound: { value: 0, position: Calculation.MAX_VALUE, },
                 lowerBound: undefined,
                 fill: "$MIN",
+                label: "≈0"
             }
         );
         break;

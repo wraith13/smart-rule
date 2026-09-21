@@ -164,7 +164,8 @@
         {
             "lowerBound": 1.5e56,
             "upperBound": null,
-            "fill": "$MAX"
+            "fill": "$MAX",
+            "label": "≈∞"
         }
     ]
 }

@@ -430,12 +430,14 @@
         {
             "lowerBound": null,
             "upperBound": 1.616255e-35,
-            "fill": "$MIN"
+            "fill": "$MIN",
+            "label": "≈0"
         },
         {
             "lowerBound": 8.8e26,
             "upperBound": null,
-            "fill": "$MAX"
+            "fill": "$MAX",
+            "label": "≈∞"
         }
     ]
 }

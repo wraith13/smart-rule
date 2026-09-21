@@ -90,12 +90,14 @@
         {
             "lowerBound": null,
             "upperBound": 4.222e-105,
-            "fill": "$MIN"
+            "fill": "$MIN",
+            "label": "≈0"
         },
         {
             "lowerBound": 3.566e80,
             "upperBound": null,
-            "fill": "$MAX"
+            "fill": "$MAX",
+            "label": "≈∞"
         }
     ]
 }

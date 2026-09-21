@@ -689,10 +689,12 @@ declare module "script/model" {
                 lowerBound: null;
                 upperBound: number;
                 fill: string;
+                label: string;
             } | {
                 lowerBound: number;
                 upperBound: null;
                 fill: string;
+                label: string;
             })[];
         };
         area: {
@@ -720,6 +722,7 @@ declare module "script/model" {
                 lowerBound: null;
                 upperBound: number;
                 fill: string;
+                label: string;
             }[];
         };
         volume: {
@@ -756,10 +759,12 @@ declare module "script/model" {
                 lowerBound: null;
                 upperBound: number;
                 fill: string;
+                label: string;
             } | {
                 lowerBound: number;
                 upperBound: null;
                 fill: string;
+                label: string;
             })[];
         };
         mass: {
@@ -796,6 +801,7 @@ declare module "script/model" {
                 lowerBound: number;
                 upperBound: null;
                 fill: string;
+                label: string;
             }[];
         };
         time: {
@@ -868,6 +874,7 @@ declare module "script/model" {
                 lowerBound: null;
                 upperBound: number;
                 fill: string;
+                label: string;
             }[];
         };
         speed: {
@@ -1568,6 +1575,7 @@ declare module "script/model" {
     }) => number;
     export const getMinValue: (lane: Type.Lane) => number;
     export const getMaxValue: (lane: Type.Lane) => number;
+    export const getDenseLabel: (lane: Type.Lane) => Type.MultiLanguageText | undefined;
     export const getPrimaryValueAt: (lane: Type.Lane, position: number) => number;
     export const getPrimaryPositionAt: (lane: Type.Lane, value: Type.ValueType, quarter?: number) => number;
     export const angleToQuarter: (angle: number) => number;
