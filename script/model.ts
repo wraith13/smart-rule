@@ -518,11 +518,16 @@ export const getDenseLabel = (lane: Type.Lane): Type.MultiLanguageText | undefin
     // case "logarithmic":
     case "sine":
         return "-1 ... +1";
-    // case "cosine":
-    // case "tangent":
-    // case "secant":
-    // case "cosecant":
-    // case "cotangent":
+    case "cosine":
+        return "-1 ... +1";
+    case "tangent":
+        return "-∞ ... +∞";
+    case "secant":
+        return "-∞ ... -1 ∪ +1 ... +∞";
+    case "cosecant":
+        return "-∞ ... -1 ∪ +1 ... +∞";
+    case "cotangent":
+        return "-∞ ... +∞";
     // case "arcsine":
     // case "arccosine":
     // case "arctangent":
@@ -2993,13 +2998,13 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
                 lowerBound: undefined,
                 upperBound: { value: 0, position: Calculation.MIN_VALUE, },
                 fill: "$MIN",
-                label: "≈0"
+                label: "≈0",
             }:
             {
                 upperBound: { value: 0, position: Calculation.MAX_VALUE, },
                 lowerBound: undefined,
                 fill: "$MIN",
-                label: "≈0"
+                label: "≈0",
             }
         );
         break;
@@ -3019,13 +3024,13 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
                 lowerBound: undefined,
                 upperBound: { value: 1, position: angleCos.minPosition, },
                 fill: "$SPARSE",
-                label: "≈1"
+                label: "≈1",
             }:
             {
                 upperBound: { value: 1, position: 1 / angleCos.minPosition, },
                 lowerBound: undefined,
                 fill: "$SPARSE",
-                label: "≈1"
+                label: "≈1",
             }
         );
         break;
@@ -3037,11 +3042,13 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
                 lowerBound: undefined,
                 upperBound: { value: 0, position: Calculation.MIN_VALUE, },
                 fill: "$MIN",
+                label: "≈0",
             }:
             {
                 upperBound: { value: 0, position: Calculation.MAX_VALUE, },
                 lowerBound: undefined,
                 fill: "$MIN",
+                label: "≈0",
             }
         );
         break;
@@ -3061,13 +3068,13 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
                 lowerBound: undefined,
                 upperBound: { value: getMinValue(lane), position: angleSec.minPosition, },
                 fill: "$SPARSE",
-                label: "≈1"
+                label: "≈1",
             }:
             {
                 upperBound: { value: getMinValue(lane), position: 1 / angleSec.minPosition, },
                 lowerBound: undefined,
                 fill: "$SPARSE",
-                label: "≈1"
+                label: "≈1",
             }
         );
         break;

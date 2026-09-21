@@ -99,6 +99,10 @@
                 "regular": 14,
                 "small": 12,
                 "mini": 10.5
+            },
+            "sizeAdjustment": {
+                "∞": 1.8,
+                "∪": 0.7
             }
         },
         "ruler": {

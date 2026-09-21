@@ -779,6 +779,10 @@ define("resource/config", [], {
                 "regular": 14,
                 "small": 12,
                 "mini": 10.5
+            },
+            "sizeAdjustment": {
+                "∞": 1.8,
+                "∪": 0.7
             }
         },
         "ruler": {
@@ -7313,11 +7317,16 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
             // case "logarithmic":
             case "sine":
                 return "-1 ... +1";
-            // case "cosine":
-            // case "tangent":
-            // case "secant":
-            // case "cosecant":
-            // case "cotangent":
+            case "cosine":
+                return "-1 ... +1";
+            case "tangent":
+                return "-∞ ... +∞";
+            case "secant":
+                return "-∞ ... -1 ∪ +1 ... +∞";
+            case "cosecant":
+                return "-∞ ... -1 ∪ +1 ... +∞";
+            case "cotangent":
+                return "-∞ ... +∞";
             // case "arcsine":
             // case "arccosine":
             // case "arctangent":
@@ -9372,13 +9381,13 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                         lowerBound: undefined,
                         upperBound: { value: 0, position: Calculation.MIN_VALUE, },
                         fill: "$MIN",
-                        label: "≈0"
+                        label: "≈0",
                     } :
                     {
                         upperBound: { value: 0, position: Calculation.MAX_VALUE, },
                         lowerBound: undefined,
                         fill: "$MIN",
-                        label: "≈0"
+                        label: "≈0",
                     });
                 break;
             case "cosine":
@@ -9393,13 +9402,13 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                         lowerBound: undefined,
                         upperBound: { value: 1, position: cos_json_1.default.minPosition, },
                         fill: "$SPARSE",
-                        label: "≈1"
+                        label: "≈1",
                     } :
                     {
                         upperBound: { value: 1, position: 1 / cos_json_1.default.minPosition, },
                         lowerBound: undefined,
                         fill: "$SPARSE",
-                        label: "≈1"
+                        label: "≈1",
                     });
                 break;
             case "tangent":
@@ -9408,11 +9417,13 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                         lowerBound: undefined,
                         upperBound: { value: 0, position: Calculation.MIN_VALUE, },
                         fill: "$MIN",
+                        label: "≈0",
                     } :
                     {
                         upperBound: { value: 0, position: Calculation.MAX_VALUE, },
                         lowerBound: undefined,
                         fill: "$MIN",
+                        label: "≈0",
                     });
                 break;
             case "secant":
@@ -9427,13 +9438,13 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                         lowerBound: undefined,
                         upperBound: { value: (0, exports.getMinValue)(lane), position: sec_json_1.default.minPosition, },
                         fill: "$SPARSE",
-                        label: "≈1"
+                        label: "≈1",
                     } :
                     {
                         upperBound: { value: (0, exports.getMinValue)(lane), position: 1 / sec_json_1.default.minPosition, },
                         lowerBound: undefined,
                         fill: "$SPARSE",
-                        label: "≈1"
+                        label: "≈1",
                     });
                 break;
             case "cosecant":

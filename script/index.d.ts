@@ -1924,6 +1924,10 @@ declare module "script/json-eval-updater" {
                         small: number;
                         mini: number;
                     };
+                    sizeAdjustment: {
+                        "\u221E": number;
+                        "\u222A": number;
+                    };
                 };
                 ruler: {
                     frameRenderTimeLimit: number;
