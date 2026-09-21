@@ -9512,7 +9512,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                             lowerBound: (!isInverted) ? undefined : Type.getExValueNumber(valueTickWindow.topValue),
                             upperBound: (!isInverted) ? (isExponential ? (0, exports.getMinValue)(lane) : Type.getExValueNumber(valueTickWindow.topValue)) : undefined,
                             fill: (!isInverted) ? minColor : "$MAX",
-                            label: !isInverted && isExponential ? "≈1" : undefined,
+                            label: !isInverted ? (isExponential ? "≈1" : (hasMinus ? "≈-∞" : "≈0")) : "≈∞",
                         });
                     }
                 }
@@ -9522,7 +9522,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                             lowerBound: (!isInverted) ? Type.getExValueNumber(valueTickWindow.bottomValue) : undefined,
                             upperBound: (!isInverted) ? undefined : (isExponential ? (0, exports.getMinValue)(lane) : Type.getExValueNumber(valueTickWindow.bottomValue)),
                             fill: (!isInverted) ? "$MAX" : minColor,
-                            label: isInverted && isExponential ? "≈1" : undefined,
+                            label: isInverted ? (isExponential ? "≈1" : (hasMinus ? "≈-∞" : "≈0")) : "≈∞",
                         });
                     }
                 }
@@ -10427,7 +10427,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                                 ]
                             });
                             group.appendChild(label);
-                            (0, exports.drawLeveledText)(label, Locale.resolve(area.subLabel), { dx: 8, });
+                            (0, exports.drawLeveledText)(label, "( " + Locale.resolve(area.subLabel) + " )", { dx: 8, });
                         }
                         else {
                             group.appendChild(SVG.make({
@@ -10485,7 +10485,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                                 "font-size": config_json_6.default.render.font.size.regular,
                             });
                             group.appendChild(subLabel);
-                            (0, exports.drawLeveledText)(subLabel, Locale.resolve(area.subLabel));
+                            (0, exports.drawLeveledText)(subLabel, "( " + Locale.resolve(area.subLabel) + " )");
                         }
                         else {
                             group.appendChild(SVG.make({

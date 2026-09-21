@@ -547,7 +547,7 @@ export const drawAreas = (view: Type.View, group: SVGGElement, slide: Type.Slide
                             ]
                         });
                         group.appendChild(label);
-                        drawLeveledText(label, Locale.resolve(area.subLabel), { dx: 8, });
+                        drawLeveledText(label, "( " +Locale.resolve(area.subLabel) +" )", { dx: 8, });
                     }
                     else
                     {
@@ -627,7 +627,7 @@ export const drawAreas = (view: Type.View, group: SVGGElement, slide: Type.Slide
                             "font-size": config.render.font.size.regular,
                         });
                         group.appendChild(subLabel);
-                        drawLeveledText(subLabel, Locale.resolve(area.subLabel));
+                        drawLeveledText(subLabel, "( " +Locale.resolve(area.subLabel) +" )");
                     }
                     else
                     {

@@ -3173,7 +3173,7 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
                     lowerBound: ( ! isInverted) ? undefined:  Type.getExValueNumber(valueTickWindow.topValue),
                     upperBound: ( ! isInverted) ? (isExponential ? getMinValue(lane): Type.getExValueNumber(valueTickWindow.topValue)): undefined,
                     fill: ( ! isInverted) ? minColor: "$MAX",
-                    label: ! isInverted && isExponential ? "≈1": undefined,
+                    label: ! isInverted ? (isExponential ? "≈1": (hasMinus ? "≈-∞": "≈0")): "≈∞",
                 });
             }
         }
@@ -3186,7 +3186,7 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
                     lowerBound: ( ! isInverted) ? Type.getExValueNumber(valueTickWindow.bottomValue): undefined,
                     upperBound: ( ! isInverted) ? undefined: (isExponential ? getMinValue(lane): Type.getExValueNumber(valueTickWindow.bottomValue)),
                     fill: ( ! isInverted) ? "$MAX": minColor,
-                    label: isInverted && isExponential ? "≈1": undefined,
+                    label: isInverted ? (isExponential ? "≈1": (hasMinus ? "≈-∞": "≈0")): "≈∞",
                 });
             }
         }
