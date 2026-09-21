@@ -21,6 +21,7 @@ declare module "script/locale" {
             "Exponential notation": string;
             "Adjust exponent to multiple of 3": string;
             "Show complex solutions for inverse trigonometric functions": string;
+            "Complex Solutions": string;
             Unit: string;
             Help: string;
             "NNN BCE": string;
@@ -56,6 +57,7 @@ declare module "script/locale" {
             "Exponential notation": string;
             "Adjust exponent to multiple of 3": string;
             "Show complex solutions for inverse trigonometric functions": string;
+            "Complex Solutions": string;
             Unit: string;
             Help: string;
             "NNN BCE": string;
@@ -1633,7 +1635,7 @@ declare module "script/model" {
     export const designDigitTicks: (slide: Type.SlideUnit, view: Type.View, lane: Type.Lane, tickWindow: ValueTickWindow) => Type.LaneContent;
     export const getLocaleDigitTable: (locale: string) => Type.DigitTable;
     export const numberToLocaleString: (value: number, locale?: string) => string;
-    export const formatUniverseEpochDuration: (duration: number, locale?: string) => string;
+    export const formatUniverseEpochDurationForHuman: (duration: number, locale?: string) => string;
     export const makeAreaSpanLabel: (constantTable: Type.ConstantTable, area: Type.ConstantTableArea) => string | undefined;
     export const designConstantAreas: (slide: Type.SlideUnit, view: Type.View, lane: Type.Lane, tickWindow: ValueTickWindow, constantTable: Type.ConstantTable, area: Type.ConstantTableArea) => Type.Area[];
     export const designConstantTickColor: (tick: Type.ConstantTableTick) => string;
@@ -1907,6 +1909,14 @@ declare module "script/json-eval-updater" {
                 touchZoomThreshold: number;
             };
             render: {
+                font: {
+                    size: {
+                        large: number;
+                        regular: number;
+                        small: number;
+                        mini: number;
+                    };
+                };
                 ruler: {
                     frameRenderTimeLimit: number;
                     foregroundColor: {

@@ -2541,30 +2541,21 @@ export const numberToLocaleString = (value: number, locale: string = Locale.getL
         return Calculation.groupDigits(value.toLocaleString(locale, { maximumFractionDigits: Math.max(3 -exponent, 0) }), locale);
     }
 };
-export const formatUniverseEpochDuration = (duration: number, locale: string = Locale.getLocale()): string =>
+export const formatUniverseEpochDurationForHuman = (duration: number, locale: string = Locale.getLocale()): string =>
 {
-    if (duration < 60)
+    switch(true)
     {
+    case duration < 60:
         return Locale.map("NNN seconds").replace("NNN", `${numberToLocaleString(duration, locale)}`);
-    }
-    else if (duration < 3600)
-    {
+    case duration < 3600:
         return Locale.map("NNN minutes").replace("NNN", `${numberToLocaleString(duration / 60, locale)}`);
-    }
-    else if (duration < 3600 *24)
-    {
+    case duration < 3600 *24:
         return Locale.map("NNN hours").replace("NNN", `${numberToLocaleString(duration / 3600, locale)}`);
-    }
-    else if (duration < 3600 *24 *config.time.gregorianYearLength)
-    {
+    case duration < 3600 *24 *config.time.gregorianYearLength:
         return Locale.map("NNN days").replace("NNN", `${numberToLocaleString(duration / (3600 * 24), locale)}`);
-    }
-    else if (duration < 3600 *24 *config.time.gregorianYearLength *100) // Up to 100 years, use Gregorian calendar year
-    {
+    case duration < 3600 *24 *config.time.gregorianYearLength *100: // Up to 100 years, use Gregorian calendar year
         return Locale.map("NNN years").replace("NNN", `${numberToLocaleString(duration / (3600 * 24 * config.time.gregorianYearLength), locale)}`);
-    }
-    else
-    {
+    default:
         const digitTable = getLocaleDigitTable(locale);
         const years = duration / (3600 * 24 * config.time.julianYearLength);
         const yearsExponent = Math.floor(Math.log10(years));
@@ -2592,7 +2583,7 @@ export const makeAreaSpanLabel = (constantTable: Type.ConstantTable, area: Type.
         if (Calculation.isRegularNumber(area.upperBound))
         {
             const span = area.upperBound -(area.lowerBound ?? 0);
-            return formatUniverseEpochDuration(span);
+            return formatUniverseEpochDurationForHuman(span);
         }
         else
         {
@@ -3090,7 +3081,7 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
             lowerBound: Math.PI /2,
             upperBound: undefined,
             fill: "$NAN",
-            label: "NaN",
+            label: Locale.map("Complex Solutions"),
         });
         break;
     case "arccosine":
@@ -3099,7 +3090,7 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
             lowerBound: undefined,
             upperBound: 0,
             fill: "$NAN",
-            label: "NaN",
+            label: Locale.map("Complex Solutions"),
         });
         content.areas.push
         ({
@@ -3130,7 +3121,7 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
             lowerBound: undefined,
             upperBound: Calculation.MIN_VALUE,
             fill: "$NAN",
-            label: "NaN",
+            label: Locale.map("Complex Solutions"),
         });
         content.areas.push // 🔥 これは仮置き。正規のロジックで設定される様にする時にこちらは要削除
         ({
@@ -3153,7 +3144,7 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
             lowerBound: Math.PI /2,
             upperBound: undefined,
             fill: "$NAN",
-            label: "NaN",
+            label: Locale.map("Complex Solutions"),
         });
         break;
     case "arccotangent":

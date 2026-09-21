@@ -227,7 +227,9 @@ export const drawLeveledText = (label: SVGTextElement, text: string, option: { d
                 class: `leveled-text-${Render.getLevelName(i)}`,
                 dx,
                 dy,
-                "font-size": Render.isRegularSizeText(i) ? 12 : 9,
+                "font-size": Render.isRegularSizeText(i) ?
+                    config.render.font.size.regular:
+                    config.render.font.size.mini,
                 textContent: i.text,
             });
             label.appendChild(tspan);
@@ -314,7 +316,7 @@ export const drawLane = (view: Type.View, slide: Type.SlideUnit, lane: Type.Lane
             x: left + 16,
             y: 26,
             fill: Theme.resolve(config.render.ruler.foregroundColor),
-            "font-size": 16,
+            "font-size": config.render.font.size.large,
             textContent: Locale.resolve(lane.name) ?? `Lane ${laneIndex}`,
         }
     );
@@ -381,7 +383,7 @@ export const drawLane = (view: Type.View, slide: Type.SlideUnit, lane: Type.Lane
                 x: left + 16,
                 y: 50,
                 fill: Theme.resolve(config.render.ruler.foregroundColor),
-                "font-size": 12,
+                "font-size": config.render.font.size.regular,
                 // textContent: `${Locale.map("Unit")}${Locale.map("lang-colon-suffix")} ${Model.makeConstantStandardTickUnit(lane.unit)}`,
             }
         );
@@ -527,18 +529,18 @@ export const drawAreas = (view: Type.View, group: SVGGElement, slide: Type.Slide
                             y: y +height -8,
                             transform: `rotate(-90, ${left +16}, ${y +height -8})`,
                             fill: Theme.resolve(config.render.ruler.paleForegroundColor),
-                            "font-size": 12,
+                            "font-size": config.render.font.size.regular,
                             children: [
                                 {
                                     tag: "tspan",
                                     fill: area.color ?? Theme.resolve(config.render.ruler.foregroundColor),
-                                    "font-size": 12,
+                                    "font-size": config.render.font.size.regular,
                                     textContent: Locale.resolve(area.label),
                                 },
                                 // {
                                 //     tag: "tspan",
                                 //     fill: Theme.resolve(config.render.ruler.paleForegroundColor),
-                                //     "font-size": 12,
+                                //     "font-size": config.render.font.size.regular,
                                 //     dx: 8,
                                 //     textContent: Locale.resolve(area.subLabel),
                                 // }
@@ -559,7 +561,7 @@ export const drawAreas = (view: Type.View, group: SVGGElement, slide: Type.Slide
                                 y: y +height -8,
                                 transform: `rotate(-90, ${left +16}, ${y +height -8})`,
                                 fill: area.color ?? Theme.resolve(config.render.ruler.foregroundColor),
-                                "font-size": 12,
+                                "font-size": config.render.font.size.regular,
                                 textContent: Locale.resolve(area.label),
                             })
                         );
@@ -611,7 +613,7 @@ export const drawAreas = (view: Type.View, group: SVGGElement, slide: Type.Slide
                                 x: left + 8,
                                 y: y +(height /2) +4 -8,
                                 fill: area.color ?? Theme.resolve(config.render.ruler.foregroundColor),
-                                "font-size": 12,
+                                "font-size": config.render.font.size.regular,
                                 textContent: Locale.resolve(area.label),
                             })
                         );
@@ -622,7 +624,7 @@ export const drawAreas = (view: Type.View, group: SVGGElement, slide: Type.Slide
                             x: left + 8,
                             y: y +(height /2) +4 +8,
                             fill: Theme.resolve(config.render.ruler.paleForegroundColor),
-                            "font-size": 12,
+                            "font-size": config.render.font.size.regular,
                         });
                         group.appendChild(subLabel);
                         drawLeveledText(subLabel, Locale.resolve(area.subLabel));
@@ -638,7 +640,7 @@ export const drawAreas = (view: Type.View, group: SVGGElement, slide: Type.Slide
                                 x: left + 8,
                                 y: y +(height /2) +4,
                                 fill: area.color ?? Theme.resolve(config.render.ruler.foregroundColor),
-                                "font-size": 12,
+                                "font-size": config.render.font.size.regular,
                                 textContent: Locale.resolve(area.label),
                             })
                         );
@@ -860,7 +862,7 @@ export const drawTicks = (view: Type.View, group: SVGGElement, slide: Type.Slide
                     //fill: tickTrait.color,
                     transform: isConstantTable ? `rotate(-45 ${x} ${y})` : undefined,
                     fill: color,
-                    "font-size": 12,
+                    "font-size": config.render.font.size.regular,
                     "text-anchor": "left" === drawLabelDirection ? "start" : "end",
                     "data-tick-value": valueString,
                     ...(tick.unit ? { "data-tick-unit": tick.unit } : {}),
@@ -878,7 +880,7 @@ export const drawTicks = (view: Type.View, group: SVGGElement, slide: Type.Slide
                             class: "tick-label behind-tick-count",
                             fill: "#888888",
                             dy: -currentDy,
-                            "font-size": 10.5,
+                            "font-size": config.render.font.size.small,
                             textContent: ` (+${tick.behindTickCount})`,
                         })
                     );
@@ -1374,7 +1376,7 @@ export const drawLaneUnitPopup = (_view: Type.View, popup: Type.LaneUnitPopup): 
                 width: width - 16,
                 height: 20,
                 fill: Theme.resolve(config.render.ruler.foregroundColor),
-                "font-size": 12,
+                "font-size": config.render.font.size.regular,
                 events:
                 {
                     click: () =>
@@ -1400,7 +1402,7 @@ export const drawLaneUnitPopup = (_view: Type.View, popup: Type.LaneUnitPopup): 
                 width: width - 16 +90,
                 height: 20,
                 fill: Theme.resolve(config.render.ruler.foregroundColor),
-                "font-size": 12,
+                "font-size": config.render.font.size.regular,
                 "text-anchor": "end",
                 events:
                 {

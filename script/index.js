@@ -55,6 +55,7 @@ define("resource/lang/en", [], {
     "Exponential notation": "Exponential notation",
     "Adjust exponent to multiple of 3": "Adjust exponent to multiple of 3",
     "Show complex solutions for inverse trigonometric functions": "Show complex solutions for inverse trigonometric functions",
+    "Complex Solutions": "Complex Solutions",
     "Unit": "Unit",
     "Help": "Help",
     "NNN BCE": "NNN BCE",
@@ -90,6 +91,7 @@ define("resource/lang/ja", [], {
     "Exponential notation": "指数表記",
     "Adjust exponent to multiple of 3": "指数を3の倍数に調整",
     "Show complex solutions for inverse trigonometric functions": "逆三角関数の複素数解を表示",
+    "Complex Solutions": "複素数解",
     "Unit": "単位",
     "Help": "ヘルプ",
     "NNN BCE": "紀元前 NNN 年",
@@ -771,6 +773,14 @@ define("resource/config", [], {
         "touchZoomThreshold": 20
     },
     "render": {
+        "font": {
+            "size": {
+                "large": 16,
+                "regular": 14,
+                "small": 12,
+                "mini": 10.5
+            }
+        },
         "ruler": {
             "frameRenderTimeLimit": 10,
             "foregroundColor": {
@@ -791,7 +801,7 @@ define("resource/config", [], {
                 "light": "#F0F0F0",
                 "dark": "#1A1A1A"
             },
-            "laneWidth": 180,
+            "laneWidth": 210,
             "slideSeparator": {
                 "width": 1,
                 "color": {
@@ -6807,7 +6817,7 @@ define("resource/constant/history", [], {
 define("script/model", ["require", "exports", "script/locale", "script/calculation", "script/type", "script/url", "script/theme", "script/comparer", "resource/config", "resource/digit/$si", "resource/digit/en", "resource/digit/ja", "resource/angle/sin", "resource/angle/cos", "resource/angle/tan", "resource/angle/sec", "resource/angle/csc", "resource/angle/cot", "resource/constant/size", "resource/constant/area", "resource/constant/volume", "resource/constant/mass", "resource/constant/time", "resource/constant/speed", "resource/constant/energy", "resource/constant/temperature", "resource/constant/counting", "resource/constant/sound-frequency", "resource/constant/emw-wavelength", "resource/constant/emw-frequency", "resource/constant/emw-energy", "resource/constant/history"], function (require, exports, Locale, Calculation, Type, Url, Theme, Comparer, config_json_3, _si_json_1, en_json_2, ja_json_2, sin_json_1, cos_json_1, tan_json_1, sec_json_1, csc_json_1, cot_json_1, size_json_1, area_json_1, volume_json_1, mass_json_1, time_json_1, speed_json_1, energy_json_1, temperature_json_1, counting_json_1, sound_frequency_json_1, emw_wavelength_json_1, emw_frequency_json_1, emw_energy_json_1, history_json_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.hasDataArea = exports.getLaneContext = exports.getCursorValues = exports.getCursorValue = exports.getCursorPosition = exports.makeSure = exports.removeLane = exports.makeLane = exports.addConstantLane = exports.addDigitLane = exports.addLane = exports.getSlideFromLane = exports.getLane = exports.getLastSlideAndLastLane = exports.getSlideAndLane = exports.makeSureSlide = exports.makeSlide = exports.getLaneIndex = exports.getSlideIndexFromLane = exports.getSlideIndex = exports.isRootSlide = exports.getRootSlideAndRootLane = exports.getRootSlide = exports.isPrimaryLane = exports.isRootLane = exports.getRootLane = exports.makeRootLane = exports.designTicks = exports.complementMinMaxArea = exports.getBottomTick = exports.getTopTick = exports.designOscillatingTicks = exports.designPeriodicTicks = exports.getUnitList = exports.designConstantTicks = exports.makeConstantStandardTickUnit = exports.designConstantTickType = exports.designConstantTickColor = exports.designConstantAreas = exports.makeAreaSpanLabel = exports.formatUniverseEpochDuration = exports.numberToLocaleString = exports.getLocaleDigitTable = exports.designDigitTicks = exports.makeDigitLabel = exports.designPrimeDecompositionTicks = exports.factorsToString = exports.designPrimeNumbersTicks = exports.designCurvedTicks = exports.designLinearTicks = exports.designLogarithmicTicks = exports.addConstTicks = exports.designAngleTicks360 = exports.designAngleTicks90 = exports.designAngleTicks30 = exports.getMajorRateFromAngle = exports.getMajorRateCore = exports.designAngleTicks10 = exports.designAngleTicksInverted10 = exports.designAngleTicksRegular10 = exports.makeTick = exports.getDigitIndexFromWidth = exports.designCurvedTicks10 = exports.designLinearTicks10 = exports.designLogarithmicTicks10 = exports.designTickType = exports.getLongTickSpaceWidth = exports.makePositionTickWindowFromPositionAndWidth = exports.makePositionTickWindowFromWindow = exports.ValueTickWindowToPositionTickWindow = exports.PositionTickWindowToValueTickWindow = exports.getSnapReferenceLaneIndex = exports.getConvenientWidth = exports.getWidth = exports.getPositionAt = exports.getSlideOffset = exports.getAnchorSlideAndLane = exports.getRawViewPositionAt = exports.logPositionToLinearPosition = exports.linearPositionToLogPosition = exports.getLinearPositionAt = exports.getValueAt = exports.getRawValueAt = exports.angleToQuarter = exports.getPrimaryPositionAt = exports.getPrimaryValueAt = exports.getMaxValue = exports.getMinValue = exports.getWidthValueRatioFromAngleTicks = exports.getAngleTick = exports.getAngleTable = exports.getPrimaryTick = exports.getSlidePositionAt = exports.isDiscreteLane = exports.isOscillatingLane = exports.isPeriodicLane = exports.getPrimaryPeriod = exports.getPrimaryPeriod360 = exports.getSlidePosition = exports.isInvertedSlide = exports.isInvertedLane = exports.getAllLanes = exports.getAllLaneCount = exports.RootLaneIndex = exports.RootSlideIndex = exports.ticksCache = exports.data = exports.getConstantTable = exports.constant = exports.getDigitTable = exports.digit = void 0;
+    exports.initialize = exports.hasDataArea = exports.getLaneContext = exports.getCursorValues = exports.getCursorValue = exports.getCursorPosition = exports.makeSure = exports.removeLane = exports.makeLane = exports.addConstantLane = exports.addDigitLane = exports.addLane = exports.getSlideFromLane = exports.getLane = exports.getLastSlideAndLastLane = exports.getSlideAndLane = exports.makeSureSlide = exports.makeSlide = exports.getLaneIndex = exports.getSlideIndexFromLane = exports.getSlideIndex = exports.isRootSlide = exports.getRootSlideAndRootLane = exports.getRootSlide = exports.isPrimaryLane = exports.isRootLane = exports.getRootLane = exports.makeRootLane = exports.designTicks = exports.complementMinMaxArea = exports.getBottomTick = exports.getTopTick = exports.designOscillatingTicks = exports.designPeriodicTicks = exports.getUnitList = exports.designConstantTicks = exports.makeConstantStandardTickUnit = exports.designConstantTickType = exports.designConstantTickColor = exports.designConstantAreas = exports.makeAreaSpanLabel = exports.formatUniverseEpochDurationForHuman = exports.numberToLocaleString = exports.getLocaleDigitTable = exports.designDigitTicks = exports.makeDigitLabel = exports.designPrimeDecompositionTicks = exports.factorsToString = exports.designPrimeNumbersTicks = exports.designCurvedTicks = exports.designLinearTicks = exports.designLogarithmicTicks = exports.addConstTicks = exports.designAngleTicks360 = exports.designAngleTicks90 = exports.designAngleTicks30 = exports.getMajorRateFromAngle = exports.getMajorRateCore = exports.designAngleTicks10 = exports.designAngleTicksInverted10 = exports.designAngleTicksRegular10 = exports.makeTick = exports.getDigitIndexFromWidth = exports.designCurvedTicks10 = exports.designLinearTicks10 = exports.designLogarithmicTicks10 = exports.designTickType = exports.getLongTickSpaceWidth = exports.makePositionTickWindowFromPositionAndWidth = exports.makePositionTickWindowFromWindow = exports.ValueTickWindowToPositionTickWindow = exports.PositionTickWindowToValueTickWindow = exports.getSnapReferenceLaneIndex = exports.getConvenientWidth = exports.getWidth = exports.getPositionAt = exports.getSlideOffset = exports.getAnchorSlideAndLane = exports.getRawViewPositionAt = exports.logPositionToLinearPosition = exports.linearPositionToLogPosition = exports.getLinearPositionAt = exports.getValueAt = exports.getRawValueAt = exports.angleToQuarter = exports.getPrimaryPositionAt = exports.getPrimaryValueAt = exports.getMaxValue = exports.getMinValue = exports.getWidthValueRatioFromAngleTicks = exports.getAngleTick = exports.getAngleTable = exports.getPrimaryTick = exports.getSlidePositionAt = exports.isDiscreteLane = exports.isOscillatingLane = exports.isPeriodicLane = exports.getPrimaryPeriod = exports.getPrimaryPeriod360 = exports.getSlidePosition = exports.isInvertedSlide = exports.isInvertedLane = exports.getAllLanes = exports.getAllLaneCount = exports.RootLaneIndex = exports.RootSlideIndex = exports.ticksCache = exports.data = exports.getConstantTable = exports.constant = exports.getDigitTable = exports.digit = void 0;
     Locale = __importStar(Locale);
     Calculation = __importStar(Calculation);
     Type = __importStar(Type);
@@ -8958,49 +8968,44 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
         }
     };
     exports.numberToLocaleString = numberToLocaleString;
-    const formatUniverseEpochDuration = (duration, locale = Locale.getLocale()) => {
-        if (duration < 60) {
-            return Locale.map("NNN seconds").replace("NNN", `${(0, exports.numberToLocaleString)(duration, locale)}`);
-        }
-        else if (duration < 3600) {
-            return Locale.map("NNN minutes").replace("NNN", `${(0, exports.numberToLocaleString)(duration / 60, locale)}`);
-        }
-        else if (duration < 3600 * 24) {
-            return Locale.map("NNN hours").replace("NNN", `${(0, exports.numberToLocaleString)(duration / 3600, locale)}`);
-        }
-        else if (duration < 3600 * 24 * config_json_3.default.time.gregorianYearLength) {
-            return Locale.map("NNN days").replace("NNN", `${(0, exports.numberToLocaleString)(duration / (3600 * 24), locale)}`);
-        }
-        else if (duration < 3600 * 24 * config_json_3.default.time.gregorianYearLength * 100) // Up to 100 years, use Gregorian calendar year
-         {
-            return Locale.map("NNN years").replace("NNN", `${(0, exports.numberToLocaleString)(duration / (3600 * 24 * config_json_3.default.time.gregorianYearLength), locale)}`);
-        }
-        else {
-            const digitTable = (0, exports.getLocaleDigitTable)(locale);
-            const years = duration / (3600 * 24 * config_json_3.default.time.julianYearLength);
-            const yearsExponent = Math.floor(Math.log10(years));
-            const digit = digitTable.digits
-                .filter(digit => 1 < digit.exponent && digit.exponent <= yearsExponent)
-                .sort((a, b) => b.exponent - a.exponent)[0];
-            if (digit) {
-                const digitYears = years / Math.pow(10, digit.exponent);
-                return Locale.map("NNN PPP years")
-                    .replace("NNN", (0, exports.numberToLocaleString)(digitYears, locale))
-                    .replace("PPP", Locale.resolve(digit.label));
-            }
-            else {
-                return Locale.map("NNN years")
-                    .replace("NNN", (0, exports.numberToLocaleString)(years, locale));
-            }
+    const formatUniverseEpochDurationForHuman = (duration, locale = Locale.getLocale()) => {
+        switch (true) {
+            case duration < 60:
+                return Locale.map("NNN seconds").replace("NNN", `${(0, exports.numberToLocaleString)(duration, locale)}`);
+            case duration < 3600:
+                return Locale.map("NNN minutes").replace("NNN", `${(0, exports.numberToLocaleString)(duration / 60, locale)}`);
+            case duration < 3600 * 24:
+                return Locale.map("NNN hours").replace("NNN", `${(0, exports.numberToLocaleString)(duration / 3600, locale)}`);
+            case duration < 3600 * 24 * config_json_3.default.time.gregorianYearLength:
+                return Locale.map("NNN days").replace("NNN", `${(0, exports.numberToLocaleString)(duration / (3600 * 24), locale)}`);
+            case duration < 3600 * 24 * config_json_3.default.time.gregorianYearLength * 100: // Up to 100 years, use Gregorian calendar year
+                return Locale.map("NNN years").replace("NNN", `${(0, exports.numberToLocaleString)(duration / (3600 * 24 * config_json_3.default.time.gregorianYearLength), locale)}`);
+            default:
+                const digitTable = (0, exports.getLocaleDigitTable)(locale);
+                const years = duration / (3600 * 24 * config_json_3.default.time.julianYearLength);
+                const yearsExponent = Math.floor(Math.log10(years));
+                const digit = digitTable.digits
+                    .filter(digit => 1 < digit.exponent && digit.exponent <= yearsExponent)
+                    .sort((a, b) => b.exponent - a.exponent)[0];
+                if (digit) {
+                    const digitYears = years / Math.pow(10, digit.exponent);
+                    return Locale.map("NNN PPP years")
+                        .replace("NNN", (0, exports.numberToLocaleString)(digitYears, locale))
+                        .replace("PPP", Locale.resolve(digit.label));
+                }
+                else {
+                    return Locale.map("NNN years")
+                        .replace("NNN", (0, exports.numberToLocaleString)(years, locale));
+                }
         }
     };
-    exports.formatUniverseEpochDuration = formatUniverseEpochDuration;
+    exports.formatUniverseEpochDurationForHuman = formatUniverseEpochDurationForHuman;
     const makeAreaSpanLabel = (constantTable, area) => {
         var _a, _b, _c;
         if ((_b = (_a = constantTable.areaOptions) === null || _a === void 0 ? void 0 : _a.span) === null || _b === void 0 ? void 0 : _b.show) {
             if (Calculation.isRegularNumber(area.upperBound)) {
                 const span = area.upperBound - ((_c = area.lowerBound) !== null && _c !== void 0 ? _c : 0);
-                return (0, exports.formatUniverseEpochDuration)(span);
+                return (0, exports.formatUniverseEpochDurationForHuman)(span);
             }
             else {
                 return "∞";
@@ -9427,7 +9432,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                     lowerBound: Math.PI / 2,
                     upperBound: undefined,
                     fill: "$NAN",
-                    label: "NaN",
+                    label: Locale.map("Complex Solutions"),
                 });
                 break;
             case "arccosine":
@@ -9435,7 +9440,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                     lowerBound: undefined,
                     upperBound: 0,
                     fill: "$NAN",
-                    label: "NaN",
+                    label: Locale.map("Complex Solutions"),
                 });
                 content.areas.push({
                     lowerBound: Math.PI / 2,
@@ -9462,7 +9467,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                     lowerBound: undefined,
                     upperBound: Calculation.MIN_VALUE,
                     fill: "$NAN",
-                    label: "NaN",
+                    label: Locale.map("Complex Solutions"),
                 });
                 content.areas.push // 🔥 これは仮置き。正規のロジックで設定される様にする時にこちらは要削除
                 ({
@@ -9483,7 +9488,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                     lowerBound: Math.PI / 2,
                     upperBound: undefined,
                     fill: "$NAN",
-                    label: "NaN",
+                    label: Locale.map("Complex Solutions"),
                 });
                 break;
             case "arccotangent":
@@ -10175,7 +10180,9 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                     class: `leveled-text-${Render.getLevelName(i)}`,
                     dx,
                     dy,
-                    "font-size": Render.isRegularSizeText(i) ? 12 : 9,
+                    "font-size": Render.isRegularSizeText(i) ?
+                        config_json_6.default.render.font.size.regular :
+                        config_json_6.default.render.font.size.mini,
                     textContent: i.text,
                 });
                 label.appendChild(tspan);
@@ -10245,7 +10252,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
             x: left + 16,
             y: 26,
             fill: Theme.resolve(config_json_6.default.render.ruler.foregroundColor),
-            "font-size": 16,
+            "font-size": config_json_6.default.render.font.size.large,
             textContent: (_a = Locale.resolve(lane.name)) !== null && _a !== void 0 ? _a : `Lane ${laneIndex}`,
         });
         const unitLabelGroup = SVG.makeSure(group, {
@@ -10286,7 +10293,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                 x: left + 16,
                 y: 50,
                 fill: Theme.resolve(config_json_6.default.render.ruler.foregroundColor),
-                "font-size": 12,
+                "font-size": config_json_6.default.render.font.size.regular,
                 // textContent: `${Locale.map("Unit")}${Locale.map("lang-colon-suffix")} ${Model.makeConstantStandardTickUnit(lane.unit)}`,
             });
             unitLabel.innerHTML = "";
@@ -10402,18 +10409,18 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                                 y: y + height - 8,
                                 transform: `rotate(-90, ${left + 16}, ${y + height - 8})`,
                                 fill: Theme.resolve(config_json_6.default.render.ruler.paleForegroundColor),
-                                "font-size": 12,
+                                "font-size": config_json_6.default.render.font.size.regular,
                                 children: [
                                     {
                                         tag: "tspan",
                                         fill: (_c = area.color) !== null && _c !== void 0 ? _c : Theme.resolve(config_json_6.default.render.ruler.foregroundColor),
-                                        "font-size": 12,
+                                        "font-size": config_json_6.default.render.font.size.regular,
                                         textContent: Locale.resolve(area.label),
                                     },
                                     // {
                                     //     tag: "tspan",
                                     //     fill: Theme.resolve(config.render.ruler.paleForegroundColor),
-                                    //     "font-size": 12,
+                                    //     "font-size": config.render.font.size.regular,
                                     //     dx: 8,
                                     //     textContent: Locale.resolve(area.subLabel),
                                     // }
@@ -10430,7 +10437,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                                 y: y + height - 8,
                                 transform: `rotate(-90, ${left + 16}, ${y + height - 8})`,
                                 fill: (_d = area.color) !== null && _d !== void 0 ? _d : Theme.resolve(config_json_6.default.render.ruler.foregroundColor),
-                                "font-size": 12,
+                                "font-size": config_json_6.default.render.font.size.regular,
                                 textContent: Locale.resolve(area.label),
                             }));
                         }
@@ -10466,7 +10473,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                                 x: left + 8,
                                 y: y + (height / 2) + 4 - 8,
                                 fill: (_f = area.color) !== null && _f !== void 0 ? _f : Theme.resolve(config_json_6.default.render.ruler.foregroundColor),
-                                "font-size": 12,
+                                "font-size": config_json_6.default.render.font.size.regular,
                                 textContent: Locale.resolve(area.label),
                             }));
                             const subLabel = SVG.make({
@@ -10475,7 +10482,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                                 x: left + 8,
                                 y: y + (height / 2) + 4 + 8,
                                 fill: Theme.resolve(config_json_6.default.render.ruler.paleForegroundColor),
-                                "font-size": 12,
+                                "font-size": config_json_6.default.render.font.size.regular,
                             });
                             group.appendChild(subLabel);
                             (0, exports.drawLeveledText)(subLabel, Locale.resolve(area.subLabel));
@@ -10487,7 +10494,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                                 x: left + 8,
                                 y: y + (height / 2) + 4,
                                 fill: (_g = area.color) !== null && _g !== void 0 ? _g : Theme.resolve(config_json_6.default.render.ruler.foregroundColor),
-                                "font-size": 12,
+                                "font-size": config_json_6.default.render.font.size.regular,
                                 textContent: Locale.resolve(area.label),
                             }));
                         }
@@ -10642,7 +10649,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                     const y = position + 4;
                     const text = SVG.make(Object.assign(Object.assign({ tag: "text", class: "tick-label", x: x, y: y, 
                         //fill: tickTrait.color,
-                        transform: isConstantTable ? `rotate(-45 ${x} ${y})` : undefined, fill: color, "font-size": 12, "text-anchor": "left" === drawLabelDirection ? "start" : "end", "data-tick-value": valueString }, (tick.unit ? { "data-tick-unit": tick.unit } : {})), (tick.label ? { "data-tick-label": Locale.resolve(tick.label) } : {})));
+                        transform: isConstantTable ? `rotate(-45 ${x} ${y})` : undefined, fill: color, "font-size": config_json_6.default.render.font.size.regular, "text-anchor": "left" === drawLabelDirection ? "start" : "end", "data-tick-value": valueString }, (tick.unit ? { "data-tick-unit": tick.unit } : {})), (tick.label ? { "data-tick-label": Locale.resolve(tick.label) } : {})));
                     group.appendChild(text);
                     const { currentDy } = (0, exports.drawLeveledText)(text, (0, exports.makeNumberLabel)(tick));
                     if (tick.behindTickCount && 0 < tick.behindTickCount) {
@@ -10651,7 +10658,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                             class: "tick-label behind-tick-count",
                             fill: "#888888",
                             dy: -currentDy,
-                            "font-size": 10.5,
+                            "font-size": config_json_6.default.render.font.size.small,
                             textContent: ` (+${tick.behindTickCount})`,
                         }));
                     }
@@ -11044,7 +11051,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                 width: width - 16,
                 height: 20,
                 fill: Theme.resolve(config_json_6.default.render.ruler.foregroundColor),
-                "font-size": 12,
+                "font-size": config_json_6.default.render.font.size.regular,
                 events: {
                     click: () => {
                     },
@@ -11063,7 +11070,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                 width: width - 16 + 90,
                 height: 20,
                 fill: Theme.resolve(config_json_6.default.render.ruler.foregroundColor),
-                "font-size": 12,
+                "font-size": config_json_6.default.render.font.size.regular,
                 "text-anchor": "end",
                 events: {
                     click: () => {
