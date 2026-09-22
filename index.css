@@ -7,9 +7,22 @@ html, body, .view, .wallpaper, .screen
     max-height: 100lvh;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
 }
-svg text
+
+@font-face
 {
-    font-family: "Monaspace Neon", "Cascadia Code", "Apple Color Emoji", Menlo, Monaco, "Consolas", "Liberation Mono", "Courier New", monospace;
+    font-family: "NumberFont";
+    src: local("Monaspace Neon"), local("Cascadia Code"), local("Apple Color Emoji"), local("Menlo"), local("Monaco"), local("Consolas"), local("Liberation Mono"), local("Courier New"), local("monospace");
+    unicode-range: U+0000-221D, U+221F-2229, U+222B-10FFFF;
+}
+
+@font-face {
+    font-family: "NumberFont";
+    src: local("-apple-system"), local("BlinkMacSystemFont"), local("Segoe UI"), local("Noto Sans"), local("Helvetica"), local("Arial"), local("sans-serif"), local("Apple Color Emoji"), local("Segoe UI Emoji");
+    unicode-range: U+221E, U+222A; /* ∞, ∪ */
+}
+svg text:not(.proportional-font)
+{
+    font-family: "NumberFont", "Monaspace Neon", "Cascadia Code", "Apple Color Emoji", Menlo, Monaco, "Consolas", "Liberation Mono", "Courier New", monospace;
 }
 html, body, .view, .wallpaper
 {

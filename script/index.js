@@ -7316,17 +7316,17 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
             // case "exponential":
             // case "logarithmic":
             case "sine":
-                return "-1 ... +1";
+                return "-1 … +1";
             case "cosine":
-                return "-1 ... +1";
+                return "-1 … +1";
             case "tangent":
-                return "-∞ ... +∞";
+                return "-∞ … +∞";
             case "secant":
-                return "-∞ ... -1 ∪ +1 ... +∞";
+                return "-∞ … -1 ∪ +1 … +∞";
             case "cosecant":
-                return "-∞ ... -1 ∪ +1 ... +∞";
+                return "-∞ … -1 ∪ +1 … +∞";
             case "cotangent":
-                return "-∞ ... +∞";
+                return "-∞ … +∞";
             // case "arcsine":
             // case "arccosine":
             // case "arctangent":
