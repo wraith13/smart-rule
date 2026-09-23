@@ -21,6 +21,7 @@ declare module "script/locale" {
             "Exponential notation": string;
             "Adjust exponent to multiple of 3": string;
             "Show complex solutions for inverse trigonometric functions": string;
+            "Range symbol": string;
             "Complex Solutions": string;
             Unit: string;
             Help: string;
@@ -57,6 +58,7 @@ declare module "script/locale" {
             "Exponential notation": string;
             "Adjust exponent to multiple of 3": string;
             "Show complex solutions for inverse trigonometric functions": string;
+            "Range symbol": string;
             "Complex Solutions": string;
             Unit: string;
             Help: string;
@@ -262,6 +264,7 @@ declare module "script/ui" {
         const exponentMultipleOfThreeCheckbox: HTMLInputElement;
         const numberFormatSelect: HTMLSelectElement;
         const showComplexSolutionsCheckbox: HTMLInputElement;
+        const rangeSymbolSelect: HTMLSelectElement;
     }
     export namespace ControlPanel {
         const element: HTMLDivElement;
@@ -294,6 +297,7 @@ declare module "script/settings" {
     export const getExponentMultipleOfThree: () => boolean;
     export const getNumberFormat: () => "scientific" | "localized";
     export const getShowComplexSolutions: () => boolean;
+    export const getRangeSymbol: () => "en-dash" | "ellipsis" | "wave-dash";
     export const getAllSettings: () => {
         i: boolean;
         l: string;
@@ -303,6 +307,7 @@ declare module "script/settings" {
         m: boolean;
         n: "scientific" | "localized";
         c: boolean;
+        r: "en-dash" | "ellipsis" | "wave-dash";
     };
     export const applySettings: (settings: ReturnType<typeof getAllSettings>) => void;
 }
@@ -1575,6 +1580,7 @@ declare module "script/model" {
     }) => number;
     export const getMinValue: (lane: Type.Lane) => number;
     export const getMaxValue: (lane: Type.Lane) => number;
+    export const getRangeSymbol: () => string;
     export const getDenseLabel: (lane: Type.Lane) => Type.MultiLanguageText | undefined;
     export const getPrimaryValueAt: (lane: Type.Lane, position: number) => number;
     export const getPrimaryPositionAt: (lane: Type.Lane, value: Type.ValueType, quarter?: number) => number;
@@ -1862,6 +1868,11 @@ declare module "script/json-eval-updater" {
                 subscript: string;
                 exponent: string;
                 miniSymbols: string[];
+                rangeSymbols: {
+                    "en-dash": string;
+                    ellipsis: string;
+                    "wave-dash": string;
+                };
             };
             model: {
                 lane: {

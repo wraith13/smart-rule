@@ -55,6 +55,7 @@ define("resource/lang/en", [], {
     "Exponential notation": "Exponential notation",
     "Adjust exponent to multiple of 3": "Adjust exponent to multiple of 3",
     "Show complex solutions for inverse trigonometric functions": "Show complex solutions for inverse trigonometric functions",
+    "Range symbol": "Range symbol",
     "Complex Solutions": "Complex Solutions",
     "Unit": "Unit",
     "Help": "Help",
@@ -91,6 +92,7 @@ define("resource/lang/ja", [], {
     "Exponential notation": "指数表記",
     "Adjust exponent to multiple of 3": "指数を3の倍数に調整",
     "Show complex solutions for inverse trigonometric functions": "逆三角関数の複素数解を表示",
+    "Range symbol": "範囲記号",
     "Complex Solutions": "複素数解",
     "Unit": "単位",
     "Help": "ヘルプ",
@@ -564,6 +566,7 @@ define("script/ui", ["require", "exports", "script/locale", "script/html", "scri
         SettingsPanel.exponentMultipleOfThreeCheckbox = HTML.getElementById("input", "exponent-multiple-of-three-checkbox");
         SettingsPanel.numberFormatSelect = HTML.getElementById("select", "number-format-select");
         SettingsPanel.showComplexSolutionsCheckbox = HTML.getElementById("input", "show-complex-solutions-checkbox");
+        SettingsPanel.rangeSymbolSelect = HTML.getElementById("select", "range-symbol-select");
     })(SettingsPanel || (exports.SettingsPanel = SettingsPanel = {}));
     var ControlPanel;
     (function (ControlPanel) {
@@ -637,7 +640,7 @@ define("script/ui", ["require", "exports", "script/locale", "script/html", "scri
 define("script/settings", ["require", "exports", "script/ui"], function (require, exports, UI) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.applySettings = exports.getAllSettings = exports.getShowComplexSolutions = exports.getNumberFormat = exports.getExponentMultipleOfThree = exports.getExponentFormat = exports.getThreeDigitSeparator = exports.getTheme = exports.isIncludeCursor = void 0;
+    exports.applySettings = exports.getAllSettings = exports.getRangeSymbol = exports.getShowComplexSolutions = exports.getNumberFormat = exports.getExponentMultipleOfThree = exports.getExponentFormat = exports.getThreeDigitSeparator = exports.getTheme = exports.isIncludeCursor = void 0;
     UI = __importStar(UI);
     const isIncludeCursor = () => UI.SavePanel.includeCursorCheckbox.checked;
     exports.isIncludeCursor = isIncludeCursor;
@@ -654,6 +657,8 @@ define("script/settings", ["require", "exports", "script/ui"], function (require
     exports.getNumberFormat = getNumberFormat;
     const getShowComplexSolutions = () => UI.SettingsPanel.showComplexSolutionsCheckbox.checked;
     exports.getShowComplexSolutions = getShowComplexSolutions;
+    const getRangeSymbol = () => UI.SettingsPanel.rangeSymbolSelect.value;
+    exports.getRangeSymbol = getRangeSymbol;
     const getAllSettings = () => // URL パラメーターで使うので短く！ / EN: Short for URL parameters!
      ({
         i: (0, exports.isIncludeCursor)(),
@@ -664,6 +669,7 @@ define("script/settings", ["require", "exports", "script/ui"], function (require
         m: (0, exports.getExponentMultipleOfThree)(),
         n: (0, exports.getNumberFormat)(),
         c: (0, exports.getShowComplexSolutions)(),
+        r: (0, exports.getRangeSymbol)(),
     });
     exports.getAllSettings = getAllSettings;
     const applySettings = (settings) => {
@@ -675,6 +681,7 @@ define("script/settings", ["require", "exports", "script/ui"], function (require
         UI.SettingsPanel.exponentMultipleOfThreeCheckbox.checked = settings.m;
         UI.SettingsPanel.numberFormatSelect.value = settings.n;
         UI.SettingsPanel.showComplexSolutionsCheckbox.checked = settings.c;
+        UI.SettingsPanel.rangeSymbolSelect.value = settings.r;
     };
     exports.applySettings = applySettings;
 });
@@ -717,7 +724,12 @@ define("resource/config", [], {
             "♁",
             "♃",
             "♄"
-        ]
+        ],
+        "rangeSymbols": {
+            "en-dash": "–",
+            "ellipsis": "⋯",
+            "wave-dash": "〜"
+        }
     },
     "model": {
         "lane": {
@@ -6825,14 +6837,15 @@ define("resource/constant/history", [], {
         }
     ]
 });
-define("script/model", ["require", "exports", "script/locale", "script/calculation", "script/type", "script/url", "script/theme", "script/comparer", "resource/config", "resource/digit/$si", "resource/digit/en", "resource/digit/ja", "resource/angle/sin", "resource/angle/cos", "resource/angle/tan", "resource/angle/sec", "resource/angle/csc", "resource/angle/cot", "resource/constant/size", "resource/constant/area", "resource/constant/volume", "resource/constant/mass", "resource/constant/time", "resource/constant/speed", "resource/constant/energy", "resource/constant/temperature", "resource/constant/counting", "resource/constant/sound-frequency", "resource/constant/emw-wavelength", "resource/constant/emw-frequency", "resource/constant/emw-energy", "resource/constant/history"], function (require, exports, Locale, Calculation, Type, Url, Theme, Comparer, config_json_3, _si_json_1, en_json_2, ja_json_2, sin_json_1, cos_json_1, tan_json_1, sec_json_1, csc_json_1, cot_json_1, size_json_1, area_json_1, volume_json_1, mass_json_1, time_json_1, speed_json_1, energy_json_1, temperature_json_1, counting_json_1, sound_frequency_json_1, emw_wavelength_json_1, emw_frequency_json_1, emw_energy_json_1, history_json_1) {
+define("script/model", ["require", "exports", "script/locale", "script/calculation", "script/type", "script/url", "script/settings", "script/theme", "script/comparer", "resource/config", "resource/digit/$si", "resource/digit/en", "resource/digit/ja", "resource/angle/sin", "resource/angle/cos", "resource/angle/tan", "resource/angle/sec", "resource/angle/csc", "resource/angle/cot", "resource/constant/size", "resource/constant/area", "resource/constant/volume", "resource/constant/mass", "resource/constant/time", "resource/constant/speed", "resource/constant/energy", "resource/constant/temperature", "resource/constant/counting", "resource/constant/sound-frequency", "resource/constant/emw-wavelength", "resource/constant/emw-frequency", "resource/constant/emw-energy", "resource/constant/history"], function (require, exports, Locale, Calculation, Type, Url, Settings, Theme, Comparer, config_json_3, _si_json_1, en_json_2, ja_json_2, sin_json_1, cos_json_1, tan_json_1, sec_json_1, csc_json_1, cot_json_1, size_json_1, area_json_1, volume_json_1, mass_json_1, time_json_1, speed_json_1, energy_json_1, temperature_json_1, counting_json_1, sound_frequency_json_1, emw_wavelength_json_1, emw_frequency_json_1, emw_energy_json_1, history_json_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.hasDataArea = exports.getLaneContext = exports.getCursorValues = exports.getCursorValue = exports.getCursorPosition = exports.makeSure = exports.removeLane = exports.makeLane = exports.addConstantLane = exports.addDigitLane = exports.addLane = exports.getSlideFromLane = exports.getLane = exports.getLastSlideAndLastLane = exports.getSlideAndLane = exports.makeSureSlide = exports.makeSlide = exports.getLaneIndex = exports.getSlideIndexFromLane = exports.getSlideIndex = exports.isRootSlide = exports.getRootSlideAndRootLane = exports.getRootSlide = exports.isPrimaryLane = exports.isRootLane = exports.getRootLane = exports.makeRootLane = exports.designTicks = exports.complementMinMaxArea = exports.getBottomTick = exports.getTopTick = exports.designOscillatingTicks = exports.designPeriodicTicks = exports.getUnitList = exports.designConstantTicks = exports.makeConstantStandardTickUnit = exports.designConstantTickType = exports.designConstantTickColor = exports.designConstantAreas = exports.makeAreaSpanLabel = exports.formatUniverseEpochDurationForHuman = exports.numberToLocaleString = exports.getLocaleDigitTable = exports.designDigitTicks = exports.makeDigitLabel = exports.designPrimeDecompositionTicks = exports.factorsToString = exports.designPrimeNumbersTicks = exports.designCurvedTicks = exports.designLinearTicks = exports.designLogarithmicTicks = exports.addConstTicks = exports.designAngleTicks360 = exports.designAngleTicks90 = exports.designAngleTicks30 = exports.getMajorRateFromAngle = exports.getMajorRateCore = exports.designAngleTicks10 = exports.designAngleTicksInverted10 = exports.designAngleTicksRegular10 = exports.makeTick = exports.getDigitIndexFromWidth = exports.designCurvedTicks10 = exports.designLinearTicks10 = exports.designLogarithmicTicks10 = exports.designTickType = exports.getLongTickSpaceWidth = exports.makePositionTickWindowFromPositionAndWidth = exports.makePositionTickWindowFromWindow = exports.ValueTickWindowToPositionTickWindow = exports.PositionTickWindowToValueTickWindow = exports.getSnapReferenceLaneIndex = exports.getConvenientWidth = exports.getWidth = exports.getPositionAt = exports.getSlideOffset = exports.getAnchorSlideAndLane = exports.getRawViewPositionAt = exports.logPositionToLinearPosition = exports.linearPositionToLogPosition = exports.getLinearPositionAt = exports.getValueAt = exports.getRawValueAt = exports.angleToQuarter = exports.getPrimaryPositionAt = exports.getPrimaryValueAt = exports.getDenseLabel = exports.getMaxValue = exports.getMinValue = exports.getWidthValueRatioFromAngleTicks = exports.getAngleTick = exports.getAngleTable = exports.getPrimaryTick = exports.getSlidePositionAt = exports.isDiscreteLane = exports.isOscillatingLane = exports.isPeriodicLane = exports.getPrimaryPeriod = exports.getPrimaryPeriod360 = exports.getSlidePosition = exports.isInvertedSlide = exports.isInvertedLane = exports.getAllLanes = exports.getAllLaneCount = exports.RootLaneIndex = exports.RootSlideIndex = exports.ticksCache = exports.data = exports.getConstantTable = exports.constant = exports.getDigitTable = exports.digit = void 0;
+    exports.initialize = exports.hasDataArea = exports.getLaneContext = exports.getCursorValues = exports.getCursorValue = exports.getCursorPosition = exports.makeSure = exports.removeLane = exports.makeLane = exports.addConstantLane = exports.addDigitLane = exports.addLane = exports.getSlideFromLane = exports.getLane = exports.getLastSlideAndLastLane = exports.getSlideAndLane = exports.makeSureSlide = exports.makeSlide = exports.getLaneIndex = exports.getSlideIndexFromLane = exports.getSlideIndex = exports.isRootSlide = exports.getRootSlideAndRootLane = exports.getRootSlide = exports.isPrimaryLane = exports.isRootLane = exports.getRootLane = exports.makeRootLane = exports.designTicks = exports.complementMinMaxArea = exports.getBottomTick = exports.getTopTick = exports.designOscillatingTicks = exports.designPeriodicTicks = exports.getUnitList = exports.designConstantTicks = exports.makeConstantStandardTickUnit = exports.designConstantTickType = exports.designConstantTickColor = exports.designConstantAreas = exports.makeAreaSpanLabel = exports.formatUniverseEpochDurationForHuman = exports.numberToLocaleString = exports.getLocaleDigitTable = exports.designDigitTicks = exports.makeDigitLabel = exports.designPrimeDecompositionTicks = exports.factorsToString = exports.designPrimeNumbersTicks = exports.designCurvedTicks = exports.designLinearTicks = exports.designLogarithmicTicks = exports.addConstTicks = exports.designAngleTicks360 = exports.designAngleTicks90 = exports.designAngleTicks30 = exports.getMajorRateFromAngle = exports.getMajorRateCore = exports.designAngleTicks10 = exports.designAngleTicksInverted10 = exports.designAngleTicksRegular10 = exports.makeTick = exports.getDigitIndexFromWidth = exports.designCurvedTicks10 = exports.designLinearTicks10 = exports.designLogarithmicTicks10 = exports.designTickType = exports.getLongTickSpaceWidth = exports.makePositionTickWindowFromPositionAndWidth = exports.makePositionTickWindowFromWindow = exports.ValueTickWindowToPositionTickWindow = exports.PositionTickWindowToValueTickWindow = exports.getSnapReferenceLaneIndex = exports.getConvenientWidth = exports.getWidth = exports.getPositionAt = exports.getSlideOffset = exports.getAnchorSlideAndLane = exports.getRawViewPositionAt = exports.logPositionToLinearPosition = exports.linearPositionToLogPosition = exports.getLinearPositionAt = exports.getValueAt = exports.getRawValueAt = exports.angleToQuarter = exports.getPrimaryPositionAt = exports.getPrimaryValueAt = exports.getDenseLabel = exports.getRangeSymbol = exports.getMaxValue = exports.getMinValue = exports.getWidthValueRatioFromAngleTicks = exports.getAngleTick = exports.getAngleTable = exports.getPrimaryTick = exports.getSlidePositionAt = exports.isDiscreteLane = exports.isOscillatingLane = exports.isPeriodicLane = exports.getPrimaryPeriod = exports.getPrimaryPeriod360 = exports.getSlidePosition = exports.isInvertedSlide = exports.isInvertedLane = exports.getAllLanes = exports.getAllLaneCount = exports.RootLaneIndex = exports.RootSlideIndex = exports.ticksCache = exports.data = exports.getConstantTable = exports.constant = exports.getDigitTable = exports.digit = void 0;
     Locale = __importStar(Locale);
     Calculation = __importStar(Calculation);
     Type = __importStar(Type);
     Url = __importStar(Url);
+    Settings = __importStar(Settings);
     Theme = __importStar(Theme);
     Comparer = __importStar(Comparer);
     config_json_3 = __importDefault(config_json_3);
@@ -7303,6 +7316,8 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
         }
     };
     exports.getMaxValue = getMaxValue;
+    const getRangeSymbol = () => config_json_3.default.symbols.rangeSymbols[Settings.getRangeSymbol()];
+    exports.getRangeSymbol = getRangeSymbol;
     const getDenseLabel = (lane) => {
         switch (lane.type) {
             // case "primary":
@@ -7316,17 +7331,17 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
             // case "exponential":
             // case "logarithmic":
             case "sine":
-                return "-1 … +1";
+                return "-1 – +1".replace(/–/g, (0, exports.getRangeSymbol)());
             case "cosine":
-                return "-1 … +1";
+                return "-1 – +1".replace(/–/g, (0, exports.getRangeSymbol)());
             case "tangent":
-                return "-∞ … +∞";
+                return "-∞ – +∞".replace(/–/g, (0, exports.getRangeSymbol)());
             case "secant":
-                return "-∞ … -1 ∪ +1 … +∞";
+                return "-∞ – -1 ∪ +1 – +∞".replace(/–/g, (0, exports.getRangeSymbol)());
             case "cosecant":
-                return "-∞ … -1 ∪ +1 … +∞";
+                return "-∞ – -1 ∪ +1 – +∞".replace(/–/g, (0, exports.getRangeSymbol)());
             case "cotangent":
-                return "-∞ … +∞";
+                return "-∞ – +∞".replace(/–/g, (0, exports.getRangeSymbol)());
             // case "arcsine":
             // case "arccosine":
             // case "arctangent":
@@ -11943,6 +11958,7 @@ define("script/event", ["require", "exports", "script/url", "script/type", "scri
         UI.SettingsPanel.exponentMultipleOfThreeCheckbox.addEventListener("change", () => Render.markDirty());
         UI.SettingsPanel.numberFormatSelect.addEventListener("change", () => Render.markDirty());
         UI.SettingsPanel.showComplexSolutionsCheckbox.addEventListener("change", () => Render.markDirty());
+        UI.SettingsPanel.rangeSymbolSelect.addEventListener("change", () => Render.markDirty());
         Command.updateViewModeRoundBar();
         Command.updateViewScaleRoundBar();
         Command.updateViewLockRoundBar();

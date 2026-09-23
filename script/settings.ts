@@ -12,6 +12,8 @@ export const getNumberFormat = (): "scientific" | "localized" =>
     UI.SettingsPanel.numberFormatSelect.value as ReturnType<typeof getNumberFormat>;
 export const getShowComplexSolutions = (): boolean =>
     UI.SettingsPanel.showComplexSolutionsCheckbox.checked;
+export const getRangeSymbol = (): "en-dash" | "ellipsis" | "wave-dash" =>
+    UI.SettingsPanel.rangeSymbolSelect.value as ReturnType<typeof getRangeSymbol>;
 export const getAllSettings = () => // URL パラメーターで使うので短く！ / EN: Short for URL parameters!
 ({
     i: isIncludeCursor(),
@@ -22,6 +24,7 @@ export const getAllSettings = () => // URL パラメーターで使うので短�
     m: getExponentMultipleOfThree(),
     n: getNumberFormat(),
     c: getShowComplexSolutions(),
+    r: getRangeSymbol(),
 });
 export const applySettings = (settings: ReturnType<typeof getAllSettings>) =>
 {
@@ -33,4 +36,5 @@ export const applySettings = (settings: ReturnType<typeof getAllSettings>) =>
     UI.SettingsPanel.exponentMultipleOfThreeCheckbox.checked = settings.m;
     UI.SettingsPanel.numberFormatSelect.value = settings.n;
     UI.SettingsPanel.showComplexSolutionsCheckbox.checked = settings.c;
+    UI.SettingsPanel.rangeSymbolSelect.value = settings.r;
 };

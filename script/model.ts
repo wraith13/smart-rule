@@ -3,6 +3,7 @@ import * as Calculation from "./calculation";
 import * as Type from "./type";
 // import * as Time from "./time";
 import * as Url from "./url";
+import * as Settings from "./settings";
 import * as Theme from "./theme";
 import * as Comparer from "./comparer";
 // import * as JsonEvalUpdater from "./json-eval-updater";
@@ -502,6 +503,8 @@ export const getMaxValue = (lane: Type.Lane): number =>
         throw new Error(`🦋 FIXME: getMaxValue not implemented for lane type: ${lane.type}`);
     }
 };
+export const getRangeSymbol = () =>
+    config.symbols.rangeSymbols[Settings.getRangeSymbol()];
 export const getDenseLabel = (lane: Type.Lane): Type.MultiLanguageText | undefined =>
 {
     switch(lane.type)
@@ -517,17 +520,17 @@ export const getDenseLabel = (lane: Type.Lane): Type.MultiLanguageText | undefin
     // case "exponential":
     // case "logarithmic":
     case "sine":
-        return "-1 … +1";
+        return "-1 – +1".replace(/–/g, getRangeSymbol());
     case "cosine":
-        return "-1 … +1";
+        return "-1 – +1".replace(/–/g, getRangeSymbol());
     case "tangent":
-        return "-∞ … +∞";
+        return "-∞ – +∞".replace(/–/g, getRangeSymbol());
     case "secant":
-        return "-∞ … -1 ∪ +1 … +∞";
+        return "-∞ – -1 ∪ +1 – +∞".replace(/–/g, getRangeSymbol());
     case "cosecant":
-        return "-∞ … -1 ∪ +1 … +∞";
+        return "-∞ – -1 ∪ +1 – +∞".replace(/–/g, getRangeSymbol());
     case "cotangent":
-        return "-∞ … +∞";
+        return "-∞ – +∞".replace(/–/g, getRangeSymbol());
     // case "arcsine":
     // case "arccosine":
     // case "arctangent":

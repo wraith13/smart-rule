@@ -37,7 +37,12 @@
             "♁",
             "♃",
             "♄"
-        ]
+        ],
+        "rangeSymbols": {
+            "en-dash": "–",
+            "ellipsis": "⋯",
+            "wave-dash": "〜"
+        }
     },
     "model": {
         "lane": {
