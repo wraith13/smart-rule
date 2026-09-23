@@ -22,6 +22,7 @@ declare module "script/locale" {
             "Adjust exponent to multiple of 3": string;
             "Show complex solutions for inverse trigonometric functions": string;
             "Range symbol": string;
+            "Or symbol": string;
             "Complex Solutions": string;
             Unit: string;
             Help: string;
@@ -59,6 +60,7 @@ declare module "script/locale" {
             "Adjust exponent to multiple of 3": string;
             "Show complex solutions for inverse trigonometric functions": string;
             "Range symbol": string;
+            "Or symbol": string;
             "Complex Solutions": string;
             Unit: string;
             Help: string;
@@ -1581,6 +1583,9 @@ declare module "script/model" {
     export const getMinValue: (lane: Type.Lane) => number;
     export const getMaxValue: (lane: Type.Lane) => number;
     export const getRangeSymbol: () => string;
+    export const applyRangeSymbol: (text: string) => string;
+    export const applyOrSymbol: (text: string) => string;
+    export const applySymbols: (text: string) => string;
     export const getDenseLabel: (lane: Type.Lane) => Type.MultiLanguageText | undefined;
     export const getPrimaryValueAt: (lane: Type.Lane, position: number) => number;
     export const getPrimaryPositionAt: (lane: Type.Lane, value: Type.ValueType, quarter?: number) => number;
@@ -1872,6 +1877,12 @@ declare module "script/json-eval-updater" {
                     "en-dash": string;
                     ellipsis: string;
                     "wave-dash": string;
+                    word: string;
+                };
+                orSymbols: {
+                    union: string;
+                    ascii: string;
+                    word: string;
                 };
             };
             model: {

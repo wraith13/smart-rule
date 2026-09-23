@@ -164,6 +164,15 @@ __STYLE__ DUMMY { color: initial; }
                     <option value="en-dash">–</option>
                     <option value="ellipsis" selected>⋯</option>
                     <option value="wave-dash">〜</option>
+                    <option value="word">to</option>
+                </select>
+            </label>
+            <label>
+                <span data-lang-key="Or symbol"></span><span data-lang-key="lang-colon-suffix"></span>
+                <select id="or-symbol-select">
+                    <option value="union">∪</option>
+                    <option value="ascii">|</option>
+                    <option value="word" selected>or</option>
                 </select>
             </label>
             <span>※この設定は一部のロケールでのみ機能します。</span>

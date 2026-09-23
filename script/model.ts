@@ -505,6 +505,12 @@ export const getMaxValue = (lane: Type.Lane): number =>
 };
 export const getRangeSymbol = () =>
     config.symbols.rangeSymbols[Settings.getRangeSymbol()];
+export const applyRangeSymbol = (text: string): string =>
+    text.replace(/\$RANGE\$/g, getRangeSymbol());
+export const applyOrSymbol = (text: string): string =>
+    text.replace(/\$OR\$/g, "∪");
+export const applySymbols = (text: string): string =>
+    applyRangeSymbol(applyOrSymbol(text));
 export const getDenseLabel = (lane: Type.Lane): Type.MultiLanguageText | undefined =>
 {
     switch(lane.type)
@@ -520,17 +526,17 @@ export const getDenseLabel = (lane: Type.Lane): Type.MultiLanguageText | undefin
     // case "exponential":
     // case "logarithmic":
     case "sine":
-        return "-1 – +1".replace(/–/g, getRangeSymbol());
+        return applySymbols("-1 $RANGE$ +1");
     case "cosine":
-        return "-1 – +1".replace(/–/g, getRangeSymbol());
+        return applySymbols("-1 $RANGE$ +1");
     case "tangent":
-        return "-∞ – +∞".replace(/–/g, getRangeSymbol());
+        return applySymbols("-∞ $RANGE$ +∞");
     case "secant":
-        return "-∞ – -1 ∪ +1 – +∞".replace(/–/g, getRangeSymbol());
+        return applySymbols("-∞ $RANGE$ -1 $OR$ +1 $RANGE$ +∞");
     case "cosecant":
-        return "-∞ – -1 ∪ +1 – +∞".replace(/–/g, getRangeSymbol());
+        return applySymbols("-∞ $RANGE$ -1 $OR$ +1 $RANGE$ +∞");
     case "cotangent":
-        return "-∞ – +∞".replace(/–/g, getRangeSymbol());
+        return applySymbols("-∞ $RANGE$ +∞");
     // case "arcsine":
     // case "arccosine":
     // case "arctangent":

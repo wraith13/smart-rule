@@ -2,7 +2,7 @@
 <!--
     This file is genereted by build.js. このファイルは build.js によって生成されました。
     build options: ../build.json all
-    build at: Wed Sep 23 2026 04:49:41 GMT+0900 (日本標準時)
+    build at: Wed Sep 23 2026 23:48:16 GMT+0900 (日本標準時)
     repository: https://github.com/wraith13/smart-rule/
 -->
 <!-- license:
@@ -75,7 +75,7 @@ html, body, .view, .wallpaper, .screen
 @font-face
 {
     font-family: "NumberFont";
-    src: local("Monaspace Neon"), local("Cascadia Code"), local("Apple Color Emoji"), local("Menlo"), local("Monaco"), local("Consolas"), local("Liberation Mono"), local("Courier New"), local("monospace");
+    src: local("Monaspace Neon"), local("Cascadia Code"), local("Menlo"), local("Monaco"), local("Consolas"), local("Liberation Mono"), local("Courier New"), local("monospace");
     unicode-range: U+0000-221D, U+221F-2229, U+222B-10FFFF;
 }
 
@@ -86,7 +86,7 @@ html, body, .view, .wallpaper, .screen
 }
 svg text:not(.proportional-font)
 {
-    font-family: "NumberFont", "Monaspace Neon", "Cascadia Code", "Apple Color Emoji", Menlo, Monaco, "Consolas", "Liberation Mono", "Courier New", monospace;
+    font-family: "NumberFont", "Monaspace Neon", "Cascadia Code", Menlo, Monaco, "Consolas", "Liberation Mono", "Courier New", monospace;
 }
 html, body, .view, .wallpaper
 {
@@ -567,6 +567,15 @@ button:focus
                     <option value="en-dash">–</option>
                     <option value="ellipsis" selected>⋯</option>
                     <option value="wave-dash">〜</option>
+                    <option value="word">to</option>
+                </select>
+            </label>
+            <label>
+                <span data-lang-key="Or symbol"></span><span data-lang-key="lang-colon-suffix"></span>
+                <select id="or-symbol-select">
+                    <option value="union">∪</option>
+                    <option value="ascii">|</option>
+                    <option value="word" selected>or</option>
                 </select>
             </label>
             <span>※この設定は一部のロケールでのみ機能します。</span>
@@ -652,8 +661,8 @@ button:focus
 <div id="toast-panel"></div>
 <script type="text/javascript">
 const build = {
-    at: "Wed Sep 23 2026 04:49:41 GMT+0900 (日本標準時)",
-    tick: 1790106581160
+    at: "Wed Sep 23 2026 23:48:16 GMT+0900 (日本標準時)",
+    tick: 1790174896337
 };
 const evilCommonjsConfig = {
     "log": {
@@ -1071,6 +1080,7 @@ define("resource/lang/en", [], {
     "Adjust exponent to multiple of 3": "Adjust exponent to multiple of 3",
     "Show complex solutions for inverse trigonometric functions": "Show complex solutions for inverse trigonometric functions",
     "Range symbol": "Range symbol",
+    "Or symbol": "Or symbol",
     "Complex Solutions": "Complex Solutions",
     "Unit": "Unit",
     "Help": "Help",
@@ -1108,6 +1118,7 @@ define("resource/lang/ja", [], {
     "Adjust exponent to multiple of 3": "指数を3の倍数に調整",
     "Show complex solutions for inverse trigonometric functions": "逆三角関数の複素数解を表示",
     "Range symbol": "範囲記号",
+    "Or symbol": "OR記号",
     "Complex Solutions": "複素数解",
     "Unit": "単位",
     "Help": "ヘルプ",
@@ -1743,7 +1754,13 @@ define("resource/config", [], {
         "rangeSymbols": {
             "en-dash": "–",
             "ellipsis": "⋯",
-            "wave-dash": "〜"
+            "wave-dash": "〜",
+            "word": "to"
+        },
+        "orSymbols": {
+            "union": "∪",
+            "ascii": "|",
+            "word": "or"
         }
     },
     "model": {
@@ -7855,7 +7872,7 @@ define("resource/constant/history", [], {
 define("script/model", ["require", "exports", "script/locale", "script/calculation", "script/type", "script/url", "script/settings", "script/theme", "script/comparer", "resource/config", "resource/digit/$si", "resource/digit/en", "resource/digit/ja", "resource/angle/sin", "resource/angle/cos", "resource/angle/tan", "resource/angle/sec", "resource/angle/csc", "resource/angle/cot", "resource/constant/size", "resource/constant/area", "resource/constant/volume", "resource/constant/mass", "resource/constant/time", "resource/constant/speed", "resource/constant/energy", "resource/constant/temperature", "resource/constant/counting", "resource/constant/sound-frequency", "resource/constant/emw-wavelength", "resource/constant/emw-frequency", "resource/constant/emw-energy", "resource/constant/history"], function (require, exports, Locale, Calculation, Type, Url, Settings, Theme, Comparer, config_json_3, _si_json_1, en_json_2, ja_json_2, sin_json_1, cos_json_1, tan_json_1, sec_json_1, csc_json_1, cot_json_1, size_json_1, area_json_1, volume_json_1, mass_json_1, time_json_1, speed_json_1, energy_json_1, temperature_json_1, counting_json_1, sound_frequency_json_1, emw_wavelength_json_1, emw_frequency_json_1, emw_energy_json_1, history_json_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.hasDataArea = exports.getLaneContext = exports.getCursorValues = exports.getCursorValue = exports.getCursorPosition = exports.makeSure = exports.removeLane = exports.makeLane = exports.addConstantLane = exports.addDigitLane = exports.addLane = exports.getSlideFromLane = exports.getLane = exports.getLastSlideAndLastLane = exports.getSlideAndLane = exports.makeSureSlide = exports.makeSlide = exports.getLaneIndex = exports.getSlideIndexFromLane = exports.getSlideIndex = exports.isRootSlide = exports.getRootSlideAndRootLane = exports.getRootSlide = exports.isPrimaryLane = exports.isRootLane = exports.getRootLane = exports.makeRootLane = exports.designTicks = exports.complementMinMaxArea = exports.getBottomTick = exports.getTopTick = exports.designOscillatingTicks = exports.designPeriodicTicks = exports.getUnitList = exports.designConstantTicks = exports.makeConstantStandardTickUnit = exports.designConstantTickType = exports.designConstantTickColor = exports.designConstantAreas = exports.makeAreaSpanLabel = exports.formatUniverseEpochDurationForHuman = exports.numberToLocaleString = exports.getLocaleDigitTable = exports.designDigitTicks = exports.makeDigitLabel = exports.designPrimeDecompositionTicks = exports.factorsToString = exports.designPrimeNumbersTicks = exports.designCurvedTicks = exports.designLinearTicks = exports.designLogarithmicTicks = exports.addConstTicks = exports.designAngleTicks360 = exports.designAngleTicks90 = exports.designAngleTicks30 = exports.getMajorRateFromAngle = exports.getMajorRateCore = exports.designAngleTicks10 = exports.designAngleTicksInverted10 = exports.designAngleTicksRegular10 = exports.makeTick = exports.getDigitIndexFromWidth = exports.designCurvedTicks10 = exports.designLinearTicks10 = exports.designLogarithmicTicks10 = exports.designTickType = exports.getLongTickSpaceWidth = exports.makePositionTickWindowFromPositionAndWidth = exports.makePositionTickWindowFromWindow = exports.ValueTickWindowToPositionTickWindow = exports.PositionTickWindowToValueTickWindow = exports.getSnapReferenceLaneIndex = exports.getConvenientWidth = exports.getWidth = exports.getPositionAt = exports.getSlideOffset = exports.getAnchorSlideAndLane = exports.getRawViewPositionAt = exports.logPositionToLinearPosition = exports.linearPositionToLogPosition = exports.getLinearPositionAt = exports.getValueAt = exports.getRawValueAt = exports.angleToQuarter = exports.getPrimaryPositionAt = exports.getPrimaryValueAt = exports.getDenseLabel = exports.getRangeSymbol = exports.getMaxValue = exports.getMinValue = exports.getWidthValueRatioFromAngleTicks = exports.getAngleTick = exports.getAngleTable = exports.getPrimaryTick = exports.getSlidePositionAt = exports.isDiscreteLane = exports.isOscillatingLane = exports.isPeriodicLane = exports.getPrimaryPeriod = exports.getPrimaryPeriod360 = exports.getSlidePosition = exports.isInvertedSlide = exports.isInvertedLane = exports.getAllLanes = exports.getAllLaneCount = exports.RootLaneIndex = exports.RootSlideIndex = exports.ticksCache = exports.data = exports.getConstantTable = exports.constant = exports.getDigitTable = exports.digit = void 0;
+    exports.initialize = exports.hasDataArea = exports.getLaneContext = exports.getCursorValues = exports.getCursorValue = exports.getCursorPosition = exports.makeSure = exports.removeLane = exports.makeLane = exports.addConstantLane = exports.addDigitLane = exports.addLane = exports.getSlideFromLane = exports.getLane = exports.getLastSlideAndLastLane = exports.getSlideAndLane = exports.makeSureSlide = exports.makeSlide = exports.getLaneIndex = exports.getSlideIndexFromLane = exports.getSlideIndex = exports.isRootSlide = exports.getRootSlideAndRootLane = exports.getRootSlide = exports.isPrimaryLane = exports.isRootLane = exports.getRootLane = exports.makeRootLane = exports.designTicks = exports.complementMinMaxArea = exports.getBottomTick = exports.getTopTick = exports.designOscillatingTicks = exports.designPeriodicTicks = exports.getUnitList = exports.designConstantTicks = exports.makeConstantStandardTickUnit = exports.designConstantTickType = exports.designConstantTickColor = exports.designConstantAreas = exports.makeAreaSpanLabel = exports.formatUniverseEpochDurationForHuman = exports.numberToLocaleString = exports.getLocaleDigitTable = exports.designDigitTicks = exports.makeDigitLabel = exports.designPrimeDecompositionTicks = exports.factorsToString = exports.designPrimeNumbersTicks = exports.designCurvedTicks = exports.designLinearTicks = exports.designLogarithmicTicks = exports.addConstTicks = exports.designAngleTicks360 = exports.designAngleTicks90 = exports.designAngleTicks30 = exports.getMajorRateFromAngle = exports.getMajorRateCore = exports.designAngleTicks10 = exports.designAngleTicksInverted10 = exports.designAngleTicksRegular10 = exports.makeTick = exports.getDigitIndexFromWidth = exports.designCurvedTicks10 = exports.designLinearTicks10 = exports.designLogarithmicTicks10 = exports.designTickType = exports.getLongTickSpaceWidth = exports.makePositionTickWindowFromPositionAndWidth = exports.makePositionTickWindowFromWindow = exports.ValueTickWindowToPositionTickWindow = exports.PositionTickWindowToValueTickWindow = exports.getSnapReferenceLaneIndex = exports.getConvenientWidth = exports.getWidth = exports.getPositionAt = exports.getSlideOffset = exports.getAnchorSlideAndLane = exports.getRawViewPositionAt = exports.logPositionToLinearPosition = exports.linearPositionToLogPosition = exports.getLinearPositionAt = exports.getValueAt = exports.getRawValueAt = exports.angleToQuarter = exports.getPrimaryPositionAt = exports.getPrimaryValueAt = exports.getDenseLabel = exports.applySymbols = exports.applyOrSymbol = exports.applyRangeSymbol = exports.getRangeSymbol = exports.getMaxValue = exports.getMinValue = exports.getWidthValueRatioFromAngleTicks = exports.getAngleTick = exports.getAngleTable = exports.getPrimaryTick = exports.getSlidePositionAt = exports.isDiscreteLane = exports.isOscillatingLane = exports.isPeriodicLane = exports.getPrimaryPeriod = exports.getPrimaryPeriod360 = exports.getSlidePosition = exports.isInvertedSlide = exports.isInvertedLane = exports.getAllLanes = exports.getAllLaneCount = exports.RootLaneIndex = exports.RootSlideIndex = exports.ticksCache = exports.data = exports.getConstantTable = exports.constant = exports.getDigitTable = exports.digit = void 0;
     Locale = __importStar(Locale);
     Calculation = __importStar(Calculation);
     Type = __importStar(Type);
@@ -8333,6 +8350,12 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
     exports.getMaxValue = getMaxValue;
     const getRangeSymbol = () => config_json_3.default.symbols.rangeSymbols[Settings.getRangeSymbol()];
     exports.getRangeSymbol = getRangeSymbol;
+    const applyRangeSymbol = (text) => text.replace(/\$RANGE\$/g, (0, exports.getRangeSymbol)());
+    exports.applyRangeSymbol = applyRangeSymbol;
+    const applyOrSymbol = (text) => text.replace(/\$OR\$/g, "∪");
+    exports.applyOrSymbol = applyOrSymbol;
+    const applySymbols = (text) => (0, exports.applyRangeSymbol)((0, exports.applyOrSymbol)(text));
+    exports.applySymbols = applySymbols;
     const getDenseLabel = (lane) => {
         switch (lane.type) {
             // case "primary":
@@ -8346,17 +8369,17 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
             // case "exponential":
             // case "logarithmic":
             case "sine":
-                return "-1 – +1".replace(/–/g, (0, exports.getRangeSymbol)());
+                return (0, exports.applySymbols)("-1 $RANGE$ +1");
             case "cosine":
-                return "-1 – +1".replace(/–/g, (0, exports.getRangeSymbol)());
+                return (0, exports.applySymbols)("-1 $RANGE$ +1");
             case "tangent":
-                return "-∞ – +∞".replace(/–/g, (0, exports.getRangeSymbol)());
+                return (0, exports.applySymbols)("-∞ $RANGE$ +∞");
             case "secant":
-                return "-∞ – -1 ∪ +1 – +∞".replace(/–/g, (0, exports.getRangeSymbol)());
+                return (0, exports.applySymbols)("-∞ $RANGE$ -1 $OR$ +1 $RANGE$ +∞");
             case "cosecant":
-                return "-∞ – -1 ∪ +1 – +∞".replace(/–/g, (0, exports.getRangeSymbol)());
+                return (0, exports.applySymbols)("-∞ $RANGE$ -1 $OR$ +1 $RANGE$ +∞");
             case "cotangent":
-                return "-∞ – +∞".replace(/–/g, (0, exports.getRangeSymbol)());
+                return (0, exports.applySymbols)("-∞ $RANGE$ +∞");
             // case "arcsine":
             // case "arccosine":
             // case "arctangent":

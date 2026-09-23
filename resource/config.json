@@ -41,7 +41,13 @@
         "rangeSymbols": {
             "en-dash": "–",
             "ellipsis": "⋯",
-            "wave-dash": "〜"
+            "wave-dash": "〜",
+            "word": "to"
+        },
+        "orSymbols": {
+            "union": "∪",
+            "ascii": "|",
+            "word": "or"
         }
     },
     "model": {
