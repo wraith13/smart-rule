@@ -54,6 +54,7 @@ define("resource/lang/en", [], {
     "Thousands separator": "Thousands separator",
     "Exponential notation": "Exponential notation",
     "Adjust exponent to multiple of 3": "Adjust exponent to multiple of 3",
+    "Approximate symbol": "Approximate symbol",
     "Range symbol": "Range symbol",
     "Or symbol": "Or symbol",
     "Complex Solutions": "Complex Solutions",
@@ -91,6 +92,7 @@ define("resource/lang/ja", [], {
     "Thousands separator": "３桁区切り記号",
     "Exponential notation": "指数表記",
     "Adjust exponent to multiple of 3": "指数を3の倍数に調整",
+    "Approximate symbol": "近似記号",
     "Range symbol": "範囲記号",
     "Or symbol": "OR記号",
     "Complex Solutions": "複素数解",
@@ -565,6 +567,7 @@ define("script/ui", ["require", "exports", "script/locale", "script/html", "scri
         SettingsPanel.exponentFormatSelect = HTML.getElementById("select", "exponent-format-select");
         SettingsPanel.exponentMultipleOfThreeCheckbox = HTML.getElementById("input", "exponent-multiple-of-three-checkbox");
         SettingsPanel.numberFormatSelect = HTML.getElementById("select", "number-format-select");
+        SettingsPanel.approximateSymbolSelect = HTML.getElementById("select", "approximate-symbol-select");
         SettingsPanel.rangeSymbolSelect = HTML.getElementById("select", "range-symbol-select");
         SettingsPanel.orSymbolSelect = HTML.getElementById("select", "or-symbol-select");
     })(SettingsPanel || (exports.SettingsPanel = SettingsPanel = {}));
@@ -677,6 +680,11 @@ define("resource/config", [], {
             "♃",
             "♄"
         ],
+        "approximateSymbols": {
+            "wave-nearly-equal": "≈",
+            "dot-nearly-equal": "≒",
+            "tilda": "~"
+        },
         "rangeSymbols": {
             "en-dash": "–",
             "ellipsis": "⋯",
@@ -868,7 +876,7 @@ define("resource/config", [], {
 define("script/settings", ["require", "exports", "script/ui"], function (require, exports, UI) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.applySettings = exports.getAllSettings = exports.getOrSymbol = exports.getRangeSymbol = exports.getNumberFormat = exports.getExponentMultipleOfThree = exports.getExponentFormat = exports.getThreeDigitSeparator = exports.getTheme = exports.isIncludeCursor = void 0;
+    exports.applySettings = exports.getAllSettings = exports.getOrSymbol = exports.getRangeSymbol = exports.getApproximateSymbol = exports.getNumberFormat = exports.getExponentMultipleOfThree = exports.getExponentFormat = exports.getThreeDigitSeparator = exports.getTheme = exports.isIncludeCursor = void 0;
     UI = __importStar(UI);
     const isIncludeCursor = () => UI.SavePanel.includeCursorCheckbox.checked;
     exports.isIncludeCursor = isIncludeCursor;
@@ -883,6 +891,8 @@ define("script/settings", ["require", "exports", "script/ui"], function (require
     exports.getExponentMultipleOfThree = getExponentMultipleOfThree;
     const getNumberFormat = () => UI.SettingsPanel.numberFormatSelect.value;
     exports.getNumberFormat = getNumberFormat;
+    const getApproximateSymbol = () => UI.SettingsPanel.approximateSymbolSelect.value;
+    exports.getApproximateSymbol = getApproximateSymbol;
     const getRangeSymbol = () => UI.SettingsPanel.rangeSymbolSelect.value;
     exports.getRangeSymbol = getRangeSymbol;
     const getOrSymbol = () => UI.SettingsPanel.orSymbolSelect.value;
@@ -896,12 +906,13 @@ define("script/settings", ["require", "exports", "script/ui"], function (require
         e: (0, exports.getExponentFormat)(),
         m: (0, exports.getExponentMultipleOfThree)(),
         n: (0, exports.getNumberFormat)(),
+        a: (0, exports.getApproximateSymbol)(),
         r: (0, exports.getRangeSymbol)(),
         o: (0, exports.getOrSymbol)(),
     });
     exports.getAllSettings = getAllSettings;
     const applySettings = (settings) => {
-        var _a, _b, _c, _d, _e, _f;
+        var _a, _b, _c, _d, _e, _f, _g;
         UI.SavePanel.includeCursorCheckbox.checked = settings.i;
         UI.SettingsPanel.languageSelect.value = settings.l;
         UI.SettingsPanel.themeSelect.value = (_a = settings.t) !== null && _a !== void 0 ? _a : "auto";
@@ -909,8 +920,9 @@ define("script/settings", ["require", "exports", "script/ui"], function (require
         UI.SettingsPanel.exponentFormatSelect.value = (_c = settings.e) !== null && _c !== void 0 ? _c : "x10";
         UI.SettingsPanel.exponentMultipleOfThreeCheckbox.checked = settings.m;
         UI.SettingsPanel.numberFormatSelect.value = (_d = settings.n) !== null && _d !== void 0 ? _d : "scientific";
-        UI.SettingsPanel.rangeSymbolSelect.value = (_e = settings.r) !== null && _e !== void 0 ? _e : "ellipsis";
-        UI.SettingsPanel.orSymbolSelect.value = (_f = settings.o) !== null && _f !== void 0 ? _f : "union";
+        UI.SettingsPanel.approximateSymbolSelect.value = (_e = settings.a) !== null && _e !== void 0 ? _e : "tilde";
+        UI.SettingsPanel.rangeSymbolSelect.value = (_f = settings.r) !== null && _f !== void 0 ? _f : "ellipsis";
+        UI.SettingsPanel.orSymbolSelect.value = (_g = settings.o) !== null && _g !== void 0 ? _g : "union";
     };
     exports.applySettings = applySettings;
 });

@@ -38,6 +38,11 @@
             "♃",
             "♄"
         ],
+        "approximateSymbols": {
+            "wave-nearly-equal": "≈",
+            "dot-nearly-equal": "≒",
+            "tilda": "~"
+        },
         "rangeSymbols": {
             "en-dash": "–",
             "ellipsis": "⋯",

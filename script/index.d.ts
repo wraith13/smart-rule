@@ -20,6 +20,7 @@ declare module "script/locale" {
             "Thousands separator": string;
             "Exponential notation": string;
             "Adjust exponent to multiple of 3": string;
+            "Approximate symbol": string;
             "Range symbol": string;
             "Or symbol": string;
             "Complex Solutions": string;
@@ -57,6 +58,7 @@ declare module "script/locale" {
             "Thousands separator": string;
             "Exponential notation": string;
             "Adjust exponent to multiple of 3": string;
+            "Approximate symbol": string;
             "Range symbol": string;
             "Or symbol": string;
             "Complex Solutions": string;
@@ -263,6 +265,7 @@ declare module "script/ui" {
         const exponentFormatSelect: HTMLSelectElement;
         const exponentMultipleOfThreeCheckbox: HTMLInputElement;
         const numberFormatSelect: HTMLSelectElement;
+        const approximateSymbolSelect: HTMLSelectElement;
         const rangeSymbolSelect: HTMLSelectElement;
         const orSymbolSelect: HTMLSelectElement;
     }
@@ -297,6 +300,7 @@ declare module "script/settings" {
     export const getExponentFormat: () => "e" | "x10";
     export const getExponentMultipleOfThree: () => boolean;
     export const getNumberFormat: () => "scientific" | "localized";
+    export const getApproximateSymbol: () => keyof typeof config.symbols.approximateSymbols;
     export const getRangeSymbol: () => keyof typeof config.symbols.rangeSymbols;
     export const getOrSymbol: () => keyof typeof config.symbols.orSymbols;
     export const getAllSettings: () => {
@@ -307,6 +311,7 @@ declare module "script/settings" {
         e: "e" | "x10";
         m: boolean;
         n: "scientific" | "localized";
+        a: "wave-nearly-equal" | "dot-nearly-equal" | "tilda";
         r: "en-dash" | "ellipsis" | "wave-dash" | "word";
         o: "word" | "union" | "ascii";
     };
@@ -1873,6 +1878,11 @@ declare module "script/json-eval-updater" {
                 subscript: string;
                 exponent: string;
                 miniSymbols: string[];
+                approximateSymbols: {
+                    "wave-nearly-equal": string;
+                    "dot-nearly-equal": string;
+                    tilda: string;
+                };
                 rangeSymbols: {
                     "en-dash": string;
                     ellipsis: string;
