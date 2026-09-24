@@ -560,8 +560,8 @@ export const initialize = () =>
     UI.SettingsPanel.exponentFormatSelect.addEventListener("change", () => Render.markDirty());
     UI.SettingsPanel.exponentMultipleOfThreeCheckbox.addEventListener("change", () => Render.markDirty());
     UI.SettingsPanel.numberFormatSelect.addEventListener("change", () => Render.markDirty());
-    UI.SettingsPanel.showComplexSolutionsCheckbox.addEventListener("change", () => Render.markDirty());
     UI.SettingsPanel.rangeSymbolSelect.addEventListener("change", () => Render.markDirty());
+    UI.SettingsPanel.orSymbolSelect.addEventListener("change", () => Render.markDirty());
     Command.updateViewModeRoundBar();
     Command.updateViewScaleRoundBar();
     Command.updateViewLockRoundBar();

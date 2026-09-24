@@ -20,7 +20,6 @@ declare module "script/locale" {
             "Thousands separator": string;
             "Exponential notation": string;
             "Adjust exponent to multiple of 3": string;
-            "Show complex solutions for inverse trigonometric functions": string;
             "Range symbol": string;
             "Or symbol": string;
             "Complex Solutions": string;
@@ -58,7 +57,6 @@ declare module "script/locale" {
             "Thousands separator": string;
             "Exponential notation": string;
             "Adjust exponent to multiple of 3": string;
-            "Show complex solutions for inverse trigonometric functions": string;
             "Range symbol": string;
             "Or symbol": string;
             "Complex Solutions": string;
@@ -265,8 +263,8 @@ declare module "script/ui" {
         const exponentFormatSelect: HTMLSelectElement;
         const exponentMultipleOfThreeCheckbox: HTMLInputElement;
         const numberFormatSelect: HTMLSelectElement;
-        const showComplexSolutionsCheckbox: HTMLInputElement;
         const rangeSymbolSelect: HTMLSelectElement;
+        const orSymbolSelect: HTMLSelectElement;
     }
     export namespace ControlPanel {
         const element: HTMLDivElement;
@@ -292,14 +290,15 @@ declare module "script/ui" {
     export const initialize: () => void;
 }
 declare module "script/settings" {
+    import config from "resource/config";
     export const isIncludeCursor: () => boolean;
     export const getTheme: () => string;
     export const getThreeDigitSeparator: () => "none" | "custom" | "thin-space";
     export const getExponentFormat: () => "e" | "x10";
     export const getExponentMultipleOfThree: () => boolean;
     export const getNumberFormat: () => "scientific" | "localized";
-    export const getShowComplexSolutions: () => boolean;
-    export const getRangeSymbol: () => "en-dash" | "ellipsis" | "wave-dash";
+    export const getRangeSymbol: () => keyof typeof config.symbols.rangeSymbols;
+    export const getOrSymbol: () => keyof typeof config.symbols.orSymbols;
     export const getAllSettings: () => {
         i: boolean;
         l: string;
@@ -308,8 +307,8 @@ declare module "script/settings" {
         e: "e" | "x10";
         m: boolean;
         n: "scientific" | "localized";
-        c: boolean;
-        r: "en-dash" | "ellipsis" | "wave-dash";
+        r: "en-dash" | "ellipsis" | "wave-dash" | "word";
+        o: "word" | "union" | "ascii";
     };
     export const applySettings: (settings: ReturnType<typeof getAllSettings>) => void;
 }
@@ -1584,6 +1583,7 @@ declare module "script/model" {
     export const getMaxValue: (lane: Type.Lane) => number;
     export const getRangeSymbol: () => string;
     export const applyRangeSymbol: (text: string) => string;
+    export const getOrSymbol: () => string;
     export const applyOrSymbol: (text: string) => string;
     export const applySymbols: (text: string) => string;
     export const getDenseLabel: (lane: Type.Lane) => Type.MultiLanguageText | undefined;

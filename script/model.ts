@@ -507,8 +507,10 @@ export const getRangeSymbol = () =>
     config.symbols.rangeSymbols[Settings.getRangeSymbol()];
 export const applyRangeSymbol = (text: string): string =>
     text.replace(/\$RANGE\$/g, getRangeSymbol());
+export const getOrSymbol = () =>
+    config.symbols.orSymbols[Settings.getOrSymbol()];
 export const applyOrSymbol = (text: string): string =>
-    text.replace(/\$OR\$/g, "∪");
+    text.replace(/\$OR\$/g, getOrSymbol());
 export const applySymbols = (text: string): string =>
     applyRangeSymbol(applyOrSymbol(text));
 export const getDenseLabel = (lane: Type.Lane): Type.MultiLanguageText | undefined =>

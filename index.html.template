@@ -155,10 +155,6 @@ __STYLE__ DUMMY { color: initial; }
                 </select>
             </label>
             <label>
-                <span data-lang-key="Show complex solutions for inverse trigonometric functions"></span><span data-lang-key="lang-colon-suffix"></span>
-                <input type="checkbox" id="show-complex-solutions-checkbox" />
-            </label>
-            <label>
                 <span data-lang-key="Range symbol"></span><span data-lang-key="lang-colon-suffix"></span>
                 <select id="range-symbol-select">
                     <option value="en-dash">–</option>
@@ -170,9 +166,9 @@ __STYLE__ DUMMY { color: initial; }
             <label>
                 <span data-lang-key="Or symbol"></span><span data-lang-key="lang-colon-suffix"></span>
                 <select id="or-symbol-select">
-                    <option value="union">∪</option>
+                    <option value="union" selected>∪</option>
                     <option value="ascii">|</option>
-                    <option value="word" selected>or</option>
+                    <option value="word">or</option>
                 </select>
             </label>
             <span>※この設定は一部のロケールでのみ機能します。</span>

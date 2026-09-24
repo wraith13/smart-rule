@@ -54,7 +54,6 @@ define("resource/lang/en", [], {
     "Thousands separator": "Thousands separator",
     "Exponential notation": "Exponential notation",
     "Adjust exponent to multiple of 3": "Adjust exponent to multiple of 3",
-    "Show complex solutions for inverse trigonometric functions": "Show complex solutions for inverse trigonometric functions",
     "Range symbol": "Range symbol",
     "Or symbol": "Or symbol",
     "Complex Solutions": "Complex Solutions",
@@ -92,7 +91,6 @@ define("resource/lang/ja", [], {
     "Thousands separator": "３桁区切り記号",
     "Exponential notation": "指数表記",
     "Adjust exponent to multiple of 3": "指数を3の倍数に調整",
-    "Show complex solutions for inverse trigonometric functions": "逆三角関数の複素数解を表示",
     "Range symbol": "範囲記号",
     "Or symbol": "OR記号",
     "Complex Solutions": "複素数解",
@@ -567,8 +565,8 @@ define("script/ui", ["require", "exports", "script/locale", "script/html", "scri
         SettingsPanel.exponentFormatSelect = HTML.getElementById("select", "exponent-format-select");
         SettingsPanel.exponentMultipleOfThreeCheckbox = HTML.getElementById("input", "exponent-multiple-of-three-checkbox");
         SettingsPanel.numberFormatSelect = HTML.getElementById("select", "number-format-select");
-        SettingsPanel.showComplexSolutionsCheckbox = HTML.getElementById("input", "show-complex-solutions-checkbox");
         SettingsPanel.rangeSymbolSelect = HTML.getElementById("select", "range-symbol-select");
+        SettingsPanel.orSymbolSelect = HTML.getElementById("select", "or-symbol-select");
     })(SettingsPanel || (exports.SettingsPanel = SettingsPanel = {}));
     var ControlPanel;
     (function (ControlPanel) {
@@ -638,54 +636,6 @@ define("script/ui", ["require", "exports", "script/locale", "script/html", "scri
         (0, exports.setAriaHidden)(ControlPanel.fullscreenButton, !ControlPanel.fullscreenEnabled);
     };
     exports.initialize = initialize;
-});
-define("script/settings", ["require", "exports", "script/ui"], function (require, exports, UI) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.applySettings = exports.getAllSettings = exports.getRangeSymbol = exports.getShowComplexSolutions = exports.getNumberFormat = exports.getExponentMultipleOfThree = exports.getExponentFormat = exports.getThreeDigitSeparator = exports.getTheme = exports.isIncludeCursor = void 0;
-    UI = __importStar(UI);
-    const isIncludeCursor = () => UI.SavePanel.includeCursorCheckbox.checked;
-    exports.isIncludeCursor = isIncludeCursor;
-    // export const getLanguage = (): string => UI.SettingsPanel.languageSelect.value;
-    const getTheme = () => UI.SettingsPanel.themeSelect.value;
-    exports.getTheme = getTheme;
-    const getThreeDigitSeparator = () => UI.SettingsPanel.threeDigitSeparatorSelect.value;
-    exports.getThreeDigitSeparator = getThreeDigitSeparator;
-    const getExponentFormat = () => UI.SettingsPanel.exponentFormatSelect.value;
-    exports.getExponentFormat = getExponentFormat;
-    const getExponentMultipleOfThree = () => UI.SettingsPanel.exponentMultipleOfThreeCheckbox.checked;
-    exports.getExponentMultipleOfThree = getExponentMultipleOfThree;
-    const getNumberFormat = () => UI.SettingsPanel.numberFormatSelect.value;
-    exports.getNumberFormat = getNumberFormat;
-    const getShowComplexSolutions = () => UI.SettingsPanel.showComplexSolutionsCheckbox.checked;
-    exports.getShowComplexSolutions = getShowComplexSolutions;
-    const getRangeSymbol = () => UI.SettingsPanel.rangeSymbolSelect.value;
-    exports.getRangeSymbol = getRangeSymbol;
-    const getAllSettings = () => // URL パラメーターで使うので短く！ / EN: Short for URL parameters!
-     ({
-        i: (0, exports.isIncludeCursor)(),
-        l: UI.SettingsPanel.languageSelect.value,
-        t: (0, exports.getTheme)(),
-        s: (0, exports.getThreeDigitSeparator)(),
-        e: (0, exports.getExponentFormat)(),
-        m: (0, exports.getExponentMultipleOfThree)(),
-        n: (0, exports.getNumberFormat)(),
-        c: (0, exports.getShowComplexSolutions)(),
-        r: (0, exports.getRangeSymbol)(),
-    });
-    exports.getAllSettings = getAllSettings;
-    const applySettings = (settings) => {
-        UI.SavePanel.includeCursorCheckbox.checked = settings.i;
-        UI.SettingsPanel.languageSelect.value = settings.l;
-        UI.SettingsPanel.themeSelect.value = settings.t;
-        UI.SettingsPanel.threeDigitSeparatorSelect.value = settings.s;
-        UI.SettingsPanel.exponentFormatSelect.value = settings.e;
-        UI.SettingsPanel.exponentMultipleOfThreeCheckbox.checked = settings.m;
-        UI.SettingsPanel.numberFormatSelect.value = settings.n;
-        UI.SettingsPanel.showComplexSolutionsCheckbox.checked = settings.c;
-        UI.SettingsPanel.rangeSymbolSelect.value = settings.r;
-    };
-    exports.applySettings = applySettings;
 });
 define("resource/config", [], {
     "applicationTitle": "Smart Rule",
@@ -914,6 +864,55 @@ define("resource/config", [], {
             "tickDensityThreshold_10": 35
         }
     }
+});
+define("script/settings", ["require", "exports", "script/ui"], function (require, exports, UI) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.applySettings = exports.getAllSettings = exports.getOrSymbol = exports.getRangeSymbol = exports.getNumberFormat = exports.getExponentMultipleOfThree = exports.getExponentFormat = exports.getThreeDigitSeparator = exports.getTheme = exports.isIncludeCursor = void 0;
+    UI = __importStar(UI);
+    const isIncludeCursor = () => UI.SavePanel.includeCursorCheckbox.checked;
+    exports.isIncludeCursor = isIncludeCursor;
+    // export const getLanguage = (): string => UI.SettingsPanel.languageSelect.value;
+    const getTheme = () => UI.SettingsPanel.themeSelect.value;
+    exports.getTheme = getTheme;
+    const getThreeDigitSeparator = () => UI.SettingsPanel.threeDigitSeparatorSelect.value;
+    exports.getThreeDigitSeparator = getThreeDigitSeparator;
+    const getExponentFormat = () => UI.SettingsPanel.exponentFormatSelect.value;
+    exports.getExponentFormat = getExponentFormat;
+    const getExponentMultipleOfThree = () => UI.SettingsPanel.exponentMultipleOfThreeCheckbox.checked;
+    exports.getExponentMultipleOfThree = getExponentMultipleOfThree;
+    const getNumberFormat = () => UI.SettingsPanel.numberFormatSelect.value;
+    exports.getNumberFormat = getNumberFormat;
+    const getRangeSymbol = () => UI.SettingsPanel.rangeSymbolSelect.value;
+    exports.getRangeSymbol = getRangeSymbol;
+    const getOrSymbol = () => UI.SettingsPanel.orSymbolSelect.value;
+    exports.getOrSymbol = getOrSymbol;
+    const getAllSettings = () => // URL パラメーターで使うので短く！ / EN: Short for URL parameters!
+     ({
+        i: (0, exports.isIncludeCursor)(),
+        l: UI.SettingsPanel.languageSelect.value,
+        t: (0, exports.getTheme)(),
+        s: (0, exports.getThreeDigitSeparator)(),
+        e: (0, exports.getExponentFormat)(),
+        m: (0, exports.getExponentMultipleOfThree)(),
+        n: (0, exports.getNumberFormat)(),
+        r: (0, exports.getRangeSymbol)(),
+        o: (0, exports.getOrSymbol)(),
+    });
+    exports.getAllSettings = getAllSettings;
+    const applySettings = (settings) => {
+        var _a, _b, _c, _d, _e, _f;
+        UI.SavePanel.includeCursorCheckbox.checked = settings.i;
+        UI.SettingsPanel.languageSelect.value = settings.l;
+        UI.SettingsPanel.themeSelect.value = (_a = settings.t) !== null && _a !== void 0 ? _a : "auto";
+        UI.SettingsPanel.threeDigitSeparatorSelect.value = (_b = settings.s) !== null && _b !== void 0 ? _b : "thin-space";
+        UI.SettingsPanel.exponentFormatSelect.value = (_c = settings.e) !== null && _c !== void 0 ? _c : "x10";
+        UI.SettingsPanel.exponentMultipleOfThreeCheckbox.checked = settings.m;
+        UI.SettingsPanel.numberFormatSelect.value = (_d = settings.n) !== null && _d !== void 0 ? _d : "scientific";
+        UI.SettingsPanel.rangeSymbolSelect.value = (_e = settings.r) !== null && _e !== void 0 ? _e : "ellipsis";
+        UI.SettingsPanel.orSymbolSelect.value = (_f = settings.o) !== null && _f !== void 0 ? _f : "union";
+    };
+    exports.applySettings = applySettings;
 });
 define("script/calculation", ["require", "exports", "script/settings", "resource/config"], function (require, exports, Settings, config_json_1) {
     "use strict";
@@ -6848,7 +6847,7 @@ define("resource/constant/history", [], {
 define("script/model", ["require", "exports", "script/locale", "script/calculation", "script/type", "script/url", "script/settings", "script/theme", "script/comparer", "resource/config", "resource/digit/$si", "resource/digit/en", "resource/digit/ja", "resource/angle/sin", "resource/angle/cos", "resource/angle/tan", "resource/angle/sec", "resource/angle/csc", "resource/angle/cot", "resource/constant/size", "resource/constant/area", "resource/constant/volume", "resource/constant/mass", "resource/constant/time", "resource/constant/speed", "resource/constant/energy", "resource/constant/temperature", "resource/constant/counting", "resource/constant/sound-frequency", "resource/constant/emw-wavelength", "resource/constant/emw-frequency", "resource/constant/emw-energy", "resource/constant/history"], function (require, exports, Locale, Calculation, Type, Url, Settings, Theme, Comparer, config_json_3, _si_json_1, en_json_2, ja_json_2, sin_json_1, cos_json_1, tan_json_1, sec_json_1, csc_json_1, cot_json_1, size_json_1, area_json_1, volume_json_1, mass_json_1, time_json_1, speed_json_1, energy_json_1, temperature_json_1, counting_json_1, sound_frequency_json_1, emw_wavelength_json_1, emw_frequency_json_1, emw_energy_json_1, history_json_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.hasDataArea = exports.getLaneContext = exports.getCursorValues = exports.getCursorValue = exports.getCursorPosition = exports.makeSure = exports.removeLane = exports.makeLane = exports.addConstantLane = exports.addDigitLane = exports.addLane = exports.getSlideFromLane = exports.getLane = exports.getLastSlideAndLastLane = exports.getSlideAndLane = exports.makeSureSlide = exports.makeSlide = exports.getLaneIndex = exports.getSlideIndexFromLane = exports.getSlideIndex = exports.isRootSlide = exports.getRootSlideAndRootLane = exports.getRootSlide = exports.isPrimaryLane = exports.isRootLane = exports.getRootLane = exports.makeRootLane = exports.designTicks = exports.complementMinMaxArea = exports.getBottomTick = exports.getTopTick = exports.designOscillatingTicks = exports.designPeriodicTicks = exports.getUnitList = exports.designConstantTicks = exports.makeConstantStandardTickUnit = exports.designConstantTickType = exports.designConstantTickColor = exports.designConstantAreas = exports.makeAreaSpanLabel = exports.formatUniverseEpochDurationForHuman = exports.numberToLocaleString = exports.getLocaleDigitTable = exports.designDigitTicks = exports.makeDigitLabel = exports.designPrimeDecompositionTicks = exports.factorsToString = exports.designPrimeNumbersTicks = exports.designCurvedTicks = exports.designLinearTicks = exports.designLogarithmicTicks = exports.addConstTicks = exports.designAngleTicks360 = exports.designAngleTicks90 = exports.designAngleTicks30 = exports.getMajorRateFromAngle = exports.getMajorRateCore = exports.designAngleTicks10 = exports.designAngleTicksInverted10 = exports.designAngleTicksRegular10 = exports.makeTick = exports.getDigitIndexFromWidth = exports.designCurvedTicks10 = exports.designLinearTicks10 = exports.designLogarithmicTicks10 = exports.designTickType = exports.getLongTickSpaceWidth = exports.makePositionTickWindowFromPositionAndWidth = exports.makePositionTickWindowFromWindow = exports.ValueTickWindowToPositionTickWindow = exports.PositionTickWindowToValueTickWindow = exports.getSnapReferenceLaneIndex = exports.getConvenientWidth = exports.getWidth = exports.getPositionAt = exports.getSlideOffset = exports.getAnchorSlideAndLane = exports.getRawViewPositionAt = exports.logPositionToLinearPosition = exports.linearPositionToLogPosition = exports.getLinearPositionAt = exports.getValueAt = exports.getRawValueAt = exports.angleToQuarter = exports.getPrimaryPositionAt = exports.getPrimaryValueAt = exports.getDenseLabel = exports.applySymbols = exports.applyOrSymbol = exports.applyRangeSymbol = exports.getRangeSymbol = exports.getMaxValue = exports.getMinValue = exports.getWidthValueRatioFromAngleTicks = exports.getAngleTick = exports.getAngleTable = exports.getPrimaryTick = exports.getSlidePositionAt = exports.isDiscreteLane = exports.isOscillatingLane = exports.isPeriodicLane = exports.getPrimaryPeriod = exports.getPrimaryPeriod360 = exports.getSlidePosition = exports.isInvertedSlide = exports.isInvertedLane = exports.getAllLanes = exports.getAllLaneCount = exports.RootLaneIndex = exports.RootSlideIndex = exports.ticksCache = exports.data = exports.getConstantTable = exports.constant = exports.getDigitTable = exports.digit = void 0;
+    exports.initialize = exports.hasDataArea = exports.getLaneContext = exports.getCursorValues = exports.getCursorValue = exports.getCursorPosition = exports.makeSure = exports.removeLane = exports.makeLane = exports.addConstantLane = exports.addDigitLane = exports.addLane = exports.getSlideFromLane = exports.getLane = exports.getLastSlideAndLastLane = exports.getSlideAndLane = exports.makeSureSlide = exports.makeSlide = exports.getLaneIndex = exports.getSlideIndexFromLane = exports.getSlideIndex = exports.isRootSlide = exports.getRootSlideAndRootLane = exports.getRootSlide = exports.isPrimaryLane = exports.isRootLane = exports.getRootLane = exports.makeRootLane = exports.designTicks = exports.complementMinMaxArea = exports.getBottomTick = exports.getTopTick = exports.designOscillatingTicks = exports.designPeriodicTicks = exports.getUnitList = exports.designConstantTicks = exports.makeConstantStandardTickUnit = exports.designConstantTickType = exports.designConstantTickColor = exports.designConstantAreas = exports.makeAreaSpanLabel = exports.formatUniverseEpochDurationForHuman = exports.numberToLocaleString = exports.getLocaleDigitTable = exports.designDigitTicks = exports.makeDigitLabel = exports.designPrimeDecompositionTicks = exports.factorsToString = exports.designPrimeNumbersTicks = exports.designCurvedTicks = exports.designLinearTicks = exports.designLogarithmicTicks = exports.addConstTicks = exports.designAngleTicks360 = exports.designAngleTicks90 = exports.designAngleTicks30 = exports.getMajorRateFromAngle = exports.getMajorRateCore = exports.designAngleTicks10 = exports.designAngleTicksInverted10 = exports.designAngleTicksRegular10 = exports.makeTick = exports.getDigitIndexFromWidth = exports.designCurvedTicks10 = exports.designLinearTicks10 = exports.designLogarithmicTicks10 = exports.designTickType = exports.getLongTickSpaceWidth = exports.makePositionTickWindowFromPositionAndWidth = exports.makePositionTickWindowFromWindow = exports.ValueTickWindowToPositionTickWindow = exports.PositionTickWindowToValueTickWindow = exports.getSnapReferenceLaneIndex = exports.getConvenientWidth = exports.getWidth = exports.getPositionAt = exports.getSlideOffset = exports.getAnchorSlideAndLane = exports.getRawViewPositionAt = exports.logPositionToLinearPosition = exports.linearPositionToLogPosition = exports.getLinearPositionAt = exports.getValueAt = exports.getRawValueAt = exports.angleToQuarter = exports.getPrimaryPositionAt = exports.getPrimaryValueAt = exports.getDenseLabel = exports.applySymbols = exports.applyOrSymbol = exports.getOrSymbol = exports.applyRangeSymbol = exports.getRangeSymbol = exports.getMaxValue = exports.getMinValue = exports.getWidthValueRatioFromAngleTicks = exports.getAngleTick = exports.getAngleTable = exports.getPrimaryTick = exports.getSlidePositionAt = exports.isDiscreteLane = exports.isOscillatingLane = exports.isPeriodicLane = exports.getPrimaryPeriod = exports.getPrimaryPeriod360 = exports.getSlidePosition = exports.isInvertedSlide = exports.isInvertedLane = exports.getAllLanes = exports.getAllLaneCount = exports.RootLaneIndex = exports.RootSlideIndex = exports.ticksCache = exports.data = exports.getConstantTable = exports.constant = exports.getDigitTable = exports.digit = void 0;
     Locale = __importStar(Locale);
     Calculation = __importStar(Calculation);
     Type = __importStar(Type);
@@ -7328,7 +7327,9 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
     exports.getRangeSymbol = getRangeSymbol;
     const applyRangeSymbol = (text) => text.replace(/\$RANGE\$/g, (0, exports.getRangeSymbol)());
     exports.applyRangeSymbol = applyRangeSymbol;
-    const applyOrSymbol = (text) => text.replace(/\$OR\$/g, "∪");
+    const getOrSymbol = () => config_json_3.default.symbols.orSymbols[Settings.getOrSymbol()];
+    exports.getOrSymbol = getOrSymbol;
+    const applyOrSymbol = (text) => text.replace(/\$OR\$/g, (0, exports.getOrSymbol)());
     exports.applyOrSymbol = applyOrSymbol;
     const applySymbols = (text) => (0, exports.applyRangeSymbol)((0, exports.applyOrSymbol)(text));
     exports.applySymbols = applySymbols;
@@ -11971,8 +11972,8 @@ define("script/event", ["require", "exports", "script/url", "script/type", "scri
         UI.SettingsPanel.exponentFormatSelect.addEventListener("change", () => Render.markDirty());
         UI.SettingsPanel.exponentMultipleOfThreeCheckbox.addEventListener("change", () => Render.markDirty());
         UI.SettingsPanel.numberFormatSelect.addEventListener("change", () => Render.markDirty());
-        UI.SettingsPanel.showComplexSolutionsCheckbox.addEventListener("change", () => Render.markDirty());
         UI.SettingsPanel.rangeSymbolSelect.addEventListener("change", () => Render.markDirty());
+        UI.SettingsPanel.orSymbolSelect.addEventListener("change", () => Render.markDirty());
         Command.updateViewModeRoundBar();
         Command.updateViewScaleRoundBar();
         Command.updateViewLockRoundBar();

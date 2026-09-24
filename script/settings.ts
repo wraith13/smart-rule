@@ -1,4 +1,5 @@
 import * as UI from "./ui";
+import config from "@resource/config.json";
 export const isIncludeCursor = (): boolean => UI.SavePanel.includeCursorCheckbox.checked;
 // export const getLanguage = (): string => UI.SettingsPanel.languageSelect.value;
 export const getTheme = (): string => UI.SettingsPanel.themeSelect.value;
@@ -10,10 +11,10 @@ export const getExponentMultipleOfThree = (): boolean =>
     UI.SettingsPanel.exponentMultipleOfThreeCheckbox.checked;
 export const getNumberFormat = (): "scientific" | "localized" =>
     UI.SettingsPanel.numberFormatSelect.value as ReturnType<typeof getNumberFormat>;
-export const getShowComplexSolutions = (): boolean =>
-    UI.SettingsPanel.showComplexSolutionsCheckbox.checked;
-export const getRangeSymbol = (): "en-dash" | "ellipsis" | "wave-dash" =>
-    UI.SettingsPanel.rangeSymbolSelect.value as ReturnType<typeof getRangeSymbol>;
+export const getRangeSymbol = () =>
+    UI.SettingsPanel.rangeSymbolSelect.value as keyof typeof config.symbols.rangeSymbols;
+export const getOrSymbol = () =>
+    UI.SettingsPanel.orSymbolSelect.value as keyof typeof config.symbols.orSymbols;
 export const getAllSettings = () => // URL パラメーターで使うので短く！ / EN: Short for URL parameters!
 ({
     i: isIncludeCursor(),
@@ -23,18 +24,18 @@ export const getAllSettings = () => // URL パラメーターで使うので短�
     e: getExponentFormat(),
     m: getExponentMultipleOfThree(),
     n: getNumberFormat(),
-    c: getShowComplexSolutions(),
     r: getRangeSymbol(),
+    o: getOrSymbol(),
 });
 export const applySettings = (settings: ReturnType<typeof getAllSettings>) =>
 {
     UI.SavePanel.includeCursorCheckbox.checked = settings.i;
     UI.SettingsPanel.languageSelect.value = settings.l;
-    UI.SettingsPanel.themeSelect.value = settings.t;
-    UI.SettingsPanel.threeDigitSeparatorSelect.value = settings.s;
-    UI.SettingsPanel.exponentFormatSelect.value = settings.e;
+    UI.SettingsPanel.themeSelect.value = settings.t ?? "auto";
+    UI.SettingsPanel.threeDigitSeparatorSelect.value = settings.s ?? "thin-space";
+    UI.SettingsPanel.exponentFormatSelect.value = settings.e ?? "x10";
     UI.SettingsPanel.exponentMultipleOfThreeCheckbox.checked = settings.m;
-    UI.SettingsPanel.numberFormatSelect.value = settings.n;
-    UI.SettingsPanel.showComplexSolutionsCheckbox.checked = settings.c;
-    UI.SettingsPanel.rangeSymbolSelect.value = settings.r;
+    UI.SettingsPanel.numberFormatSelect.value = settings.n ?? "scientific";
+    UI.SettingsPanel.rangeSymbolSelect.value = settings.r ?? "ellipsis";
+    UI.SettingsPanel.orSymbolSelect.value = settings.o ?? "union";
 };
