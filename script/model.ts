@@ -503,6 +503,10 @@ export const getMaxValue = (lane: Type.Lane): number =>
         throw new Error(`🦋 FIXME: getMaxValue not implemented for lane type: ${lane.type}`);
     }
 };
+export const getApproximateSymbol = () =>
+    config.symbols.approximateSymbols[Settings.getApproximateSymbol()];
+export const makeApproximateLabel = (value: string) =>
+    `${getApproximateSymbol()}${value}`;
 export const getRangeSymbol = () =>
     config.symbols.rangeSymbols[Settings.getRangeSymbol()];
 export const applyRangeSymbol = (text: string): string =>
@@ -3009,13 +3013,13 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
                 lowerBound: undefined,
                 upperBound: { value: 0, position: Calculation.MIN_VALUE, },
                 fill: "$MIN",
-                label: "≈0",
+                label: makeApproximateLabel("0"),
             }:
             {
                 upperBound: { value: 0, position: Calculation.MAX_VALUE, },
                 lowerBound: undefined,
                 fill: "$MIN",
-                label: "≈0",
+                label: makeApproximateLabel("0"),
             }
         );
         break;
@@ -3035,13 +3039,13 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
                 lowerBound: undefined,
                 upperBound: { value: 1, position: angleCos.minPosition, },
                 fill: "$SPARSE",
-                label: "≈1",
+                label: makeApproximateLabel("1"),
             }:
             {
                 upperBound: { value: 1, position: 1 / angleCos.minPosition, },
                 lowerBound: undefined,
                 fill: "$SPARSE",
-                label: "≈1",
+                label: makeApproximateLabel("1"),
             }
         );
         break;
@@ -3053,13 +3057,13 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
                 lowerBound: undefined,
                 upperBound: { value: 0, position: Calculation.MIN_VALUE, },
                 fill: "$MIN",
-                label: "≈0",
+                label: makeApproximateLabel("0"),
             }:
             {
                 upperBound: { value: 0, position: Calculation.MAX_VALUE, },
                 lowerBound: undefined,
                 fill: "$MIN",
-                label: "≈0",
+                label: makeApproximateLabel("0"),
             }
         );
         break;
@@ -3079,13 +3083,13 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
                 lowerBound: undefined,
                 upperBound: { value: getMinValue(lane), position: angleSec.minPosition, },
                 fill: "$SPARSE",
-                label: "≈1",
+                label: makeApproximateLabel("1"),
             }:
             {
                 upperBound: { value: getMinValue(lane), position: 1 / angleSec.minPosition, },
                 lowerBound: undefined,
                 fill: "$SPARSE",
-                label: "≈1",
+                label: makeApproximateLabel("1"),
             }
         );
         break;
@@ -3149,7 +3153,7 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
             lowerBound: Math.PI /2,
             upperBound: undefined,
             fill: "$SPARSE",
-            label: "≈π/2",
+            label: makeApproximateLabel("π/2"),
         });
         break;
     case "arctangent":
@@ -3164,7 +3168,7 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
             lowerBound: Math.PI /2,
             upperBound: undefined,
             fill: "$SPARSE",
-            label: "≈π/2",
+            label: makeApproximateLabel("π/2"),
         });
         break;
     case "arcsecant":
@@ -3180,7 +3184,7 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
             lowerBound: Math.PI /2,
             upperBound: undefined,
             fill: "$SPARSE",
-            label: "≈π/2",
+            label: makeApproximateLabel("π/2"),
         });
         break;
     case "arccosecant":
@@ -3212,7 +3216,7 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
             lowerBound: Math.PI /2,
             upperBound: undefined,
             fill: "$SPARSE",
-            label: "≈π/2",
+            label: makeApproximateLabel("π/2"),
         });
         break;
     default:
@@ -3225,7 +3229,7 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
                     lowerBound: ( ! isInverted) ? undefined:  Type.getExValueNumber(valueTickWindow.topValue),
                     upperBound: ( ! isInverted) ? (isExponential ? getMinValue(lane): Type.getExValueNumber(valueTickWindow.topValue)): undefined,
                     fill: ( ! isInverted) ? minColor: "$MAX",
-                    label: ! isInverted ? (isExponential ? "≈1": (hasMinus ? "≈-∞": "≈0")): "≈∞",
+                    label: makeApproximateLabel(! isInverted ? (isExponential ? "1": (hasMinus ? "-∞": "0")): "∞"),
                 });
             }
         }
@@ -3238,7 +3242,7 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
                     lowerBound: ( ! isInverted) ? Type.getExValueNumber(valueTickWindow.bottomValue): undefined,
                     upperBound: ( ! isInverted) ? undefined: (isExponential ? getMinValue(lane): Type.getExValueNumber(valueTickWindow.bottomValue)),
                     fill: ( ! isInverted) ? "$MAX": minColor,
-                    label: isInverted ? (isExponential ? "≈1": (hasMinus ? "≈-∞": "≈0")): "≈∞",
+                    label: makeApproximateLabel(isInverted ? (isExponential ? "1": (hasMinus ? "-∞": "0")): "∞"),
                 });
             }
         }

@@ -681,9 +681,11 @@ define("resource/config", [], {
             "♄"
         ],
         "approximateSymbols": {
-            "wave-nearly-equal": "≈",
-            "dot-nearly-equal": "≒",
-            "tilda": "~"
+            "tilde": "~",
+            "asymptotic": "≃",
+            "approximately-equal": "≈",
+            "almost-equal": "≅",
+            "nearly-equal": "≒"
         },
         "rangeSymbols": {
             "en-dash": "–",
@@ -6859,7 +6861,7 @@ define("resource/constant/history", [], {
 define("script/model", ["require", "exports", "script/locale", "script/calculation", "script/type", "script/url", "script/settings", "script/theme", "script/comparer", "resource/config", "resource/digit/$si", "resource/digit/en", "resource/digit/ja", "resource/angle/sin", "resource/angle/cos", "resource/angle/tan", "resource/angle/sec", "resource/angle/csc", "resource/angle/cot", "resource/constant/size", "resource/constant/area", "resource/constant/volume", "resource/constant/mass", "resource/constant/time", "resource/constant/speed", "resource/constant/energy", "resource/constant/temperature", "resource/constant/counting", "resource/constant/sound-frequency", "resource/constant/emw-wavelength", "resource/constant/emw-frequency", "resource/constant/emw-energy", "resource/constant/history"], function (require, exports, Locale, Calculation, Type, Url, Settings, Theme, Comparer, config_json_3, _si_json_1, en_json_2, ja_json_2, sin_json_1, cos_json_1, tan_json_1, sec_json_1, csc_json_1, cot_json_1, size_json_1, area_json_1, volume_json_1, mass_json_1, time_json_1, speed_json_1, energy_json_1, temperature_json_1, counting_json_1, sound_frequency_json_1, emw_wavelength_json_1, emw_frequency_json_1, emw_energy_json_1, history_json_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.hasDataArea = exports.getLaneContext = exports.getCursorValues = exports.getCursorValue = exports.getCursorPosition = exports.makeSure = exports.removeLane = exports.makeLane = exports.addConstantLane = exports.addDigitLane = exports.addLane = exports.getSlideFromLane = exports.getLane = exports.getLastSlideAndLastLane = exports.getSlideAndLane = exports.makeSureSlide = exports.makeSlide = exports.getLaneIndex = exports.getSlideIndexFromLane = exports.getSlideIndex = exports.isRootSlide = exports.getRootSlideAndRootLane = exports.getRootSlide = exports.isPrimaryLane = exports.isRootLane = exports.getRootLane = exports.makeRootLane = exports.designTicks = exports.complementMinMaxArea = exports.getBottomTick = exports.getTopTick = exports.designOscillatingTicks = exports.designPeriodicTicks = exports.getUnitList = exports.designConstantTicks = exports.makeConstantStandardTickUnit = exports.designConstantTickType = exports.designConstantTickColor = exports.designConstantAreas = exports.makeAreaSpanLabel = exports.formatUniverseEpochDurationForHuman = exports.numberToLocaleString = exports.getLocaleDigitTable = exports.designDigitTicks = exports.makeDigitLabel = exports.designPrimeDecompositionTicks = exports.factorsToString = exports.designPrimeNumbersTicks = exports.designCurvedTicks = exports.designLinearTicks = exports.designLogarithmicTicks = exports.addConstTicks = exports.designAngleTicks360 = exports.designAngleTicks90 = exports.designAngleTicks30 = exports.getMajorRateFromAngle = exports.getMajorRateCore = exports.designAngleTicks10 = exports.designAngleTicksInverted10 = exports.designAngleTicksRegular10 = exports.makeTick = exports.getDigitIndexFromWidth = exports.designCurvedTicks10 = exports.designLinearTicks10 = exports.designLogarithmicTicks10 = exports.designTickType = exports.getLongTickSpaceWidth = exports.makePositionTickWindowFromPositionAndWidth = exports.makePositionTickWindowFromWindow = exports.ValueTickWindowToPositionTickWindow = exports.PositionTickWindowToValueTickWindow = exports.getSnapReferenceLaneIndex = exports.getConvenientWidth = exports.getWidth = exports.getPositionAt = exports.getSlideOffset = exports.getAnchorSlideAndLane = exports.getRawViewPositionAt = exports.logPositionToLinearPosition = exports.linearPositionToLogPosition = exports.getLinearPositionAt = exports.getValueAt = exports.getRawValueAt = exports.angleToQuarter = exports.getPrimaryPositionAt = exports.getPrimaryValueAt = exports.getDenseLabel = exports.applySymbols = exports.applyOrSymbol = exports.getOrSymbol = exports.applyRangeSymbol = exports.getRangeSymbol = exports.getMaxValue = exports.getMinValue = exports.getWidthValueRatioFromAngleTicks = exports.getAngleTick = exports.getAngleTable = exports.getPrimaryTick = exports.getSlidePositionAt = exports.isDiscreteLane = exports.isOscillatingLane = exports.isPeriodicLane = exports.getPrimaryPeriod = exports.getPrimaryPeriod360 = exports.getSlidePosition = exports.isInvertedSlide = exports.isInvertedLane = exports.getAllLanes = exports.getAllLaneCount = exports.RootLaneIndex = exports.RootSlideIndex = exports.ticksCache = exports.data = exports.getConstantTable = exports.constant = exports.getDigitTable = exports.digit = void 0;
+    exports.initialize = exports.hasDataArea = exports.getLaneContext = exports.getCursorValues = exports.getCursorValue = exports.getCursorPosition = exports.makeSure = exports.removeLane = exports.makeLane = exports.addConstantLane = exports.addDigitLane = exports.addLane = exports.getSlideFromLane = exports.getLane = exports.getLastSlideAndLastLane = exports.getSlideAndLane = exports.makeSureSlide = exports.makeSlide = exports.getLaneIndex = exports.getSlideIndexFromLane = exports.getSlideIndex = exports.isRootSlide = exports.getRootSlideAndRootLane = exports.getRootSlide = exports.isPrimaryLane = exports.isRootLane = exports.getRootLane = exports.makeRootLane = exports.designTicks = exports.complementMinMaxArea = exports.getBottomTick = exports.getTopTick = exports.designOscillatingTicks = exports.designPeriodicTicks = exports.getUnitList = exports.designConstantTicks = exports.makeConstantStandardTickUnit = exports.designConstantTickType = exports.designConstantTickColor = exports.designConstantAreas = exports.makeAreaSpanLabel = exports.formatUniverseEpochDurationForHuman = exports.numberToLocaleString = exports.getLocaleDigitTable = exports.designDigitTicks = exports.makeDigitLabel = exports.designPrimeDecompositionTicks = exports.factorsToString = exports.designPrimeNumbersTicks = exports.designCurvedTicks = exports.designLinearTicks = exports.designLogarithmicTicks = exports.addConstTicks = exports.designAngleTicks360 = exports.designAngleTicks90 = exports.designAngleTicks30 = exports.getMajorRateFromAngle = exports.getMajorRateCore = exports.designAngleTicks10 = exports.designAngleTicksInverted10 = exports.designAngleTicksRegular10 = exports.makeTick = exports.getDigitIndexFromWidth = exports.designCurvedTicks10 = exports.designLinearTicks10 = exports.designLogarithmicTicks10 = exports.designTickType = exports.getLongTickSpaceWidth = exports.makePositionTickWindowFromPositionAndWidth = exports.makePositionTickWindowFromWindow = exports.ValueTickWindowToPositionTickWindow = exports.PositionTickWindowToValueTickWindow = exports.getSnapReferenceLaneIndex = exports.getConvenientWidth = exports.getWidth = exports.getPositionAt = exports.getSlideOffset = exports.getAnchorSlideAndLane = exports.getRawViewPositionAt = exports.logPositionToLinearPosition = exports.linearPositionToLogPosition = exports.getLinearPositionAt = exports.getValueAt = exports.getRawValueAt = exports.angleToQuarter = exports.getPrimaryPositionAt = exports.getPrimaryValueAt = exports.getDenseLabel = exports.applySymbols = exports.applyOrSymbol = exports.getOrSymbol = exports.applyRangeSymbol = exports.getRangeSymbol = exports.makeApproximateLabel = exports.getApproximateSymbol = exports.getMaxValue = exports.getMinValue = exports.getWidthValueRatioFromAngleTicks = exports.getAngleTick = exports.getAngleTable = exports.getPrimaryTick = exports.getSlidePositionAt = exports.isDiscreteLane = exports.isOscillatingLane = exports.isPeriodicLane = exports.getPrimaryPeriod = exports.getPrimaryPeriod360 = exports.getSlidePosition = exports.isInvertedSlide = exports.isInvertedLane = exports.getAllLanes = exports.getAllLaneCount = exports.RootLaneIndex = exports.RootSlideIndex = exports.ticksCache = exports.data = exports.getConstantTable = exports.constant = exports.getDigitTable = exports.digit = void 0;
     Locale = __importStar(Locale);
     Calculation = __importStar(Calculation);
     Type = __importStar(Type);
@@ -7335,6 +7337,10 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
         }
     };
     exports.getMaxValue = getMaxValue;
+    const getApproximateSymbol = () => config_json_3.default.symbols.approximateSymbols[Settings.getApproximateSymbol()];
+    exports.getApproximateSymbol = getApproximateSymbol;
+    const makeApproximateLabel = (value) => `${(0, exports.getApproximateSymbol)()}${value}`;
+    exports.makeApproximateLabel = makeApproximateLabel;
     const getRangeSymbol = () => config_json_3.default.symbols.rangeSymbols[Settings.getRangeSymbol()];
     exports.getRangeSymbol = getRangeSymbol;
     const applyRangeSymbol = (text) => text.replace(/\$RANGE\$/g, (0, exports.getRangeSymbol)());
@@ -9423,13 +9429,13 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                         lowerBound: undefined,
                         upperBound: { value: 0, position: Calculation.MIN_VALUE, },
                         fill: "$MIN",
-                        label: "≈0",
+                        label: (0, exports.makeApproximateLabel)("0"),
                     } :
                     {
                         upperBound: { value: 0, position: Calculation.MAX_VALUE, },
                         lowerBound: undefined,
                         fill: "$MIN",
-                        label: "≈0",
+                        label: (0, exports.makeApproximateLabel)("0"),
                     });
                 break;
             case "cosine":
@@ -9444,13 +9450,13 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                         lowerBound: undefined,
                         upperBound: { value: 1, position: cos_json_1.default.minPosition, },
                         fill: "$SPARSE",
-                        label: "≈1",
+                        label: (0, exports.makeApproximateLabel)("1"),
                     } :
                     {
                         upperBound: { value: 1, position: 1 / cos_json_1.default.minPosition, },
                         lowerBound: undefined,
                         fill: "$SPARSE",
-                        label: "≈1",
+                        label: (0, exports.makeApproximateLabel)("1"),
                     });
                 break;
             case "tangent":
@@ -9459,13 +9465,13 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                         lowerBound: undefined,
                         upperBound: { value: 0, position: Calculation.MIN_VALUE, },
                         fill: "$MIN",
-                        label: "≈0",
+                        label: (0, exports.makeApproximateLabel)("0"),
                     } :
                     {
                         upperBound: { value: 0, position: Calculation.MAX_VALUE, },
                         lowerBound: undefined,
                         fill: "$MIN",
-                        label: "≈0",
+                        label: (0, exports.makeApproximateLabel)("0"),
                     });
                 break;
             case "secant":
@@ -9480,13 +9486,13 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                         lowerBound: undefined,
                         upperBound: { value: (0, exports.getMinValue)(lane), position: sec_json_1.default.minPosition, },
                         fill: "$SPARSE",
-                        label: "≈1",
+                        label: (0, exports.makeApproximateLabel)("1"),
                     } :
                     {
                         upperBound: { value: (0, exports.getMinValue)(lane), position: 1 / sec_json_1.default.minPosition, },
                         lowerBound: undefined,
                         fill: "$SPARSE",
-                        label: "≈1",
+                        label: (0, exports.makeApproximateLabel)("1"),
                     });
                 break;
             case "cosecant":
@@ -9539,7 +9545,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                     lowerBound: Math.PI / 2,
                     upperBound: undefined,
                     fill: "$SPARSE",
-                    label: "≈π/2",
+                    label: (0, exports.makeApproximateLabel)("π/2"),
                 });
                 break;
             case "arctangent":
@@ -9552,7 +9558,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                     lowerBound: Math.PI / 2,
                     upperBound: undefined,
                     fill: "$SPARSE",
-                    label: "≈π/2",
+                    label: (0, exports.makeApproximateLabel)("π/2"),
                 });
                 break;
             case "arcsecant":
@@ -9567,7 +9573,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                     lowerBound: Math.PI / 2,
                     upperBound: undefined,
                     fill: "$SPARSE",
-                    label: "≈π/2",
+                    label: (0, exports.makeApproximateLabel)("π/2"),
                 });
                 break;
             case "arccosecant":
@@ -9595,7 +9601,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                     lowerBound: Math.PI / 2,
                     upperBound: undefined,
                     fill: "$SPARSE",
-                    label: "≈π/2",
+                    label: (0, exports.makeApproximateLabel)("π/2"),
                 });
                 break;
             default:
@@ -9605,7 +9611,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                             lowerBound: (!isInverted) ? undefined : Type.getExValueNumber(valueTickWindow.topValue),
                             upperBound: (!isInverted) ? (isExponential ? (0, exports.getMinValue)(lane) : Type.getExValueNumber(valueTickWindow.topValue)) : undefined,
                             fill: (!isInverted) ? minColor : "$MAX",
-                            label: !isInverted ? (isExponential ? "≈1" : (hasMinus ? "≈-∞" : "≈0")) : "≈∞",
+                            label: (0, exports.makeApproximateLabel)(!isInverted ? (isExponential ? "1" : (hasMinus ? "-∞" : "0")) : "∞"),
                         });
                     }
                 }
@@ -9615,7 +9621,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                             lowerBound: (!isInverted) ? Type.getExValueNumber(valueTickWindow.bottomValue) : undefined,
                             upperBound: (!isInverted) ? undefined : (isExponential ? (0, exports.getMinValue)(lane) : Type.getExValueNumber(valueTickWindow.bottomValue)),
                             fill: (!isInverted) ? "$MAX" : minColor,
-                            label: isInverted ? (isExponential ? "≈1" : (hasMinus ? "≈-∞" : "≈0")) : "≈∞",
+                            label: (0, exports.makeApproximateLabel)(isInverted ? (isExponential ? "1" : (hasMinus ? "-∞" : "0")) : "∞"),
                         });
                     }
                 }
@@ -11984,6 +11990,7 @@ define("script/event", ["require", "exports", "script/url", "script/type", "scri
         UI.SettingsPanel.exponentFormatSelect.addEventListener("change", () => Render.markDirty());
         UI.SettingsPanel.exponentMultipleOfThreeCheckbox.addEventListener("change", () => Render.markDirty());
         UI.SettingsPanel.numberFormatSelect.addEventListener("change", () => Render.markDirty());
+        UI.SettingsPanel.approximateSymbolSelect.addEventListener("change", () => Render.markDirty());
         UI.SettingsPanel.rangeSymbolSelect.addEventListener("change", () => Render.markDirty());
         UI.SettingsPanel.orSymbolSelect.addEventListener("change", () => Render.markDirty());
         Command.updateViewModeRoundBar();

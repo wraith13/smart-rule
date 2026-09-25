@@ -161,6 +161,7 @@ __STYLE__ DUMMY { color: initial; }
                     <option value="asymptotic">≃</option>
                     <option value="approximately-equal">≈</option>
                     <option value="almost-equal">≅</option>
+                    <option value="nearly-equal">≒</option>
                 </select>
             </label>
             <label>

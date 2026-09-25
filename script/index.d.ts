@@ -311,7 +311,7 @@ declare module "script/settings" {
         e: "e" | "x10";
         m: boolean;
         n: "scientific" | "localized";
-        a: "wave-nearly-equal" | "dot-nearly-equal" | "tilda";
+        a: "tilde" | "asymptotic" | "approximately-equal" | "almost-equal" | "nearly-equal";
         r: "en-dash" | "ellipsis" | "wave-dash" | "word";
         o: "word" | "union" | "ascii";
     };
@@ -1586,6 +1586,8 @@ declare module "script/model" {
     }) => number;
     export const getMinValue: (lane: Type.Lane) => number;
     export const getMaxValue: (lane: Type.Lane) => number;
+    export const getApproximateSymbol: () => string;
+    export const makeApproximateLabel: (value: string) => string;
     export const getRangeSymbol: () => string;
     export const applyRangeSymbol: (text: string) => string;
     export const getOrSymbol: () => string;
@@ -1879,9 +1881,11 @@ declare module "script/json-eval-updater" {
                 exponent: string;
                 miniSymbols: string[];
                 approximateSymbols: {
-                    "wave-nearly-equal": string;
-                    "dot-nearly-equal": string;
-                    tilda: string;
+                    tilde: string;
+                    asymptotic: string;
+                    "approximately-equal": string;
+                    "almost-equal": string;
+                    "nearly-equal": string;
                 };
                 rangeSymbols: {
                     "en-dash": string;

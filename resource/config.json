@@ -39,9 +39,11 @@
             "♄"
         ],
         "approximateSymbols": {
-            "wave-nearly-equal": "≈",
-            "dot-nearly-equal": "≒",
-            "tilda": "~"
+            "tilde": "~",
+            "asymptotic": "≃",
+            "approximately-equal": "≈",
+            "almost-equal": "≅",
+            "nearly-equal": "≒"
         },
         "rangeSymbols": {
             "en-dash": "–",
