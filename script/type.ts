@@ -47,7 +47,8 @@ export interface LaneUnitPopup extends ViewPopup
     child: null;
 }
 export const getViewScale = (view: View): number => Math.pow(10, view.viewScaleExponent);
-export type MultiLanguageText = string | ({ [key in string]?: string; } & { en: string; });
+export type MultiLanguageTextSet = { [key in string]?: string; } & { en: string; };
+export type MultiLanguageText = string | MultiLanguageTextSet;
 export type LaneType =
     "primary" | "invert" |
     "power" | "root" |

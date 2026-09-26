@@ -507,6 +507,8 @@ export const getApproximateSymbol = () =>
     config.symbols.approximateSymbols[Settings.getApproximateSymbol()];
 export const makeApproximateLabel = (value: string) =>
     `${getApproximateSymbol()} ${value}`;
+export const applyApproximateSymbol = (text: string): string =>
+    text.replace(/\$APPROXIMATE\$/g, getApproximateSymbol());
 export const getRangeSymbol = () =>
     config.symbols.rangeSymbols[Settings.getRangeSymbol()];
 export const applyRangeSymbol = (text: string): string =>
@@ -515,8 +517,29 @@ export const getOrSymbol = () =>
     config.symbols.orSymbols[Settings.getOrSymbol()];
 export const applyOrSymbol = (text: string): string =>
     text.replace(/\$OR\$/g, getOrSymbol());
-export const applySymbols = (text: string): string =>
-    applyRangeSymbol(applyOrSymbol(text));
+export const applySymbols = <Text extends (Type.MultiLanguageText | undefined)>(text: Text): Text =>
+{
+    if (undefined !== text && null !== text)
+    {
+        if ("string" === typeof text)
+        {
+            return applyApproximateSymbol(applyRangeSymbol(applyOrSymbol(text))) as Text;
+        }
+        else
+        {
+            const result = { } as Type.MultiLanguageTextSet;
+            for (const key in text)
+            {
+                const value = text[key];
+                result[key] = "string" === typeof value ?
+                    applyApproximateSymbol(applyRangeSymbol(applyOrSymbol(value))):
+                    value as Type.MultiLanguageTextSet[typeof key];
+            }
+            return result as Text;
+        }
+    }
+    return text;
+}
 export const getDenseLabel = (lane: Type.Lane): Type.MultiLanguageText | undefined =>
 {
     switch(lane.type)
@@ -2669,8 +2692,8 @@ export const designConstantAreas = (slide: Type.SlideUnit, view: Type.View, lane
             upperBound: area.upperBound ?? undefined,
             fill: area.fill,
             overlay: area.overlay,
-            label: (threshold <= width *1.5 || isGreatPressed) ? area.label: undefined,
-            subLabel: (threshold <= width * (undefined === details ? 0.25 : 0.075) || isGreatPressed) ? (area.subLabel ?? makeAreaSpanLabel(constantTable, area)): undefined,
+            label: (threshold <= width *1.5 || isGreatPressed) ? applySymbols(area.label): undefined,
+            subLabel: (threshold <= width * (undefined === details ? 0.25 : 0.075) || isGreatPressed) ? (applySymbols(area.subLabel) ?? makeAreaSpanLabel(constantTable, area)): undefined,
             color: Theme.resolve(area.color),
             details,
         });

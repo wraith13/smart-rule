@@ -440,11 +440,12 @@ declare module "script/type" {
         child: null;
     }
     export const getViewScale: (view: View) => number;
-    export type MultiLanguageText = string | ({
+    export type MultiLanguageTextSet = {
         [key in string]?: string;
     } & {
         en: string;
-    });
+    };
+    export type MultiLanguageText = string | MultiLanguageTextSet;
     export type LaneType = "primary" | "invert" | "power" | "root" | "exponential" | "logarithmic" | "sine" | "cosine" | "tangent" | "secant" | "cosecant" | "cotangent" | "arcsine" | "arccosine" | "arctangent" | "arcsecant" | "arccosecant" | "arccotangent" | "digit" | "constant" | "prime" | "prime-decomposition";
     export interface LaneBase {
         name?: MultiLanguageText;
@@ -1588,11 +1589,12 @@ declare module "script/model" {
     export const getMaxValue: (lane: Type.Lane) => number;
     export const getApproximateSymbol: () => string;
     export const makeApproximateLabel: (value: string) => string;
+    export const applyApproximateSymbol: (text: string) => string;
     export const getRangeSymbol: () => string;
     export const applyRangeSymbol: (text: string) => string;
     export const getOrSymbol: () => string;
     export const applyOrSymbol: (text: string) => string;
-    export const applySymbols: (text: string) => string;
+    export const applySymbols: <Text extends (Type.MultiLanguageText | undefined)>(text: Text) => Text;
     export const getDenseLabel: (lane: Type.Lane) => Type.MultiLanguageText | undefined;
     export const getPrimaryValueAt: (lane: Type.Lane, position: number) => number;
     export const getPrimaryPositionAt: (lane: Type.Lane, value: Type.ValueType, quarter?: number) => number;

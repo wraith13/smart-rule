@@ -165,7 +165,7 @@
             "lowerBound": 1.5e56,
             "upperBound": null,
             "fill": "$MAX",
-            "label": "≈∞"
+            "label": "$APPROXIMATE$ ∞"
         }
     ]
 }

@@ -3707,13 +3707,13 @@ define("resource/constant/size", [], {
             "lowerBound": null,
             "upperBound": 1.616255e-35,
             "fill": "$MIN",
-            "label": "≈0"
+            "label": "$APPROXIMATE$ 0"
         },
         {
             "lowerBound": 8.8e26,
             "upperBound": null,
             "fill": "$MAX",
-            "label": "≈∞"
+            "label": "$APPROXIMATE$ ∞"
         }
     ]
 });
@@ -3801,7 +3801,7 @@ define("resource/constant/area", [], {
             "lowerBound": null,
             "upperBound": 2.6121e-70,
             "fill": "$MIN",
-            "label": "≈0"
+            "label": "$APPROXIMATE$ 0"
         }
     ]
 });
@@ -3898,13 +3898,13 @@ define("resource/constant/volume", [], {
             "lowerBound": null,
             "upperBound": 4.222e-105,
             "fill": "$MIN",
-            "label": "≈0"
+            "label": "$APPROXIMATE$ 0"
         },
         {
             "lowerBound": 3.566e80,
             "upperBound": null,
             "fill": "$MAX",
-            "label": "≈∞"
+            "label": "$APPROXIMATE$ ∞"
         }
     ]
 });
@@ -4075,7 +4075,7 @@ define("resource/constant/mass", [], {
             "lowerBound": 1.5e56,
             "upperBound": null,
             "fill": "$MAX",
-            "label": "≈∞"
+            "label": "$APPROXIMATE$ ∞"
         }
     ]
 });
@@ -4294,7 +4294,7 @@ define("resource/constant/time", [], {
             "lowerBound": null,
             "upperBound": 5.391246366844893e-44,
             "fill": "$MIN",
-            "label": "≈0"
+            "label": "$APPROXIMATE$ 0"
         }
     ]
 });
@@ -6861,7 +6861,7 @@ define("resource/constant/history", [], {
 define("script/model", ["require", "exports", "script/locale", "script/calculation", "script/type", "script/url", "script/settings", "script/theme", "script/comparer", "resource/config", "resource/digit/$si", "resource/digit/en", "resource/digit/ja", "resource/angle/sin", "resource/angle/cos", "resource/angle/tan", "resource/angle/sec", "resource/angle/csc", "resource/angle/cot", "resource/constant/size", "resource/constant/area", "resource/constant/volume", "resource/constant/mass", "resource/constant/time", "resource/constant/speed", "resource/constant/energy", "resource/constant/temperature", "resource/constant/counting", "resource/constant/sound-frequency", "resource/constant/emw-wavelength", "resource/constant/emw-frequency", "resource/constant/emw-energy", "resource/constant/history"], function (require, exports, Locale, Calculation, Type, Url, Settings, Theme, Comparer, config_json_3, _si_json_1, en_json_2, ja_json_2, sin_json_1, cos_json_1, tan_json_1, sec_json_1, csc_json_1, cot_json_1, size_json_1, area_json_1, volume_json_1, mass_json_1, time_json_1, speed_json_1, energy_json_1, temperature_json_1, counting_json_1, sound_frequency_json_1, emw_wavelength_json_1, emw_frequency_json_1, emw_energy_json_1, history_json_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.hasDataArea = exports.getLaneContext = exports.getCursorValues = exports.getCursorValue = exports.getCursorPosition = exports.makeSure = exports.removeLane = exports.makeLane = exports.addConstantLane = exports.addDigitLane = exports.addLane = exports.getSlideFromLane = exports.getLane = exports.getLastSlideAndLastLane = exports.getSlideAndLane = exports.makeSureSlide = exports.makeSlide = exports.getLaneIndex = exports.getSlideIndexFromLane = exports.getSlideIndex = exports.isRootSlide = exports.getRootSlideAndRootLane = exports.getRootSlide = exports.isPrimaryLane = exports.isRootLane = exports.getRootLane = exports.makeRootLane = exports.designTicks = exports.complementMinMaxArea = exports.getBottomTick = exports.getTopTick = exports.designOscillatingTicks = exports.designPeriodicTicks = exports.getUnitList = exports.designConstantTicks = exports.makeConstantStandardTickUnit = exports.designConstantTickType = exports.designConstantTickColor = exports.designConstantAreas = exports.makeAreaSpanLabel = exports.formatUniverseEpochDurationForHuman = exports.numberToLocaleString = exports.getLocaleDigitTable = exports.designDigitTicks = exports.makeDigitLabel = exports.designPrimeDecompositionTicks = exports.factorsToString = exports.designPrimeNumbersTicks = exports.designCurvedTicks = exports.designLinearTicks = exports.designLogarithmicTicks = exports.addConstTicks = exports.designAngleTicks360 = exports.designAngleTicks90 = exports.designAngleTicks30 = exports.getMajorRateFromAngle = exports.getMajorRateCore = exports.designAngleTicks10 = exports.designAngleTicksInverted10 = exports.designAngleTicksRegular10 = exports.makeTick = exports.getDigitIndexFromWidth = exports.designCurvedTicks10 = exports.designLinearTicks10 = exports.designLogarithmicTicks10 = exports.designTickType = exports.getLongTickSpaceWidth = exports.makePositionTickWindowFromPositionAndWidth = exports.makePositionTickWindowFromWindow = exports.ValueTickWindowToPositionTickWindow = exports.PositionTickWindowToValueTickWindow = exports.getSnapReferenceLaneIndex = exports.getConvenientWidth = exports.getWidth = exports.getPositionAt = exports.getSlideOffset = exports.getAnchorSlideAndLane = exports.getRawViewPositionAt = exports.logPositionToLinearPosition = exports.linearPositionToLogPosition = exports.getLinearPositionAt = exports.getValueAt = exports.getRawValueAt = exports.angleToQuarter = exports.getPrimaryPositionAt = exports.getPrimaryValueAt = exports.getDenseLabel = exports.applySymbols = exports.applyOrSymbol = exports.getOrSymbol = exports.applyRangeSymbol = exports.getRangeSymbol = exports.makeApproximateLabel = exports.getApproximateSymbol = exports.getMaxValue = exports.getMinValue = exports.getWidthValueRatioFromAngleTicks = exports.getAngleTick = exports.getAngleTable = exports.getPrimaryTick = exports.getSlidePositionAt = exports.isDiscreteLane = exports.isOscillatingLane = exports.isPeriodicLane = exports.getPrimaryPeriod = exports.getPrimaryPeriod360 = exports.getSlidePosition = exports.isInvertedSlide = exports.isInvertedLane = exports.getAllLanes = exports.getAllLaneCount = exports.RootLaneIndex = exports.RootSlideIndex = exports.ticksCache = exports.data = exports.getConstantTable = exports.constant = exports.getDigitTable = exports.digit = void 0;
+    exports.initialize = exports.hasDataArea = exports.getLaneContext = exports.getCursorValues = exports.getCursorValue = exports.getCursorPosition = exports.makeSure = exports.removeLane = exports.makeLane = exports.addConstantLane = exports.addDigitLane = exports.addLane = exports.getSlideFromLane = exports.getLane = exports.getLastSlideAndLastLane = exports.getSlideAndLane = exports.makeSureSlide = exports.makeSlide = exports.getLaneIndex = exports.getSlideIndexFromLane = exports.getSlideIndex = exports.isRootSlide = exports.getRootSlideAndRootLane = exports.getRootSlide = exports.isPrimaryLane = exports.isRootLane = exports.getRootLane = exports.makeRootLane = exports.designTicks = exports.complementMinMaxArea = exports.getBottomTick = exports.getTopTick = exports.designOscillatingTicks = exports.designPeriodicTicks = exports.getUnitList = exports.designConstantTicks = exports.makeConstantStandardTickUnit = exports.designConstantTickType = exports.designConstantTickColor = exports.designConstantAreas = exports.makeAreaSpanLabel = exports.formatUniverseEpochDurationForHuman = exports.numberToLocaleString = exports.getLocaleDigitTable = exports.designDigitTicks = exports.makeDigitLabel = exports.designPrimeDecompositionTicks = exports.factorsToString = exports.designPrimeNumbersTicks = exports.designCurvedTicks = exports.designLinearTicks = exports.designLogarithmicTicks = exports.addConstTicks = exports.designAngleTicks360 = exports.designAngleTicks90 = exports.designAngleTicks30 = exports.getMajorRateFromAngle = exports.getMajorRateCore = exports.designAngleTicks10 = exports.designAngleTicksInverted10 = exports.designAngleTicksRegular10 = exports.makeTick = exports.getDigitIndexFromWidth = exports.designCurvedTicks10 = exports.designLinearTicks10 = exports.designLogarithmicTicks10 = exports.designTickType = exports.getLongTickSpaceWidth = exports.makePositionTickWindowFromPositionAndWidth = exports.makePositionTickWindowFromWindow = exports.ValueTickWindowToPositionTickWindow = exports.PositionTickWindowToValueTickWindow = exports.getSnapReferenceLaneIndex = exports.getConvenientWidth = exports.getWidth = exports.getPositionAt = exports.getSlideOffset = exports.getAnchorSlideAndLane = exports.getRawViewPositionAt = exports.logPositionToLinearPosition = exports.linearPositionToLogPosition = exports.getLinearPositionAt = exports.getValueAt = exports.getRawValueAt = exports.angleToQuarter = exports.getPrimaryPositionAt = exports.getPrimaryValueAt = exports.getDenseLabel = exports.applySymbols = exports.applyOrSymbol = exports.getOrSymbol = exports.applyRangeSymbol = exports.getRangeSymbol = exports.applyApproximateSymbol = exports.makeApproximateLabel = exports.getApproximateSymbol = exports.getMaxValue = exports.getMinValue = exports.getWidthValueRatioFromAngleTicks = exports.getAngleTick = exports.getAngleTable = exports.getPrimaryTick = exports.getSlidePositionAt = exports.isDiscreteLane = exports.isOscillatingLane = exports.isPeriodicLane = exports.getPrimaryPeriod = exports.getPrimaryPeriod360 = exports.getSlidePosition = exports.isInvertedSlide = exports.isInvertedLane = exports.getAllLanes = exports.getAllLaneCount = exports.RootLaneIndex = exports.RootSlideIndex = exports.ticksCache = exports.data = exports.getConstantTable = exports.constant = exports.getDigitTable = exports.digit = void 0;
     Locale = __importStar(Locale);
     Calculation = __importStar(Calculation);
     Type = __importStar(Type);
@@ -7341,6 +7341,8 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
     exports.getApproximateSymbol = getApproximateSymbol;
     const makeApproximateLabel = (value) => `${(0, exports.getApproximateSymbol)()} ${value}`;
     exports.makeApproximateLabel = makeApproximateLabel;
+    const applyApproximateSymbol = (text) => text.replace(/\$APPROXIMATE\$/g, (0, exports.getApproximateSymbol)());
+    exports.applyApproximateSymbol = applyApproximateSymbol;
     const getRangeSymbol = () => config_json_3.default.symbols.rangeSymbols[Settings.getRangeSymbol()];
     exports.getRangeSymbol = getRangeSymbol;
     const applyRangeSymbol = (text) => text.replace(/\$RANGE\$/g, (0, exports.getRangeSymbol)());
@@ -7349,7 +7351,24 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
     exports.getOrSymbol = getOrSymbol;
     const applyOrSymbol = (text) => text.replace(/\$OR\$/g, (0, exports.getOrSymbol)());
     exports.applyOrSymbol = applyOrSymbol;
-    const applySymbols = (text) => (0, exports.applyRangeSymbol)((0, exports.applyOrSymbol)(text));
+    const applySymbols = (text) => {
+        if (undefined !== text && null !== text) {
+            if ("string" === typeof text) {
+                return (0, exports.applyApproximateSymbol)((0, exports.applyRangeSymbol)((0, exports.applyOrSymbol)(text)));
+            }
+            else {
+                const result = {};
+                for (const key in text) {
+                    const value = text[key];
+                    result[key] = "string" === typeof value ?
+                        (0, exports.applyApproximateSymbol)((0, exports.applyRangeSymbol)((0, exports.applyOrSymbol)(value))) :
+                        value;
+                }
+                return result;
+            }
+        }
+        return text;
+    };
     exports.applySymbols = applySymbols;
     const getDenseLabel = (lane) => {
         switch (lane.type) {
@@ -9132,8 +9151,8 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                 upperBound: (_f = area.upperBound) !== null && _f !== void 0 ? _f : undefined,
                 fill: area.fill,
                 overlay: area.overlay,
-                label: (threshold <= width * 1.5 || isGreatPressed) ? area.label : undefined,
-                subLabel: (threshold <= width * (undefined === details ? 0.25 : 0.075) || isGreatPressed) ? ((_g = area.subLabel) !== null && _g !== void 0 ? _g : (0, exports.makeAreaSpanLabel)(constantTable, area)) : undefined,
+                label: (threshold <= width * 1.5 || isGreatPressed) ? (0, exports.applySymbols)(area.label) : undefined,
+                subLabel: (threshold <= width * (undefined === details ? 0.25 : 0.075) || isGreatPressed) ? ((_g = (0, exports.applySymbols)(area.subLabel)) !== null && _g !== void 0 ? _g : (0, exports.makeAreaSpanLabel)(constantTable, area)) : undefined,
                 color: Theme.resolve(area.color),
                 details,
             });

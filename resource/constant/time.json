@@ -213,7 +213,7 @@
             "lowerBound": null,
             "upperBound": 5.391246366844893e-44,
             "fill": "$MIN",
-            "label": "≈0"
+            "label": "$APPROXIMATE$ 0"
         }
     ]
 }
