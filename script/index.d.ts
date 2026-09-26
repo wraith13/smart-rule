@@ -23,7 +23,7 @@ declare module "script/locale" {
             "Approximate symbol": string;
             "Range symbol": string;
             "Or symbol": string;
-            "Complex Solutions": string;
+            "Complex Number": string;
             Unit: string;
             Help: string;
             "NNN BCE": string;
@@ -61,7 +61,7 @@ declare module "script/locale" {
             "Approximate symbol": string;
             "Range symbol": string;
             "Or symbol": string;
-            "Complex Solutions": string;
+            "Complex Number": string;
             Unit: string;
             Help: string;
             "NNN BCE": string;

@@ -57,7 +57,7 @@ define("resource/lang/en", [], {
     "Approximate symbol": "Approximate symbol",
     "Range symbol": "Range symbol",
     "Or symbol": "Or symbol",
-    "Complex Solutions": "Complex Solutions",
+    "Complex Number": "Complex Number",
     "Unit": "Unit",
     "Help": "Help",
     "NNN BCE": "NNN BCE",
@@ -95,7 +95,7 @@ define("resource/lang/ja", [], {
     "Approximate symbol": "近似記号",
     "Range symbol": "範囲記号",
     "Or symbol": "OR記号",
-    "Complex Solutions": "複素数解",
+    "Complex Number": "複素数",
     "Unit": "単位",
     "Help": "ヘルプ",
     "NNN BCE": "紀元前 NNN 年",
@@ -7339,7 +7339,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
     exports.getMaxValue = getMaxValue;
     const getApproximateSymbol = () => config_json_3.default.symbols.approximateSymbols[Settings.getApproximateSymbol()];
     exports.getApproximateSymbol = getApproximateSymbol;
-    const makeApproximateLabel = (value) => `${(0, exports.getApproximateSymbol)()}${value}`;
+    const makeApproximateLabel = (value) => `${(0, exports.getApproximateSymbol)()} ${value}`;
     exports.makeApproximateLabel = makeApproximateLabel;
     const getRangeSymbol = () => config_json_3.default.symbols.rangeSymbols[Settings.getRangeSymbol()];
     exports.getRangeSymbol = getRangeSymbol;
@@ -9501,11 +9501,13 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                         lowerBound: undefined,
                         upperBound: { value: Calculation.MAX_VALUE, position: Calculation.MIN_VALUE, },
                         fill: "$MAX",
+                        label: (0, exports.makeApproximateLabel)("∞"),
                     } :
                     {
                         upperBound: { value: Calculation.MAX_VALUE, position: Calculation.MAX_VALUE, },
                         lowerBound: undefined,
                         fill: "$MAX",
+                        label: (0, exports.makeApproximateLabel)("∞"),
                     });
                 break;
             case "cotangent":
@@ -9514,11 +9516,13 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                         lowerBound: undefined,
                         upperBound: { value: 0, position: Calculation.MIN_VALUE, },
                         fill: "$MAX",
+                        label: (0, exports.makeApproximateLabel)("∞"),
                     } :
                     {
                         upperBound: { value: 0, position: Calculation.MAX_VALUE, },
                         lowerBound: undefined,
                         fill: "$MAX",
+                        label: (0, exports.makeApproximateLabel)("∞"),
                     });
                 break;
             case "arcsine":
@@ -9526,12 +9530,13 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                     lowerBound: undefined,
                     upperBound: 0,
                     fill: "$MIN",
+                    label: (0, exports.makeApproximateLabel)("0"),
                 });
                 content.areas.push({
                     lowerBound: Math.PI / 2,
                     upperBound: undefined,
                     fill: "$NAN",
-                    label: Locale.map("Complex Solutions"),
+                    label: Locale.map("Complex Number"),
                 });
                 break;
             case "arccosine":
@@ -9539,7 +9544,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                     lowerBound: undefined,
                     upperBound: 0,
                     fill: "$NAN",
-                    label: Locale.map("Complex Solutions"),
+                    label: Locale.map("Complex Number"),
                 });
                 content.areas.push({
                     lowerBound: Math.PI / 2,
@@ -9553,6 +9558,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                     lowerBound: undefined,
                     upperBound: Calculation.MIN_VALUE,
                     fill: "$MIN",
+                    label: (0, exports.makeApproximateLabel)("0"),
                 });
                 content.areas.push({
                     lowerBound: Math.PI / 2,
@@ -9566,7 +9572,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                     lowerBound: undefined,
                     upperBound: Calculation.MIN_VALUE,
                     fill: "$NAN",
-                    label: Locale.map("Complex Solutions"),
+                    label: Locale.map("Complex Number"),
                 });
                 content.areas.push // 🔥 これは仮置き。正規のロジックで設定される様にする時にこちらは要削除
                 ({
@@ -9582,12 +9588,13 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                     lowerBound: undefined,
                     upperBound: Calculation.MIN_VALUE,
                     fill: "$MIN",
+                    label: (0, exports.makeApproximateLabel)("0"),
                 });
                 content.areas.push({
                     lowerBound: Math.PI / 2,
                     upperBound: undefined,
                     fill: "$NAN",
-                    label: Locale.map("Complex Solutions"),
+                    label: Locale.map("Complex Number"),
                 });
                 break;
             case "arccotangent":
@@ -9596,6 +9603,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                     lowerBound: undefined,
                     upperBound: Calculation.MIN_VALUE,
                     fill: "$MIN",
+                    label: (0, exports.makeApproximateLabel)("0"),
                 });
                 content.areas.push({
                     lowerBound: Math.PI / 2,

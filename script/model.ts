@@ -506,7 +506,7 @@ export const getMaxValue = (lane: Type.Lane): number =>
 export const getApproximateSymbol = () =>
     config.symbols.approximateSymbols[Settings.getApproximateSymbol()];
 export const makeApproximateLabel = (value: string) =>
-    `${getApproximateSymbol()}${value}`;
+    `${getApproximateSymbol()} ${value}`;
 export const getRangeSymbol = () =>
     config.symbols.rangeSymbols[Settings.getRangeSymbol()];
 export const applyRangeSymbol = (text: string): string =>
@@ -3101,11 +3101,13 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
                 lowerBound: undefined,
                 upperBound: { value: Calculation.MAX_VALUE, position: Calculation.MIN_VALUE, },
                 fill: "$MAX",
+                label: makeApproximateLabel("∞"),
             }:
             {
                 upperBound: { value: Calculation.MAX_VALUE, position: Calculation.MAX_VALUE, },
                 lowerBound: undefined,
                 fill: "$MAX",
+                label: makeApproximateLabel("∞"),
             }
         );
         break;
@@ -3117,11 +3119,13 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
                 lowerBound: undefined,
                 upperBound: { value: 0, position: Calculation.MIN_VALUE, },
                 fill: "$MAX",
+                label: makeApproximateLabel("∞"),
             }:
             {
                 upperBound: { value: 0, position: Calculation.MAX_VALUE, },
                 lowerBound: undefined,
                 fill: "$MAX",
+                label: makeApproximateLabel("∞"),
             }
         );
         break;
@@ -3131,13 +3135,14 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
             lowerBound: undefined,
             upperBound: 0,
             fill: "$MIN",
+            label: makeApproximateLabel("0"),
         });
         content.areas.push
         ({
             lowerBound: Math.PI /2,
             upperBound: undefined,
             fill: "$NAN",
-            label: Locale.map("Complex Solutions"),
+            label: Locale.map("Complex Number"),
         });
         break;
     case "arccosine":
@@ -3146,7 +3151,7 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
             lowerBound: undefined,
             upperBound: 0,
             fill: "$NAN",
-            label: Locale.map("Complex Solutions"),
+            label: Locale.map("Complex Number"),
         });
         content.areas.push
         ({
@@ -3162,6 +3167,7 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
             lowerBound: undefined,
             upperBound: Calculation.MIN_VALUE,
             fill: "$MIN",
+            label: makeApproximateLabel("0"),
         });
         content.areas.push
         ({
@@ -3177,7 +3183,7 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
             lowerBound: undefined,
             upperBound: Calculation.MIN_VALUE,
             fill: "$NAN",
-            label: Locale.map("Complex Solutions"),
+            label: Locale.map("Complex Number"),
         });
         content.areas.push // 🔥 これは仮置き。正規のロジックで設定される様にする時にこちらは要削除
         ({
@@ -3194,13 +3200,14 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
             lowerBound: undefined,
             upperBound: Calculation.MIN_VALUE,
             fill: "$MIN",
+            label: makeApproximateLabel("0"),
         });
         content.areas.push
         ({
             lowerBound: Math.PI /2,
             upperBound: undefined,
             fill: "$NAN",
-            label: Locale.map("Complex Solutions"),
+            label: Locale.map("Complex Number"),
         });
         break;
     case "arccotangent":
@@ -3210,6 +3217,7 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
             lowerBound: undefined,
             upperBound: Calculation.MIN_VALUE,
             fill: "$MIN",
+            label: makeApproximateLabel("0"),
         });
         content.areas.push
         ({
