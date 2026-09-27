@@ -148,11 +148,9 @@ __STYLE__ DUMMY { color: initial; }
                 <span data-lang-key="Adjust exponent to multiple of 3"></span><span data-lang-key="lang-colon-suffix"></span>
                 <input type="checkbox" id="exponent-multiple-of-three-checkbox" />
             </label>
-            <label><span>数字</span><span data-lang-key="lang-colon-suffix"></span>
-                <select id="number-format-select">
-                    <option value="scientific" selected>scientific</option>
-                    <option value="localized">localized</option>
-                </select>
+            <label>
+                <span data-lang-key="Display the approximation of 1/∞ as the approximation of 0"></span><span data-lang-key="lang-colon-suffix"></span>
+                <input type="checkbox" id="approximate-infinity-small-as-zero-checkbox" checked />
             </label>
             <label>
                 <span data-lang-key="Approximate symbol"></span><span data-lang-key="lang-colon-suffix"></span>
@@ -179,6 +177,12 @@ __STYLE__ DUMMY { color: initial; }
                     <option value="union" selected>∪</option>
                     <option value="ascii">|</option>
                     <option value="word">or</option>
+                </select>
+            </label>
+            <label><span>数字</span><span data-lang-key="lang-colon-suffix"></span>
+                <select id="number-format-select">
+                    <option value="scientific" selected>scientific</option>
+                    <option value="localized">localized</option>
                 </select>
             </label>
             <span>※この設定は一部のロケールでのみ機能します。</span>

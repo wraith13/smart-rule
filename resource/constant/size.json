@@ -431,7 +431,7 @@
             "lowerBound": null,
             "upperBound": 1.616255e-35,
             "fill": "$MIN",
-            "label": "$APPROXIMATE$ 0"
+            "label": "$APPROXIMATE$ 1/∞"
         },
         {
             "lowerBound": 8.8e26,

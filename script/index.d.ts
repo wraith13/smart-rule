@@ -20,6 +20,7 @@ declare module "script/locale" {
             "Thousands separator": string;
             "Exponential notation": string;
             "Adjust exponent to multiple of 3": string;
+            "Display the approximation of 1/\u221E as the approximation of 0": string;
             "Approximate symbol": string;
             "Range symbol": string;
             "Or symbol": string;
@@ -58,6 +59,7 @@ declare module "script/locale" {
             "Thousands separator": string;
             "Exponential notation": string;
             "Adjust exponent to multiple of 3": string;
+            "Display the approximation of 1/\u221E as the approximation of 0": string;
             "Approximate symbol": string;
             "Range symbol": string;
             "Or symbol": string;
@@ -265,6 +267,7 @@ declare module "script/ui" {
         const exponentFormatSelect: HTMLSelectElement;
         const exponentMultipleOfThreeCheckbox: HTMLInputElement;
         const numberFormatSelect: HTMLSelectElement;
+        const approximateInfinitySmallAsZeroCheckbox: HTMLInputElement;
         const approximateSymbolSelect: HTMLSelectElement;
         const rangeSymbolSelect: HTMLSelectElement;
         const orSymbolSelect: HTMLSelectElement;
@@ -300,6 +303,7 @@ declare module "script/settings" {
     export const getExponentFormat: () => "e" | "x10";
     export const getExponentMultipleOfThree: () => boolean;
     export const getNumberFormat: () => "scientific" | "localized";
+    export const getApproximateInfinitySmallAsZero: () => boolean;
     export const getApproximateSymbol: () => keyof typeof config.symbols.approximateSymbols;
     export const getRangeSymbol: () => keyof typeof config.symbols.rangeSymbols;
     export const getOrSymbol: () => keyof typeof config.symbols.orSymbols;
@@ -311,6 +315,7 @@ declare module "script/settings" {
         e: "e" | "x10";
         m: boolean;
         n: "scientific" | "localized";
+        z: boolean;
         a: "tilde" | "asymptotic" | "approximately-equal" | "almost-equal" | "nearly-equal";
         r: "en-dash" | "ellipsis" | "wave-dash" | "word";
         o: "word" | "union" | "ascii";
@@ -1587,6 +1592,8 @@ declare module "script/model" {
     }) => number;
     export const getMinValue: (lane: Type.Lane) => number;
     export const getMaxValue: (lane: Type.Lane) => number;
+    export const getApproximateInfinitySmallAsZero: () => boolean;
+    export const applyApproximateInfinitySmallAsZero: (value: string) => string;
     export const getApproximateSymbol: () => string;
     export const makeApproximateLabel: (value: string) => string;
     export const applyApproximateSymbol: (text: string) => string;
@@ -1594,6 +1601,7 @@ declare module "script/model" {
     export const applyRangeSymbol: (text: string) => string;
     export const getOrSymbol: () => string;
     export const applyOrSymbol: (text: string) => string;
+    export const applySymbolsForString: (text: string) => string;
     export const applySymbols: <Text extends (Type.MultiLanguageText | undefined)>(text: Text) => Text;
     export const getDenseLabel: (lane: Type.Lane) => Type.MultiLanguageText | undefined;
     export const getPrimaryValueAt: (lane: Type.Lane, position: number) => number;

@@ -503,10 +503,14 @@ export const getMaxValue = (lane: Type.Lane): number =>
         throw new Error(`🦋 FIXME: getMaxValue not implemented for lane type: ${lane.type}`);
     }
 };
+export const getApproximateInfinitySmallAsZero = (): boolean =>
+    Settings.getApproximateInfinitySmallAsZero();
+export const applyApproximateInfinitySmallAsZero = (value: string): string =>
+    getApproximateInfinitySmallAsZero() ? value.replace(/1\/∞/g, "0"): value;
 export const getApproximateSymbol = () =>
     config.symbols.approximateSymbols[Settings.getApproximateSymbol()];
 export const makeApproximateLabel = (value: string) =>
-    `${getApproximateSymbol()} ${value}`;
+    `${getApproximateSymbol()} ${applyApproximateInfinitySmallAsZero(value)}`;
 export const applyApproximateSymbol = (text: string): string =>
     text.replace(/\$APPROXIMATE\$/g, getApproximateSymbol());
 export const getRangeSymbol = () =>
@@ -517,13 +521,15 @@ export const getOrSymbol = () =>
     config.symbols.orSymbols[Settings.getOrSymbol()];
 export const applyOrSymbol = (text: string): string =>
     text.replace(/\$OR\$/g, getOrSymbol());
+export const applySymbolsForString = (text: string): string =>
+    applyApproximateInfinitySmallAsZero(applyApproximateSymbol(applyRangeSymbol(applyOrSymbol(text))));
 export const applySymbols = <Text extends (Type.MultiLanguageText | undefined)>(text: Text): Text =>
 {
     if (undefined !== text && null !== text)
     {
         if ("string" === typeof text)
         {
-            return applyApproximateSymbol(applyRangeSymbol(applyOrSymbol(text))) as Text;
+            return applySymbolsForString(text) as Text;
         }
         else
         {
@@ -532,7 +538,7 @@ export const applySymbols = <Text extends (Type.MultiLanguageText | undefined)>(
             {
                 const value = text[key];
                 result[key] = "string" === typeof value ?
-                    applyApproximateSymbol(applyRangeSymbol(applyOrSymbol(value))):
+                    applySymbolsForString(value):
                     value as Type.MultiLanguageTextSet[typeof key];
             }
             return result as Text;
@@ -3036,13 +3042,13 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
                 lowerBound: undefined,
                 upperBound: { value: 0, position: Calculation.MIN_VALUE, },
                 fill: "$MIN",
-                label: makeApproximateLabel("0"),
+                label: makeApproximateLabel("1/∞"),
             }:
             {
                 upperBound: { value: 0, position: Calculation.MAX_VALUE, },
                 lowerBound: undefined,
                 fill: "$MIN",
-                label: makeApproximateLabel("0"),
+                label: makeApproximateLabel("1/∞"),
             }
         );
         break;
@@ -3080,13 +3086,13 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
                 lowerBound: undefined,
                 upperBound: { value: 0, position: Calculation.MIN_VALUE, },
                 fill: "$MIN",
-                label: makeApproximateLabel("0"),
+                label: makeApproximateLabel("1/∞"),
             }:
             {
                 upperBound: { value: 0, position: Calculation.MAX_VALUE, },
                 lowerBound: undefined,
                 fill: "$MIN",
-                label: makeApproximateLabel("0"),
+                label: makeApproximateLabel("1/∞"),
             }
         );
         break;
@@ -3158,7 +3164,7 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
             lowerBound: undefined,
             upperBound: 0,
             fill: "$MIN",
-            label: makeApproximateLabel("0"),
+            label: makeApproximateLabel("1/∞"),
         });
         content.areas.push
         ({
@@ -3190,7 +3196,7 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
             lowerBound: undefined,
             upperBound: Calculation.MIN_VALUE,
             fill: "$MIN",
-            label: makeApproximateLabel("0"),
+            label: makeApproximateLabel("1/∞"),
         });
         content.areas.push
         ({
@@ -3223,7 +3229,7 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
             lowerBound: undefined,
             upperBound: Calculation.MIN_VALUE,
             fill: "$MIN",
-            label: makeApproximateLabel("0"),
+            label: makeApproximateLabel("1/∞"),
         });
         content.areas.push
         ({
@@ -3240,7 +3246,7 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
             lowerBound: undefined,
             upperBound: Calculation.MIN_VALUE,
             fill: "$MIN",
-            label: makeApproximateLabel("0"),
+            label: makeApproximateLabel("1/∞"),
         });
         content.areas.push
         ({
@@ -3260,7 +3266,7 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
                     lowerBound: ( ! isInverted) ? undefined:  Type.getExValueNumber(valueTickWindow.topValue),
                     upperBound: ( ! isInverted) ? (isExponential ? getMinValue(lane): Type.getExValueNumber(valueTickWindow.topValue)): undefined,
                     fill: ( ! isInverted) ? minColor: "$MAX",
-                    label: makeApproximateLabel(! isInverted ? (isExponential ? "1": (hasMinus ? "-∞": "0")): "∞"),
+                    label: makeApproximateLabel(! isInverted ? (isExponential ? "1": (hasMinus ? "-∞": "1/∞")): "∞"),
                 });
             }
         }
@@ -3273,7 +3279,7 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
                     lowerBound: ( ! isInverted) ? Type.getExValueNumber(valueTickWindow.bottomValue): undefined,
                     upperBound: ( ! isInverted) ? undefined: (isExponential ? getMinValue(lane): Type.getExValueNumber(valueTickWindow.bottomValue)),
                     fill: ( ! isInverted) ? "$MAX": minColor,
-                    label: makeApproximateLabel(isInverted ? (isExponential ? "1": (hasMinus ? "-∞": "0")): "∞"),
+                    label: makeApproximateLabel(isInverted ? (isExponential ? "1": (hasMinus ? "-∞": "1/∞")): "∞"),
                 });
             }
         }

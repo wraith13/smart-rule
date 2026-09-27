@@ -18,6 +18,7 @@
     "Thousands separator": "３桁区切り記号",
     "Exponential notation": "指数表記",
     "Adjust exponent to multiple of 3": "指数を3の倍数に調整",
+    "Display the approximation of 1/∞ as the approximation of 0": "1/∞の近似を0の近似として表示する",
     "Approximate symbol": "近似記号",
     "Range symbol": "範囲記号",
     "Or symbol": "OR記号",

@@ -54,6 +54,7 @@ define("resource/lang/en", [], {
     "Thousands separator": "Thousands separator",
     "Exponential notation": "Exponential notation",
     "Adjust exponent to multiple of 3": "Adjust exponent to multiple of 3",
+    "Display the approximation of 1/∞ as the approximation of 0": "Display the approximation of 1/∞ as the approximation of 0",
     "Approximate symbol": "Approximate symbol",
     "Range symbol": "Range symbol",
     "Or symbol": "Or symbol",
@@ -92,6 +93,7 @@ define("resource/lang/ja", [], {
     "Thousands separator": "３桁区切り記号",
     "Exponential notation": "指数表記",
     "Adjust exponent to multiple of 3": "指数を3の倍数に調整",
+    "Display the approximation of 1/∞ as the approximation of 0": "1/∞の近似を0の近似として表示する",
     "Approximate symbol": "近似記号",
     "Range symbol": "範囲記号",
     "Or symbol": "OR記号",
@@ -567,6 +569,7 @@ define("script/ui", ["require", "exports", "script/locale", "script/html", "scri
         SettingsPanel.exponentFormatSelect = HTML.getElementById("select", "exponent-format-select");
         SettingsPanel.exponentMultipleOfThreeCheckbox = HTML.getElementById("input", "exponent-multiple-of-three-checkbox");
         SettingsPanel.numberFormatSelect = HTML.getElementById("select", "number-format-select");
+        SettingsPanel.approximateInfinitySmallAsZeroCheckbox = HTML.getElementById("input", "approximate-infinity-small-as-zero-checkbox");
         SettingsPanel.approximateSymbolSelect = HTML.getElementById("select", "approximate-symbol-select");
         SettingsPanel.rangeSymbolSelect = HTML.getElementById("select", "range-symbol-select");
         SettingsPanel.orSymbolSelect = HTML.getElementById("select", "or-symbol-select");
@@ -878,7 +881,7 @@ define("resource/config", [], {
 define("script/settings", ["require", "exports", "script/ui"], function (require, exports, UI) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.applySettings = exports.getAllSettings = exports.getOrSymbol = exports.getRangeSymbol = exports.getApproximateSymbol = exports.getNumberFormat = exports.getExponentMultipleOfThree = exports.getExponentFormat = exports.getThreeDigitSeparator = exports.getTheme = exports.isIncludeCursor = void 0;
+    exports.applySettings = exports.getAllSettings = exports.getOrSymbol = exports.getRangeSymbol = exports.getApproximateSymbol = exports.getApproximateInfinitySmallAsZero = exports.getNumberFormat = exports.getExponentMultipleOfThree = exports.getExponentFormat = exports.getThreeDigitSeparator = exports.getTheme = exports.isIncludeCursor = void 0;
     UI = __importStar(UI);
     const isIncludeCursor = () => UI.SavePanel.includeCursorCheckbox.checked;
     exports.isIncludeCursor = isIncludeCursor;
@@ -893,6 +896,8 @@ define("script/settings", ["require", "exports", "script/ui"], function (require
     exports.getExponentMultipleOfThree = getExponentMultipleOfThree;
     const getNumberFormat = () => UI.SettingsPanel.numberFormatSelect.value;
     exports.getNumberFormat = getNumberFormat;
+    const getApproximateInfinitySmallAsZero = () => UI.SettingsPanel.approximateInfinitySmallAsZeroCheckbox.checked;
+    exports.getApproximateInfinitySmallAsZero = getApproximateInfinitySmallAsZero;
     const getApproximateSymbol = () => UI.SettingsPanel.approximateSymbolSelect.value;
     exports.getApproximateSymbol = getApproximateSymbol;
     const getRangeSymbol = () => UI.SettingsPanel.rangeSymbolSelect.value;
@@ -908,13 +913,14 @@ define("script/settings", ["require", "exports", "script/ui"], function (require
         e: (0, exports.getExponentFormat)(),
         m: (0, exports.getExponentMultipleOfThree)(),
         n: (0, exports.getNumberFormat)(),
+        z: (0, exports.getApproximateInfinitySmallAsZero)(),
         a: (0, exports.getApproximateSymbol)(),
         r: (0, exports.getRangeSymbol)(),
         o: (0, exports.getOrSymbol)(),
     });
     exports.getAllSettings = getAllSettings;
     const applySettings = (settings) => {
-        var _a, _b, _c, _d, _e, _f, _g;
+        var _a, _b, _c, _d, _e, _f, _g, _h;
         UI.SavePanel.includeCursorCheckbox.checked = settings.i;
         UI.SettingsPanel.languageSelect.value = settings.l;
         UI.SettingsPanel.themeSelect.value = (_a = settings.t) !== null && _a !== void 0 ? _a : "auto";
@@ -922,9 +928,10 @@ define("script/settings", ["require", "exports", "script/ui"], function (require
         UI.SettingsPanel.exponentFormatSelect.value = (_c = settings.e) !== null && _c !== void 0 ? _c : "x10";
         UI.SettingsPanel.exponentMultipleOfThreeCheckbox.checked = settings.m;
         UI.SettingsPanel.numberFormatSelect.value = (_d = settings.n) !== null && _d !== void 0 ? _d : "scientific";
-        UI.SettingsPanel.approximateSymbolSelect.value = (_e = settings.a) !== null && _e !== void 0 ? _e : "tilde";
-        UI.SettingsPanel.rangeSymbolSelect.value = (_f = settings.r) !== null && _f !== void 0 ? _f : "ellipsis";
-        UI.SettingsPanel.orSymbolSelect.value = (_g = settings.o) !== null && _g !== void 0 ? _g : "union";
+        UI.SettingsPanel.approximateInfinitySmallAsZeroCheckbox.checked = (_e = settings.z) !== null && _e !== void 0 ? _e : false;
+        UI.SettingsPanel.approximateSymbolSelect.value = (_f = settings.a) !== null && _f !== void 0 ? _f : "tilde";
+        UI.SettingsPanel.rangeSymbolSelect.value = (_g = settings.r) !== null && _g !== void 0 ? _g : "ellipsis";
+        UI.SettingsPanel.orSymbolSelect.value = (_h = settings.o) !== null && _h !== void 0 ? _h : "union";
     };
     exports.applySettings = applySettings;
 });
@@ -3707,7 +3714,7 @@ define("resource/constant/size", [], {
             "lowerBound": null,
             "upperBound": 1.616255e-35,
             "fill": "$MIN",
-            "label": "$APPROXIMATE$ 0"
+            "label": "$APPROXIMATE$ 1/∞"
         },
         {
             "lowerBound": 8.8e26,
@@ -3801,7 +3808,7 @@ define("resource/constant/area", [], {
             "lowerBound": null,
             "upperBound": 2.6121e-70,
             "fill": "$MIN",
-            "label": "$APPROXIMATE$ 0"
+            "label": "$APPROXIMATE$ 1/∞"
         }
     ]
 });
@@ -3898,7 +3905,7 @@ define("resource/constant/volume", [], {
             "lowerBound": null,
             "upperBound": 4.222e-105,
             "fill": "$MIN",
-            "label": "$APPROXIMATE$ 0"
+            "label": "$APPROXIMATE$ 1/∞"
         },
         {
             "lowerBound": 3.566e80,
@@ -4294,7 +4301,7 @@ define("resource/constant/time", [], {
             "lowerBound": null,
             "upperBound": 5.391246366844893e-44,
             "fill": "$MIN",
-            "label": "$APPROXIMATE$ 0"
+            "label": "$APPROXIMATE$ 1/∞"
         }
     ]
 });
@@ -6861,7 +6868,7 @@ define("resource/constant/history", [], {
 define("script/model", ["require", "exports", "script/locale", "script/calculation", "script/type", "script/url", "script/settings", "script/theme", "script/comparer", "resource/config", "resource/digit/$si", "resource/digit/en", "resource/digit/ja", "resource/angle/sin", "resource/angle/cos", "resource/angle/tan", "resource/angle/sec", "resource/angle/csc", "resource/angle/cot", "resource/constant/size", "resource/constant/area", "resource/constant/volume", "resource/constant/mass", "resource/constant/time", "resource/constant/speed", "resource/constant/energy", "resource/constant/temperature", "resource/constant/counting", "resource/constant/sound-frequency", "resource/constant/emw-wavelength", "resource/constant/emw-frequency", "resource/constant/emw-energy", "resource/constant/history"], function (require, exports, Locale, Calculation, Type, Url, Settings, Theme, Comparer, config_json_3, _si_json_1, en_json_2, ja_json_2, sin_json_1, cos_json_1, tan_json_1, sec_json_1, csc_json_1, cot_json_1, size_json_1, area_json_1, volume_json_1, mass_json_1, time_json_1, speed_json_1, energy_json_1, temperature_json_1, counting_json_1, sound_frequency_json_1, emw_wavelength_json_1, emw_frequency_json_1, emw_energy_json_1, history_json_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.hasDataArea = exports.getLaneContext = exports.getCursorValues = exports.getCursorValue = exports.getCursorPosition = exports.makeSure = exports.removeLane = exports.makeLane = exports.addConstantLane = exports.addDigitLane = exports.addLane = exports.getSlideFromLane = exports.getLane = exports.getLastSlideAndLastLane = exports.getSlideAndLane = exports.makeSureSlide = exports.makeSlide = exports.getLaneIndex = exports.getSlideIndexFromLane = exports.getSlideIndex = exports.isRootSlide = exports.getRootSlideAndRootLane = exports.getRootSlide = exports.isPrimaryLane = exports.isRootLane = exports.getRootLane = exports.makeRootLane = exports.designTicks = exports.complementMinMaxArea = exports.getBottomTick = exports.getTopTick = exports.designOscillatingTicks = exports.designPeriodicTicks = exports.getUnitList = exports.designConstantTicks = exports.makeConstantStandardTickUnit = exports.designConstantTickType = exports.designConstantTickColor = exports.designConstantAreas = exports.makeAreaSpanLabel = exports.formatUniverseEpochDurationForHuman = exports.numberToLocaleString = exports.getLocaleDigitTable = exports.designDigitTicks = exports.makeDigitLabel = exports.designPrimeDecompositionTicks = exports.factorsToString = exports.designPrimeNumbersTicks = exports.designCurvedTicks = exports.designLinearTicks = exports.designLogarithmicTicks = exports.addConstTicks = exports.designAngleTicks360 = exports.designAngleTicks90 = exports.designAngleTicks30 = exports.getMajorRateFromAngle = exports.getMajorRateCore = exports.designAngleTicks10 = exports.designAngleTicksInverted10 = exports.designAngleTicksRegular10 = exports.makeTick = exports.getDigitIndexFromWidth = exports.designCurvedTicks10 = exports.designLinearTicks10 = exports.designLogarithmicTicks10 = exports.designTickType = exports.getLongTickSpaceWidth = exports.makePositionTickWindowFromPositionAndWidth = exports.makePositionTickWindowFromWindow = exports.ValueTickWindowToPositionTickWindow = exports.PositionTickWindowToValueTickWindow = exports.getSnapReferenceLaneIndex = exports.getConvenientWidth = exports.getWidth = exports.getPositionAt = exports.getSlideOffset = exports.getAnchorSlideAndLane = exports.getRawViewPositionAt = exports.logPositionToLinearPosition = exports.linearPositionToLogPosition = exports.getLinearPositionAt = exports.getValueAt = exports.getRawValueAt = exports.angleToQuarter = exports.getPrimaryPositionAt = exports.getPrimaryValueAt = exports.getDenseLabel = exports.applySymbols = exports.applyOrSymbol = exports.getOrSymbol = exports.applyRangeSymbol = exports.getRangeSymbol = exports.applyApproximateSymbol = exports.makeApproximateLabel = exports.getApproximateSymbol = exports.getMaxValue = exports.getMinValue = exports.getWidthValueRatioFromAngleTicks = exports.getAngleTick = exports.getAngleTable = exports.getPrimaryTick = exports.getSlidePositionAt = exports.isDiscreteLane = exports.isOscillatingLane = exports.isPeriodicLane = exports.getPrimaryPeriod = exports.getPrimaryPeriod360 = exports.getSlidePosition = exports.isInvertedSlide = exports.isInvertedLane = exports.getAllLanes = exports.getAllLaneCount = exports.RootLaneIndex = exports.RootSlideIndex = exports.ticksCache = exports.data = exports.getConstantTable = exports.constant = exports.getDigitTable = exports.digit = void 0;
+    exports.initialize = exports.hasDataArea = exports.getLaneContext = exports.getCursorValues = exports.getCursorValue = exports.getCursorPosition = exports.makeSure = exports.removeLane = exports.makeLane = exports.addConstantLane = exports.addDigitLane = exports.addLane = exports.getSlideFromLane = exports.getLane = exports.getLastSlideAndLastLane = exports.getSlideAndLane = exports.makeSureSlide = exports.makeSlide = exports.getLaneIndex = exports.getSlideIndexFromLane = exports.getSlideIndex = exports.isRootSlide = exports.getRootSlideAndRootLane = exports.getRootSlide = exports.isPrimaryLane = exports.isRootLane = exports.getRootLane = exports.makeRootLane = exports.designTicks = exports.complementMinMaxArea = exports.getBottomTick = exports.getTopTick = exports.designOscillatingTicks = exports.designPeriodicTicks = exports.getUnitList = exports.designConstantTicks = exports.makeConstantStandardTickUnit = exports.designConstantTickType = exports.designConstantTickColor = exports.designConstantAreas = exports.makeAreaSpanLabel = exports.formatUniverseEpochDurationForHuman = exports.numberToLocaleString = exports.getLocaleDigitTable = exports.designDigitTicks = exports.makeDigitLabel = exports.designPrimeDecompositionTicks = exports.factorsToString = exports.designPrimeNumbersTicks = exports.designCurvedTicks = exports.designLinearTicks = exports.designLogarithmicTicks = exports.addConstTicks = exports.designAngleTicks360 = exports.designAngleTicks90 = exports.designAngleTicks30 = exports.getMajorRateFromAngle = exports.getMajorRateCore = exports.designAngleTicks10 = exports.designAngleTicksInverted10 = exports.designAngleTicksRegular10 = exports.makeTick = exports.getDigitIndexFromWidth = exports.designCurvedTicks10 = exports.designLinearTicks10 = exports.designLogarithmicTicks10 = exports.designTickType = exports.getLongTickSpaceWidth = exports.makePositionTickWindowFromPositionAndWidth = exports.makePositionTickWindowFromWindow = exports.ValueTickWindowToPositionTickWindow = exports.PositionTickWindowToValueTickWindow = exports.getSnapReferenceLaneIndex = exports.getConvenientWidth = exports.getWidth = exports.getPositionAt = exports.getSlideOffset = exports.getAnchorSlideAndLane = exports.getRawViewPositionAt = exports.logPositionToLinearPosition = exports.linearPositionToLogPosition = exports.getLinearPositionAt = exports.getValueAt = exports.getRawValueAt = exports.angleToQuarter = exports.getPrimaryPositionAt = exports.getPrimaryValueAt = exports.getDenseLabel = exports.applySymbols = exports.applySymbolsForString = exports.applyOrSymbol = exports.getOrSymbol = exports.applyRangeSymbol = exports.getRangeSymbol = exports.applyApproximateSymbol = exports.makeApproximateLabel = exports.getApproximateSymbol = exports.applyApproximateInfinitySmallAsZero = exports.getApproximateInfinitySmallAsZero = exports.getMaxValue = exports.getMinValue = exports.getWidthValueRatioFromAngleTicks = exports.getAngleTick = exports.getAngleTable = exports.getPrimaryTick = exports.getSlidePositionAt = exports.isDiscreteLane = exports.isOscillatingLane = exports.isPeriodicLane = exports.getPrimaryPeriod = exports.getPrimaryPeriod360 = exports.getSlidePosition = exports.isInvertedSlide = exports.isInvertedLane = exports.getAllLanes = exports.getAllLaneCount = exports.RootLaneIndex = exports.RootSlideIndex = exports.ticksCache = exports.data = exports.getConstantTable = exports.constant = exports.getDigitTable = exports.digit = void 0;
     Locale = __importStar(Locale);
     Calculation = __importStar(Calculation);
     Type = __importStar(Type);
@@ -7337,9 +7344,13 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
         }
     };
     exports.getMaxValue = getMaxValue;
+    const getApproximateInfinitySmallAsZero = () => Settings.getApproximateInfinitySmallAsZero();
+    exports.getApproximateInfinitySmallAsZero = getApproximateInfinitySmallAsZero;
+    const applyApproximateInfinitySmallAsZero = (value) => (0, exports.getApproximateInfinitySmallAsZero)() ? value.replace(/1\/∞/g, "0") : value;
+    exports.applyApproximateInfinitySmallAsZero = applyApproximateInfinitySmallAsZero;
     const getApproximateSymbol = () => config_json_3.default.symbols.approximateSymbols[Settings.getApproximateSymbol()];
     exports.getApproximateSymbol = getApproximateSymbol;
-    const makeApproximateLabel = (value) => `${(0, exports.getApproximateSymbol)()} ${value}`;
+    const makeApproximateLabel = (value) => `${(0, exports.getApproximateSymbol)()} ${(0, exports.applyApproximateInfinitySmallAsZero)(value)}`;
     exports.makeApproximateLabel = makeApproximateLabel;
     const applyApproximateSymbol = (text) => text.replace(/\$APPROXIMATE\$/g, (0, exports.getApproximateSymbol)());
     exports.applyApproximateSymbol = applyApproximateSymbol;
@@ -7351,17 +7362,19 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
     exports.getOrSymbol = getOrSymbol;
     const applyOrSymbol = (text) => text.replace(/\$OR\$/g, (0, exports.getOrSymbol)());
     exports.applyOrSymbol = applyOrSymbol;
+    const applySymbolsForString = (text) => (0, exports.applyApproximateInfinitySmallAsZero)((0, exports.applyApproximateSymbol)((0, exports.applyRangeSymbol)((0, exports.applyOrSymbol)(text))));
+    exports.applySymbolsForString = applySymbolsForString;
     const applySymbols = (text) => {
         if (undefined !== text && null !== text) {
             if ("string" === typeof text) {
-                return (0, exports.applyApproximateSymbol)((0, exports.applyRangeSymbol)((0, exports.applyOrSymbol)(text)));
+                return (0, exports.applySymbolsForString)(text);
             }
             else {
                 const result = {};
                 for (const key in text) {
                     const value = text[key];
                     result[key] = "string" === typeof value ?
-                        (0, exports.applyApproximateSymbol)((0, exports.applyRangeSymbol)((0, exports.applyOrSymbol)(value))) :
+                        (0, exports.applySymbolsForString)(value) :
                         value;
                 }
                 return result;
@@ -9448,13 +9461,13 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                         lowerBound: undefined,
                         upperBound: { value: 0, position: Calculation.MIN_VALUE, },
                         fill: "$MIN",
-                        label: (0, exports.makeApproximateLabel)("0"),
+                        label: (0, exports.makeApproximateLabel)("1/∞"),
                     } :
                     {
                         upperBound: { value: 0, position: Calculation.MAX_VALUE, },
                         lowerBound: undefined,
                         fill: "$MIN",
-                        label: (0, exports.makeApproximateLabel)("0"),
+                        label: (0, exports.makeApproximateLabel)("1/∞"),
                     });
                 break;
             case "cosine":
@@ -9484,13 +9497,13 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                         lowerBound: undefined,
                         upperBound: { value: 0, position: Calculation.MIN_VALUE, },
                         fill: "$MIN",
-                        label: (0, exports.makeApproximateLabel)("0"),
+                        label: (0, exports.makeApproximateLabel)("1/∞"),
                     } :
                     {
                         upperBound: { value: 0, position: Calculation.MAX_VALUE, },
                         lowerBound: undefined,
                         fill: "$MIN",
-                        label: (0, exports.makeApproximateLabel)("0"),
+                        label: (0, exports.makeApproximateLabel)("1/∞"),
                     });
                 break;
             case "secant":
@@ -9549,7 +9562,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                     lowerBound: undefined,
                     upperBound: 0,
                     fill: "$MIN",
-                    label: (0, exports.makeApproximateLabel)("0"),
+                    label: (0, exports.makeApproximateLabel)("1/∞"),
                 });
                 content.areas.push({
                     lowerBound: Math.PI / 2,
@@ -9577,7 +9590,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                     lowerBound: undefined,
                     upperBound: Calculation.MIN_VALUE,
                     fill: "$MIN",
-                    label: (0, exports.makeApproximateLabel)("0"),
+                    label: (0, exports.makeApproximateLabel)("1/∞"),
                 });
                 content.areas.push({
                     lowerBound: Math.PI / 2,
@@ -9607,7 +9620,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                     lowerBound: undefined,
                     upperBound: Calculation.MIN_VALUE,
                     fill: "$MIN",
-                    label: (0, exports.makeApproximateLabel)("0"),
+                    label: (0, exports.makeApproximateLabel)("1/∞"),
                 });
                 content.areas.push({
                     lowerBound: Math.PI / 2,
@@ -9622,7 +9635,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                     lowerBound: undefined,
                     upperBound: Calculation.MIN_VALUE,
                     fill: "$MIN",
-                    label: (0, exports.makeApproximateLabel)("0"),
+                    label: (0, exports.makeApproximateLabel)("1/∞"),
                 });
                 content.areas.push({
                     lowerBound: Math.PI / 2,
@@ -9638,7 +9651,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                             lowerBound: (!isInverted) ? undefined : Type.getExValueNumber(valueTickWindow.topValue),
                             upperBound: (!isInverted) ? (isExponential ? (0, exports.getMinValue)(lane) : Type.getExValueNumber(valueTickWindow.topValue)) : undefined,
                             fill: (!isInverted) ? minColor : "$MAX",
-                            label: (0, exports.makeApproximateLabel)(!isInverted ? (isExponential ? "1" : (hasMinus ? "-∞" : "0")) : "∞"),
+                            label: (0, exports.makeApproximateLabel)(!isInverted ? (isExponential ? "1" : (hasMinus ? "-∞" : "1/∞")) : "∞"),
                         });
                     }
                 }
@@ -9648,7 +9661,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                             lowerBound: (!isInverted) ? Type.getExValueNumber(valueTickWindow.bottomValue) : undefined,
                             upperBound: (!isInverted) ? undefined : (isExponential ? (0, exports.getMinValue)(lane) : Type.getExValueNumber(valueTickWindow.bottomValue)),
                             fill: (!isInverted) ? "$MAX" : minColor,
-                            label: (0, exports.makeApproximateLabel)(isInverted ? (isExponential ? "1" : (hasMinus ? "-∞" : "0")) : "∞"),
+                            label: (0, exports.makeApproximateLabel)(isInverted ? (isExponential ? "1" : (hasMinus ? "-∞" : "1/∞")) : "∞"),
                         });
                     }
                 }
@@ -12017,6 +12030,7 @@ define("script/event", ["require", "exports", "script/url", "script/type", "scri
         UI.SettingsPanel.exponentFormatSelect.addEventListener("change", () => Render.markDirty());
         UI.SettingsPanel.exponentMultipleOfThreeCheckbox.addEventListener("change", () => Render.markDirty());
         UI.SettingsPanel.numberFormatSelect.addEventListener("change", () => Render.markDirty());
+        UI.SettingsPanel.approximateInfinitySmallAsZeroCheckbox.addEventListener("change", () => Render.markDirty());
         UI.SettingsPanel.approximateSymbolSelect.addEventListener("change", () => Render.markDirty());
         UI.SettingsPanel.rangeSymbolSelect.addEventListener("change", () => Render.markDirty());
         UI.SettingsPanel.orSymbolSelect.addEventListener("change", () => Render.markDirty());
