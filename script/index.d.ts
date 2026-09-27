@@ -316,7 +316,7 @@ declare module "script/settings" {
         m: boolean;
         n: "scientific" | "localized";
         z: boolean;
-        a: "tilde" | "asymptotic" | "approximately-equal" | "almost-equal" | "nearly-equal";
+        a: "tilde" | "approximately-equal" | "nearly-equal";
         r: "en-dash" | "ellipsis" | "wave-dash" | "word";
         o: "word" | "union" | "ascii";
     };
@@ -1892,9 +1892,7 @@ declare module "script/json-eval-updater" {
                 miniSymbols: string[];
                 approximateSymbols: {
                     tilde: string;
-                    asymptotic: string;
                     "approximately-equal": string;
-                    "almost-equal": string;
                     "nearly-equal": string;
                 };
                 rangeSymbols: {

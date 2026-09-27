@@ -685,9 +685,7 @@ define("resource/config", [], {
         ],
         "approximateSymbols": {
             "tilde": "~",
-            "asymptotic": "≃",
             "approximately-equal": "≈",
-            "almost-equal": "≅",
             "nearly-equal": "≒"
         },
         "rangeSymbols": {

@@ -156,9 +156,7 @@ __STYLE__ DUMMY { color: initial; }
                 <span data-lang-key="Approximate symbol"></span><span data-lang-key="lang-colon-suffix"></span>
                 <select id="approximate-symbol-select">
                     <option value="tilde" selected>~</option>
-                    <option value="asymptotic">≃</option>
                     <option value="approximately-equal">≈</option>
-                    <option value="almost-equal">≅</option>
                     <option value="nearly-equal">≒</option>
                 </select>
             </label>
