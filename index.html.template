@@ -155,16 +155,16 @@ __STYLE__ DUMMY { color: initial; }
             <label>
                 <span data-lang-key="Approximate symbol"></span><span data-lang-key="lang-colon-suffix"></span>
                 <select id="approximate-symbol-select">
-                    <option value="tilde" selected>~</option>
-                    <option value="approximately-equal">≈</option>
+                    <option value="approximately-equal" selected>≈</option>
+                    <option value="tilde">~</option>
                     <option value="nearly-equal">≒</option>
                 </select>
             </label>
             <label>
                 <span data-lang-key="Range symbol"></span><span data-lang-key="lang-colon-suffix"></span>
                 <select id="range-symbol-select">
-                    <option value="en-dash">–</option>
                     <option value="ellipsis" selected>⋯</option>
+                    <option value="en-dash">–</option>
                     <option value="wave-dash">〜</option>
                     <option value="word">to</option>
                 </select>

@@ -316,8 +316,8 @@ declare module "script/settings" {
         m: boolean;
         n: "scientific" | "localized";
         z: boolean;
-        a: "tilde" | "approximately-equal" | "nearly-equal";
-        r: "en-dash" | "ellipsis" | "wave-dash" | "word";
+        a: "approximately-equal" | "tilde" | "nearly-equal";
+        r: "ellipsis" | "en-dash" | "wave-dash" | "word";
         o: "word" | "union" | "ascii";
     };
     export const applySettings: (settings: ReturnType<typeof getAllSettings>) => void;
@@ -1891,13 +1891,13 @@ declare module "script/json-eval-updater" {
                 exponent: string;
                 miniSymbols: string[];
                 approximateSymbols: {
-                    tilde: string;
                     "approximately-equal": string;
+                    tilde: string;
                     "nearly-equal": string;
                 };
                 rangeSymbols: {
-                    "en-dash": string;
                     ellipsis: string;
+                    "en-dash": string;
                     "wave-dash": string;
                     word: string;
                 };

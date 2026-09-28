@@ -2,7 +2,7 @@
 <!--
     This file is genereted by build.js. このファイルは build.js によって生成されました。
     build options: ../build.json all
-    build at: Mon Sep 28 2026 04:39:36 GMT+0900 (日本標準時)
+    build at: Mon Sep 28 2026 05:12:43 GMT+0900 (日本標準時)
     repository: https://github.com/wraith13/smart-rule/
 -->
 <!-- license:
@@ -558,16 +558,16 @@ button:focus
             <label>
                 <span data-lang-key="Approximate symbol"></span><span data-lang-key="lang-colon-suffix"></span>
                 <select id="approximate-symbol-select">
-                    <option value="tilde" selected>~</option>
-                    <option value="approximately-equal">≈</option>
+                    <option value="approximately-equal" selected>≈</option>
+                    <option value="tilde">~</option>
                     <option value="nearly-equal">≒</option>
                 </select>
             </label>
             <label>
                 <span data-lang-key="Range symbol"></span><span data-lang-key="lang-colon-suffix"></span>
                 <select id="range-symbol-select">
-                    <option value="en-dash">–</option>
                     <option value="ellipsis" selected>⋯</option>
+                    <option value="en-dash">–</option>
                     <option value="wave-dash">〜</option>
                     <option value="word">to</option>
                 </select>
@@ -669,8 +669,8 @@ button:focus
 <div id="toast-panel"></div>
 <script type="text/javascript">
 const build = {
-    at: "Mon Sep 28 2026 04:39:36 GMT+0900 (日本標準時)",
-    tick: 1790537976891
+    at: "Mon Sep 28 2026 05:12:43 GMT+0900 (日本標準時)",
+    tick: 1790539963155
 };
 const evilCommonjsConfig = {
     "log": {
@@ -1716,13 +1716,13 @@ define("resource/config", [], {
             "♄"
         ],
         "approximateSymbols": {
-            "tilde": "~",
             "approximately-equal": "≈",
+            "tilde": "~",
             "nearly-equal": "≒"
         },
         "rangeSymbols": {
-            "en-dash": "–",
             "ellipsis": "⋯",
+            "en-dash": "–",
             "wave-dash": "〜",
             "word": "to"
         },

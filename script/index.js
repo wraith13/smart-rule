@@ -684,13 +684,13 @@ define("resource/config", [], {
             "♄"
         ],
         "approximateSymbols": {
-            "tilde": "~",
             "approximately-equal": "≈",
+            "tilde": "~",
             "nearly-equal": "≒"
         },
         "rangeSymbols": {
-            "en-dash": "–",
             "ellipsis": "⋯",
+            "en-dash": "–",
             "wave-dash": "〜",
             "word": "to"
         },
