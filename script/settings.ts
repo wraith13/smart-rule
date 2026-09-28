@@ -9,8 +9,6 @@ export const getExponentFormat = (): "e" | "x10" =>
     UI.SettingsPanel.exponentFormatSelect.value as ReturnType<typeof getExponentFormat>;
 export const getExponentMultipleOfThree = (): boolean =>
     UI.SettingsPanel.exponentMultipleOfThreeCheckbox.checked;
-export const getNumberFormat = (): "scientific" | "localized" =>
-    UI.SettingsPanel.numberFormatSelect.value as ReturnType<typeof getNumberFormat>;
 export const getApproximateInfinitySmallAsZero = (): boolean =>
     UI.SettingsPanel.approximateInfinitySmallAsZeroCheckbox.checked;
 export const getApproximateSymbol = () =>
@@ -27,7 +25,6 @@ export const getAllSettings = () => // URL パラメーターで使うので短�
     s: getThreeDigitSeparator(),
     e: getExponentFormat(),
     m: getExponentMultipleOfThree(),
-    n: getNumberFormat(),
     z: getApproximateInfinitySmallAsZero(),
     a: getApproximateSymbol(),
     r: getRangeSymbol(),
@@ -41,7 +38,6 @@ export const applySettings = (settings: ReturnType<typeof getAllSettings>) =>
     UI.SettingsPanel.threeDigitSeparatorSelect.value = settings.s ?? "thin-space";
     UI.SettingsPanel.exponentFormatSelect.value = settings.e ?? "x10";
     UI.SettingsPanel.exponentMultipleOfThreeCheckbox.checked = settings.m;
-    UI.SettingsPanel.numberFormatSelect.value = settings.n ?? "scientific";
     UI.SettingsPanel.approximateInfinitySmallAsZeroCheckbox.checked = settings.z ?? false;
     UI.SettingsPanel.approximateSymbolSelect.value = settings.a ?? "tilde";
     UI.SettingsPanel.rangeSymbolSelect.value = settings.r ?? "ellipsis";

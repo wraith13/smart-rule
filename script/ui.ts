@@ -102,7 +102,6 @@ export namespace SettingsPanel
     export const threeDigitSeparatorSelect = HTML.getElementById("select", "three-digit-separator-select");
     export const exponentFormatSelect = HTML.getElementById("select", "exponent-format-select");
     export const exponentMultipleOfThreeCheckbox = HTML.getElementById("input", "exponent-multiple-of-three-checkbox");
-    export const numberFormatSelect = HTML.getElementById("select", "number-format-select");
     export const approximateInfinitySmallAsZeroCheckbox = HTML.getElementById("input", "approximate-infinity-small-as-zero-checkbox");
     export const approximateSymbolSelect = HTML.getElementById("select", "approximate-symbol-select");
     export const rangeSymbolSelect = HTML.getElementById("select", "range-symbol-select");

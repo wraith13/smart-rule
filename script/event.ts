@@ -559,7 +559,6 @@ export const initialize = () =>
     UI.SettingsPanel.threeDigitSeparatorSelect.addEventListener("change", () => Render.markDirty());
     UI.SettingsPanel.exponentFormatSelect.addEventListener("change", () => Render.markDirty());
     UI.SettingsPanel.exponentMultipleOfThreeCheckbox.addEventListener("change", () => Render.markDirty());
-    UI.SettingsPanel.numberFormatSelect.addEventListener("change", () => Render.markDirty());
     UI.SettingsPanel.approximateInfinitySmallAsZeroCheckbox.addEventListener("change", () => Render.markDirty());
     UI.SettingsPanel.approximateSymbolSelect.addEventListener("change", () => Render.markDirty());
     UI.SettingsPanel.rangeSymbolSelect.addEventListener("change", () => Render.markDirty());

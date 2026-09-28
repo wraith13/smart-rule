@@ -177,13 +177,6 @@ __STYLE__ DUMMY { color: initial; }
                     <option value="word">or</option>
                 </select>
             </label>
-            <label><span>数字</span><span data-lang-key="lang-colon-suffix"></span>
-                <select id="number-format-select">
-                    <option value="scientific" selected>scientific</option>
-                    <option value="localized">localized</option>
-                </select>
-            </label>
-            <span>※この設定は一部のロケールでのみ機能します。</span>
             <h2><span data-lang-key="Help">Help</span><span data-lang-key="lang-colon-suffix"></span></h2>
             <ul>
                 <li><a href="__REPOSITORY_URL__" target="_blank" rel="noopener noreferrer"><span data-lang-key="GitHub repository"></span></a></li>

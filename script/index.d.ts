@@ -266,7 +266,6 @@ declare module "script/ui" {
         const threeDigitSeparatorSelect: HTMLSelectElement;
         const exponentFormatSelect: HTMLSelectElement;
         const exponentMultipleOfThreeCheckbox: HTMLInputElement;
-        const numberFormatSelect: HTMLSelectElement;
         const approximateInfinitySmallAsZeroCheckbox: HTMLInputElement;
         const approximateSymbolSelect: HTMLSelectElement;
         const rangeSymbolSelect: HTMLSelectElement;
@@ -302,7 +301,6 @@ declare module "script/settings" {
     export const getThreeDigitSeparator: () => "none" | "custom" | "thin-space";
     export const getExponentFormat: () => "e" | "x10";
     export const getExponentMultipleOfThree: () => boolean;
-    export const getNumberFormat: () => "scientific" | "localized";
     export const getApproximateInfinitySmallAsZero: () => boolean;
     export const getApproximateSymbol: () => keyof typeof config.symbols.approximateSymbols;
     export const getRangeSymbol: () => keyof typeof config.symbols.rangeSymbols;
@@ -314,7 +312,6 @@ declare module "script/settings" {
         s: "none" | "custom" | "thin-space";
         e: "e" | "x10";
         m: boolean;
-        n: "scientific" | "localized";
         z: boolean;
         a: "approximately-equal" | "tilde" | "nearly-equal";
         r: "ellipsis" | "en-dash" | "wave-dash" | "word";

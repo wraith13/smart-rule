@@ -568,7 +568,6 @@ define("script/ui", ["require", "exports", "script/locale", "script/html", "scri
         SettingsPanel.threeDigitSeparatorSelect = HTML.getElementById("select", "three-digit-separator-select");
         SettingsPanel.exponentFormatSelect = HTML.getElementById("select", "exponent-format-select");
         SettingsPanel.exponentMultipleOfThreeCheckbox = HTML.getElementById("input", "exponent-multiple-of-three-checkbox");
-        SettingsPanel.numberFormatSelect = HTML.getElementById("select", "number-format-select");
         SettingsPanel.approximateInfinitySmallAsZeroCheckbox = HTML.getElementById("input", "approximate-infinity-small-as-zero-checkbox");
         SettingsPanel.approximateSymbolSelect = HTML.getElementById("select", "approximate-symbol-select");
         SettingsPanel.rangeSymbolSelect = HTML.getElementById("select", "range-symbol-select");
@@ -879,7 +878,7 @@ define("resource/config", [], {
 define("script/settings", ["require", "exports", "script/ui"], function (require, exports, UI) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.applySettings = exports.getAllSettings = exports.getOrSymbol = exports.getRangeSymbol = exports.getApproximateSymbol = exports.getApproximateInfinitySmallAsZero = exports.getNumberFormat = exports.getExponentMultipleOfThree = exports.getExponentFormat = exports.getThreeDigitSeparator = exports.getTheme = exports.isIncludeCursor = void 0;
+    exports.applySettings = exports.getAllSettings = exports.getOrSymbol = exports.getRangeSymbol = exports.getApproximateSymbol = exports.getApproximateInfinitySmallAsZero = exports.getExponentMultipleOfThree = exports.getExponentFormat = exports.getThreeDigitSeparator = exports.getTheme = exports.isIncludeCursor = void 0;
     UI = __importStar(UI);
     const isIncludeCursor = () => UI.SavePanel.includeCursorCheckbox.checked;
     exports.isIncludeCursor = isIncludeCursor;
@@ -892,8 +891,6 @@ define("script/settings", ["require", "exports", "script/ui"], function (require
     exports.getExponentFormat = getExponentFormat;
     const getExponentMultipleOfThree = () => UI.SettingsPanel.exponentMultipleOfThreeCheckbox.checked;
     exports.getExponentMultipleOfThree = getExponentMultipleOfThree;
-    const getNumberFormat = () => UI.SettingsPanel.numberFormatSelect.value;
-    exports.getNumberFormat = getNumberFormat;
     const getApproximateInfinitySmallAsZero = () => UI.SettingsPanel.approximateInfinitySmallAsZeroCheckbox.checked;
     exports.getApproximateInfinitySmallAsZero = getApproximateInfinitySmallAsZero;
     const getApproximateSymbol = () => UI.SettingsPanel.approximateSymbolSelect.value;
@@ -910,7 +907,6 @@ define("script/settings", ["require", "exports", "script/ui"], function (require
         s: (0, exports.getThreeDigitSeparator)(),
         e: (0, exports.getExponentFormat)(),
         m: (0, exports.getExponentMultipleOfThree)(),
-        n: (0, exports.getNumberFormat)(),
         z: (0, exports.getApproximateInfinitySmallAsZero)(),
         a: (0, exports.getApproximateSymbol)(),
         r: (0, exports.getRangeSymbol)(),
@@ -918,18 +914,17 @@ define("script/settings", ["require", "exports", "script/ui"], function (require
     });
     exports.getAllSettings = getAllSettings;
     const applySettings = (settings) => {
-        var _a, _b, _c, _d, _e, _f, _g, _h;
+        var _a, _b, _c, _d, _e, _f, _g;
         UI.SavePanel.includeCursorCheckbox.checked = settings.i;
         UI.SettingsPanel.languageSelect.value = settings.l;
         UI.SettingsPanel.themeSelect.value = (_a = settings.t) !== null && _a !== void 0 ? _a : "auto";
         UI.SettingsPanel.threeDigitSeparatorSelect.value = (_b = settings.s) !== null && _b !== void 0 ? _b : "thin-space";
         UI.SettingsPanel.exponentFormatSelect.value = (_c = settings.e) !== null && _c !== void 0 ? _c : "x10";
         UI.SettingsPanel.exponentMultipleOfThreeCheckbox.checked = settings.m;
-        UI.SettingsPanel.numberFormatSelect.value = (_d = settings.n) !== null && _d !== void 0 ? _d : "scientific";
-        UI.SettingsPanel.approximateInfinitySmallAsZeroCheckbox.checked = (_e = settings.z) !== null && _e !== void 0 ? _e : false;
-        UI.SettingsPanel.approximateSymbolSelect.value = (_f = settings.a) !== null && _f !== void 0 ? _f : "tilde";
-        UI.SettingsPanel.rangeSymbolSelect.value = (_g = settings.r) !== null && _g !== void 0 ? _g : "ellipsis";
-        UI.SettingsPanel.orSymbolSelect.value = (_h = settings.o) !== null && _h !== void 0 ? _h : "union";
+        UI.SettingsPanel.approximateInfinitySmallAsZeroCheckbox.checked = (_d = settings.z) !== null && _d !== void 0 ? _d : false;
+        UI.SettingsPanel.approximateSymbolSelect.value = (_e = settings.a) !== null && _e !== void 0 ? _e : "tilde";
+        UI.SettingsPanel.rangeSymbolSelect.value = (_f = settings.r) !== null && _f !== void 0 ? _f : "ellipsis";
+        UI.SettingsPanel.orSymbolSelect.value = (_g = settings.o) !== null && _g !== void 0 ? _g : "union";
     };
     exports.applySettings = applySettings;
 });
@@ -12027,7 +12022,6 @@ define("script/event", ["require", "exports", "script/url", "script/type", "scri
         UI.SettingsPanel.threeDigitSeparatorSelect.addEventListener("change", () => Render.markDirty());
         UI.SettingsPanel.exponentFormatSelect.addEventListener("change", () => Render.markDirty());
         UI.SettingsPanel.exponentMultipleOfThreeCheckbox.addEventListener("change", () => Render.markDirty());
-        UI.SettingsPanel.numberFormatSelect.addEventListener("change", () => Render.markDirty());
         UI.SettingsPanel.approximateInfinitySmallAsZeroCheckbox.addEventListener("change", () => Render.markDirty());
         UI.SettingsPanel.approximateSymbolSelect.addEventListener("change", () => Render.markDirty());
         UI.SettingsPanel.rangeSymbolSelect.addEventListener("change", () => Render.markDirty());
