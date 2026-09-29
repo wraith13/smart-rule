@@ -11736,6 +11736,7 @@ define("script/event", ["require", "exports", "script/url", "script/type", "scri
         updateHorizontalSnapDelta(snappedPosition - next);
         Model.data.offset.x = snappedPosition;
         Render.markDirty();
+        Render.resize();
     };
     exports.horizontalScroll = horizontalScroll;
     const resetZoom = () => {

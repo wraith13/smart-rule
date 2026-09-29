@@ -156,6 +156,7 @@ export const horizontalScroll = (event: Ruler.SnapPositionEvent, delta: number):
     updateHorizontalSnapDelta(snappedPosition - next);
     Model.data.offset.x = snappedPosition;
     Render.markDirty();
+    Render.resize();
 };
 export const resetZoom = (): void =>
 {
