@@ -1767,6 +1767,7 @@ declare module "script/ruler" {
     import * as Calculation from "script/calculation";
     export let scale: number;
     export let LaneWidths: number[];
+    export const cursorLaneWidth: number;
     export const setLaneWidth: (laneIndex: number, width: number) => void;
     export const renderer: (model: Type.Model, view: Type.View, dirty: Set<string>, timeLimit?: number, options?: Type.RenderingOptions) => void;
     export const getLaneIndexFromPosition: (position: number) => number | null;
@@ -1991,6 +1992,7 @@ declare module "script/json-eval-updater" {
                         dark: string;
                     };
                     laneWidth: number;
+                    handleRadius: number;
                     slideSeparator: {
                         width: number;
                         color: {

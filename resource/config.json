@@ -142,6 +142,7 @@
                 "dark": "#1A1A1A"
             },
             "laneWidth": 210,
+            "handleRadius": 24,
             "slideSeparator":
             {
                 "width": 1,

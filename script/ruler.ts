@@ -10,6 +10,7 @@ import * as Comparer from "./comparer";
 import config from "@resource/config.json";
 export let scale = 1.0;
 export let LaneWidths: number[] = [];
+export const cursorLaneWidth = config.render.ruler.handleRadius *2;
 export const setLaneWidth = (laneIndex: number, width: number): void =>
 {
     if (LaneWidths[laneIndex] !== width)
@@ -1105,7 +1106,7 @@ export const drawAnchorLine = (model: Type.Model, view: Type.View, options?: Typ
     const svg = UI.rulerOverlay;
     const visibleSvgWidth = UI.rulerSvg.viewBox.baseVal.width -Model.data.offset.x;
     const color = config.render.ruler.lineColor;
-    const handleRadius = 24;
+    const handleRadius = config.render.ruler.handleRadius;
     const lineOnBackground = SVG.makeSure
     (
         UI.rulerSvg,

@@ -786,6 +786,7 @@ define("resource/config", [], {
                 "dark": "#1A1A1A"
             },
             "laneWidth": 210,
+            "handleRadius": 24,
             "slideSeparator": {
                 "width": 1,
                 "color": {
@@ -10125,7 +10126,7 @@ define("script/render", ["require", "exports", "script/view", "script/model", "r
 define("script/ruler", ["require", "exports", "script/locale", "script/type", "script/calculation", "script/model", "script/ui", "script/theme", "script/render", "script/svg", "script/comparer", "resource/config"], function (require, exports, Locale, Type, Calculation, Model, UI, Theme, Render, SVG, Comparer, config_json_6) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.getRulerWidth = exports.resize = exports.drawLaneUnitPopup = exports.drawLanePropertyPopup = exports.drawPopup = exports.drawAnchorLine = exports.slideCursor = exports.snapHorizontalPosition = exports.snapVerticalPosition = exports.getAreaPositions = exports.nextPosition = exports.snapPosition = exports.regulateReferencePositions = exports.getReferenceLaneIndexFromEvent = exports.garbageCollectLanes = exports.drawTicks = exports.calculateMinimumFractionDigits = exports.getFractionDigitsFromUnit = exports.makeShortNumberLabel = exports.makeNumberLabel = exports.makeNumberLabelPart = exports.drawAreas = exports.getAreaFill = exports.drawLane = exports.drawLeveledText = exports.getLeftOfLane = exports.makeSureSlide = exports.makeStops = exports.makeVerticalGradient = exports.makeLinerGradient = exports.drawGradientDefines = exports.getLaneIndexFromPosition = exports.renderer = exports.setLaneWidth = exports.LaneWidths = exports.scale = void 0;
+    exports.initialize = exports.getRulerWidth = exports.resize = exports.drawLaneUnitPopup = exports.drawLanePropertyPopup = exports.drawPopup = exports.drawAnchorLine = exports.slideCursor = exports.snapHorizontalPosition = exports.snapVerticalPosition = exports.getAreaPositions = exports.nextPosition = exports.snapPosition = exports.regulateReferencePositions = exports.getReferenceLaneIndexFromEvent = exports.garbageCollectLanes = exports.drawTicks = exports.calculateMinimumFractionDigits = exports.getFractionDigitsFromUnit = exports.makeShortNumberLabel = exports.makeNumberLabel = exports.makeNumberLabelPart = exports.drawAreas = exports.getAreaFill = exports.drawLane = exports.drawLeveledText = exports.getLeftOfLane = exports.makeSureSlide = exports.makeStops = exports.makeVerticalGradient = exports.makeLinerGradient = exports.drawGradientDefines = exports.getLaneIndexFromPosition = exports.renderer = exports.setLaneWidth = exports.cursorLaneWidth = exports.LaneWidths = exports.scale = void 0;
     Locale = __importStar(Locale);
     Type = __importStar(Type);
     Calculation = __importStar(Calculation);
@@ -10138,6 +10139,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
     config_json_6 = __importDefault(config_json_6);
     exports.scale = 1.0;
     exports.LaneWidths = [];
+    exports.cursorLaneWidth = config_json_6.default.render.ruler.handleRadius * 2;
     const setLaneWidth = (laneIndex, width) => {
         if (exports.LaneWidths[laneIndex] !== width) {
             exports.LaneWidths[laneIndex] = width;
@@ -10985,7 +10987,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         const svg = UI.rulerOverlay;
         const visibleSvgWidth = UI.rulerSvg.viewBox.baseVal.width - Model.data.offset.x;
         const color = config_json_6.default.render.ruler.lineColor;
-        const handleRadius = 24;
+        const handleRadius = config_json_6.default.render.ruler.handleRadius;
         const lineOnBackground = SVG.makeSure(UI.rulerSvg, {
             tag: "line",
             class: "anchor-line",
