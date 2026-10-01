@@ -10126,7 +10126,7 @@ define("script/render", ["require", "exports", "script/view", "script/model", "r
 define("script/ruler", ["require", "exports", "script/locale", "script/type", "script/calculation", "script/model", "script/ui", "script/theme", "script/render", "script/svg", "script/comparer", "resource/config"], function (require, exports, Locale, Type, Calculation, Model, UI, Theme, Render, SVG, Comparer, config_json_6) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.getRulerWidth = exports.resize = exports.drawLaneUnitPopup = exports.drawLanePropertyPopup = exports.drawPopup = exports.drawAnchorLine = exports.slideCursor = exports.snapHorizontalPosition = exports.snapVerticalPosition = exports.getAreaPositions = exports.nextPosition = exports.snapPosition = exports.regulateReferencePositions = exports.getReferenceLaneIndexFromEvent = exports.garbageCollectLanes = exports.drawTicks = exports.calculateMinimumFractionDigits = exports.getFractionDigitsFromUnit = exports.makeShortNumberLabel = exports.makeNumberLabel = exports.makeNumberLabelPart = exports.drawAreas = exports.getAreaFill = exports.drawLane = exports.drawLeveledText = exports.getLeftOfLane = exports.makeSureSlide = exports.makeStops = exports.makeVerticalGradient = exports.makeLinerGradient = exports.drawGradientDefines = exports.getLaneIndexFromPosition = exports.renderer = exports.setLaneWidth = exports.cursorLaneWidth = exports.LaneWidths = exports.scale = void 0;
+    exports.initialize = exports.getRulerWidth = exports.resize = exports.drawLaneUnitPopup = exports.drawLanePropertyPopup = exports.drawPopup = exports.drawAnchorLine = exports.slideCursor = exports.snapHorizontalPosition = exports.snapVerticalPosition = exports.getAreaPositions = exports.nextPosition = exports.snapPosition = exports.regulateReferencePositions = exports.getReferenceLaneIndexFromEvent = exports.garbageCollectLanes = exports.drawTicks = exports.calculateMinimumFractionDigits = exports.getFractionDigitsFromUnit = exports.makeShortNumberLabel = exports.makeNumberLabel = exports.makeNumberLabelPart = exports.drawAreas = exports.getAreaFill = exports.drawCursorLane = exports.drawLane = exports.drawLeveledText = exports.getLeftOfLane = exports.makeSureSlide = exports.makeStops = exports.makeVerticalGradient = exports.makeLinerGradient = exports.drawGradientDefines = exports.getLaneIndexFromPosition = exports.renderer = exports.setLaneWidth = exports.cursorLaneWidth = exports.LaneWidths = exports.scale = void 0;
     Locale = __importStar(Locale);
     Type = __importStar(Type);
     Calculation = __importStar(Calculation);
@@ -10162,6 +10162,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                 for (let i = 0; i < Model.getAllLaneCount(); ++i) {
                     dirty.add(`LANE:${i}`);
                 }
+                dirty.add("CURSOR_LANE");
                 dirty.add(Render.RenderItemId.Popup);
                 // dirty.add(Render.Size); // Render.Size はその必要があれば自動的にセットされるのでここではセットしない。 / EN: Render.Size will be set automatically if necessary, so do not set it here.
             }
@@ -10196,6 +10197,10 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                         break;
                     case Render.RenderItemId.Popup:
                         (0, exports.drawPopup)(view);
+                        break;
+                    case "CURSOR_LANE":
+                        const { slide, lane } = Model.getSlideAndLane(0);
+                        (0, exports.drawCursorLane)(view, slide, lane);
                         break;
                     default:
                         if (i.startsWith("LANE:")) {
@@ -10473,6 +10478,9 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         (0, exports.drawTicks)(view, tickGroup, slide, lane, { ticks: (0, exports.calculateMinimumFractionDigits)(content.ticks), areas: content.areas, });
     };
     exports.drawLane = drawLane;
+    const drawCursorLane = (_view, _slide, _lane) => {
+    };
+    exports.drawCursorLane = drawCursorLane;
     const getAreaFill = (isInverted, area) => {
         const direction = ((!isInverted) ? (undefined === area.lowerBound) : (undefined === area.upperBound)) ?
             "top" : "bottom";
@@ -11234,7 +11242,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         });
     };
     exports.resize = resize;
-    const getRulerWidth = () => exports.LaneWidths.reduce((a, b) => a + b, 0);
+    const getRulerWidth = () => exports.LaneWidths.reduce((a, b) => a + b, 0) + exports.cursorLaneWidth;
     exports.getRulerWidth = getRulerWidth;
     const initialize = () => {
         Render.markDirty("DEFINES");

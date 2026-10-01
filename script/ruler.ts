@@ -38,6 +38,7 @@ export const renderer = (model: Type.Model, view: Type.View, dirty: Set<string>,
             {
                 dirty.add(`LANE:${i}`);
             }
+            dirty.add("CURSOR_LANE");
             dirty.add(Render.RenderItemId.Popup);
             // dirty.add(Render.Size); // Render.Size はその必要があれば自動的にセットされるのでここではセットしない。 / EN: Render.Size will be set automatically if necessary, so do not set it here.
         }
@@ -83,6 +84,10 @@ export const renderer = (model: Type.Model, view: Type.View, dirty: Set<string>,
                 break;
             case Render.RenderItemId.Popup:
                 drawPopup(view);
+                break;
+            case "CURSOR_LANE":
+                    const { slide, lane } = Model.getSlideAndLane(0);
+                drawCursorLane(view, slide, lane);
                 break;
             default:
                 if (i.startsWith("LANE:"))
@@ -439,6 +444,10 @@ export const drawLane = (view: Type.View, slide: Type.SlideUnit, lane: Type.Lane
     const content = Model.designTicks(slide, view, lane, Model.makePositionTickWindowFromWindow());
     drawAreas(view, tickGroup, slide, lane, content.areas);
     drawTicks(view, tickGroup, slide, lane, { ticks: calculateMinimumFractionDigits(content.ticks), areas: content.areas, });
+};
+export const drawCursorLane = (_view: Type.View, _slide: Type.SlideUnit, _lane: Type.Lane): void =>
+{
+    
 };
 export const getAreaFill = (isInverted: boolean, area: Type.Area): string =>
 {
