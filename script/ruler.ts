@@ -1444,7 +1444,7 @@ export const resize = () =>
         }
     );
 };
-export const getRulerWidth = (): number => LaneWidths.reduce((a, b) => a + b, 0);
+export const getRulerWidth = (): number => LaneWidths.reduce((a, b) => a + b, 0) +cursorLaneWidth;
 export const initialize = (): void =>
 {
     Render.markDirty("DEFINES");
