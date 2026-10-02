@@ -211,6 +211,8 @@ export const makeSureSlide = (slideIndex: number): SVGGElement => SVG.makeSure
 // };
 export const getLeftOfLane = (laneIndex: number): number =>
     LaneWidths.slice(0, laneIndex).reduce((a, b) => a + b, 0) -Model.data.offset.x;
+export const getLeftOfCursorLane = (): number =>
+    LaneWidths.reduce((a, b) => a + b, 0) -Model.data.offset.x;
 export const drawLeveledText = (label: SVGTextElement, text: string, option: { dx: number; } = { dx: 0, }) =>
 {
     let currentDx = option.dx;
@@ -445,9 +447,47 @@ export const drawLane = (view: Type.View, slide: Type.SlideUnit, lane: Type.Lane
     drawAreas(view, tickGroup, slide, lane, content.areas);
     drawTicks(view, tickGroup, slide, lane, { ticks: calculateMinimumFractionDigits(content.ticks), areas: content.areas, });
 };
-export const drawCursorLane = (_view: Type.View, _slide: Type.SlideUnit, _lane: Type.Lane): void =>
+export const drawCursorLane = (view: Type.View, slide: Type.SlideUnit, lane: Type.Lane): void =>
 {
-    
+    const slideIndex = Model.getSlideIndex(slide);
+    const group: SVGGElement = makeSureSlide(slideIndex);
+    const isLastLane = lane === slide.lanes[slide.lanes.length -1];
+    //const laneIndex = Model.getAllLaneCount();
+    const left = getLeftOfCursorLane();
+    const width = cursorLaneWidth;
+    const tickGroup = SVG.makeSure
+    (
+        group,
+        {
+            tag: "g",
+            class: "tick-group",
+            // "data-lane-index": laneIndex,
+        }
+    );
+    const separator = isLastLane ?
+        config.render.ruler.slideSeparator:
+        config.render.ruler.laneSeparator;
+    SVG.makeSure
+    (
+        group,
+        {
+            tag: "line",
+            class: "lane-separator",
+            // "data-lane-index": laneIndex,
+        },
+        {
+            x1: left + width,
+            y1: 0,
+            x2: left + width,
+            y2: group.ownerSVGElement!.viewBox.baseVal.height,
+            stroke: Theme.resolve(separator.color),
+            "stroke-width": separator.width,
+        }
+    );
+    tickGroup.innerHTML = "";
+    const content = Model.designTicks(slide, view, lane, Model.makePositionTickWindowFromWindow());
+    drawAreas(view, tickGroup, slide, lane, content.areas);
+    drawTicks(view, tickGroup, slide, lane, { ticks: calculateMinimumFractionDigits(content.ticks), areas: content.areas, });
 };
 export const getAreaFill = (isInverted: boolean, area: Type.Area): string =>
 {

@@ -1796,13 +1796,14 @@ declare module "script/ruler" {
     }[];
     export const makeSureSlide: (slideIndex: number) => SVGGElement;
     export const getLeftOfLane: (laneIndex: number) => number;
+    export const getLeftOfCursorLane: () => number;
     export const drawLeveledText: (label: SVGTextElement, text: string, option?: {
         dx: number;
     }) => {
         currentDy: number;
     };
     export const drawLane: (view: Type.View, slide: Type.SlideUnit, lane: Type.Lane) => void;
-    export const drawCursorLane: (_view: Type.View, _slide: Type.SlideUnit, _lane: Type.Lane) => void;
+    export const drawCursorLane: (view: Type.View, slide: Type.SlideUnit, lane: Type.Lane) => void;
     export const getAreaFill: (isInverted: boolean, area: Type.Area) => string;
     export const drawAreas: (view: Type.View, group: SVGGElement, slide: Type.SlideUnit, lane: Type.Lane, areas: Type.Area[], indent?: number) => void;
     export const makeNumberLabelPart: (tick: Type.Tick, rawValue: number) => string;
