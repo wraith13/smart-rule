@@ -1470,7 +1470,7 @@ export const drawLaneUnitPopup = (_view: Type.View, popup: Type.LaneUnitPopup): 
 export const resize = () =>
 {
     const laneIndex = Model.getAllLaneCount();
-    const left = getLeftOfLane(laneIndex);
+    const left = getLeftOfLane(laneIndex) +cursorLaneWidth;
     UI.rulerNewSlidePanel.style.left = `${left}px`;
     UI.rulerHelpPanel.style.left = `${UI.rulerNewSlidePanel.clientWidth +left}px`;
     const width = Math.min(document.body.clientWidth, getRulerWidth());

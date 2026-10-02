@@ -11258,7 +11258,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
     exports.drawLaneUnitPopup = drawLaneUnitPopup;
     const resize = () => {
         const laneIndex = Model.getAllLaneCount();
-        const left = (0, exports.getLeftOfLane)(laneIndex);
+        const left = (0, exports.getLeftOfLane)(laneIndex) + exports.cursorLaneWidth;
         UI.rulerNewSlidePanel.style.left = `${left}px`;
         UI.rulerHelpPanel.style.left = `${UI.rulerNewSlidePanel.clientWidth + left}px`;
         const width = Math.min(document.body.clientWidth, (0, exports.getRulerWidth)());

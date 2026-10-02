@@ -2,7 +2,7 @@
 <!--
     This file is genereted by build.js. このファイルは build.js によって生成されました。
     build options: ../build.json all
-    build at: Fri Oct 02 2026 00:58:23 GMT+0900 (日本標準時)
+    build at: Sat Oct 03 2026 01:42:18 GMT+0900 (日本標準時)
     repository: https://github.com/wraith13/smart-rule/
 -->
 <!-- license:
@@ -662,8 +662,8 @@ button:focus
 <div id="toast-panel"></div>
 <script type="text/javascript">
 const build = {
-    at: "Fri Oct 02 2026 00:58:23 GMT+0900 (日本標準時)",
-    tick: 1790870303724
+    at: "Sat Oct 03 2026 01:42:18 GMT+0900 (日本標準時)",
+    tick: 1790959338352
 };
 const evilCommonjsConfig = {
     "log": {
@@ -12283,7 +12283,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
     exports.drawLaneUnitPopup = drawLaneUnitPopup;
     const resize = () => {
         const laneIndex = Model.getAllLaneCount();
-        const left = (0, exports.getLeftOfLane)(laneIndex);
+        const left = (0, exports.getLeftOfLane)(laneIndex) + exports.cursorLaneWidth;
         UI.rulerNewSlidePanel.style.left = `${left}px`;
         UI.rulerHelpPanel.style.left = `${UI.rulerNewSlidePanel.clientWidth + left}px`;
         const width = Math.min(document.body.clientWidth, (0, exports.getRulerWidth)());
