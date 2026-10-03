@@ -2,7 +2,7 @@
 <!--
     This file is genereted by build.js. このファイルは build.js によって生成されました。
     build options: ../build.json all
-    build at: Sat Oct 03 2026 02:13:04 GMT+0900 (日本標準時)
+    build at: Sat Oct 03 2026 20:18:57 GMT+0900 (日本標準時)
     repository: https://github.com/wraith13/smart-rule/
 -->
 <!-- license:
@@ -662,8 +662,8 @@ button:focus
 <div id="toast-panel"></div>
 <script type="text/javascript">
 const build = {
-    at: "Sat Oct 03 2026 02:13:04 GMT+0900 (日本標準時)",
-    tick: 1790961184516
+    at: "Sat Oct 03 2026 20:18:57 GMT+0900 (日本標準時)",
+    tick: 1791026337309
 };
 const evilCommonjsConfig = {
     "log": {
@@ -11151,7 +11151,7 @@ define("script/render", ["require", "exports", "script/view", "script/model", "r
 define("script/ruler", ["require", "exports", "script/locale", "script/type", "script/calculation", "script/model", "script/ui", "script/theme", "script/render", "script/svg", "script/comparer", "resource/config"], function (require, exports, Locale, Type, Calculation, Model, UI, Theme, Render, SVG, Comparer, config_json_6) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.getRulerWidth = exports.resize = exports.drawLaneUnitPopup = exports.drawLanePropertyPopup = exports.drawPopup = exports.drawAnchorLine = exports.slideCursor = exports.snapHorizontalPosition = exports.snapVerticalPosition = exports.getAreaPositions = exports.nextPosition = exports.snapPosition = exports.regulateReferencePositions = exports.getReferenceLaneIndexFromEvent = exports.garbageCollectLanes = exports.drawTicks = exports.calculateMinimumFractionDigits = exports.getFractionDigitsFromUnit = exports.makeShortNumberLabel = exports.makeNumberLabel = exports.makeNumberLabelPart = exports.drawAreas = exports.getAreaFill = exports.drawCursorLane = exports.drawLane = exports.drawLeveledText = exports.getLeftOfCursorLane = exports.getLeftOfLane = exports.makeSureSlide = exports.makeStops = exports.makeVerticalGradient = exports.makeLinerGradient = exports.drawGradientDefines = exports.getLaneIndexFromPosition = exports.renderer = exports.setLaneWidth = exports.cursorLaneWidth = exports.LaneWidths = exports.scale = void 0;
+    exports.initialize = exports.getRulerWidth = exports.resize = exports.drawLaneUnitPopup = exports.drawLanePropertyPopup = exports.drawPopup = exports.drawAnchorLine = exports.slideCursor = exports.snapHorizontalPosition = exports.snapVerticalPosition = exports.getAreaPositions = exports.nextPosition = exports.snapPosition = exports.regulateReferencePositions = exports.getReferenceLaneIndexFromEvent = exports.garbageCollectLanes = exports.drawTicks = exports.calculateMinimumFractionDigits = exports.getFractionDigitsFromUnit = exports.makeShortNumberLabel = exports.makeNumberLabel = exports.makeNumberLabelPart = exports.drawAreas = exports.getAreaFill = exports.drawCursorLane = exports.drawCursorLaneTicks = exports.drawLane = exports.drawLeveledText = exports.getLeftOfCursorLane = exports.getLeftOfLane = exports.makeSureSlide = exports.makeStops = exports.makeVerticalGradient = exports.makeLinerGradient = exports.drawGradientDefines = exports.getLaneIndexFromPosition = exports.renderer = exports.setLaneWidth = exports.cursorLaneWidth = exports.LaneWidths = exports.scale = void 0;
     Locale = __importStar(Locale);
     Type = __importStar(Type);
     Calculation = __importStar(Calculation);
@@ -11213,7 +11213,8 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                         SVG.setAttributes(backgroundRect, {
                             x: 0,
                             y: 0,
-                            width: Model.getAllLaneCount() * config_json_6.default.render.ruler.laneWidth - Model.data.offset.x,
+                            // width: Model.getAllLaneCount() *config.render.ruler.laneWidth -Model.data.offset.x,
+                            width: Math.min(document.body.clientWidth, (0, exports.getRulerWidth)()),
                             height: UI.rulerSvg.viewBox.baseVal.height,
                             fill: Theme.resolve(config_json_6.default.render.ruler.laneBackgroundColor),
                         });
@@ -11506,6 +11507,36 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         (0, exports.drawTicks)(view, tickGroup, slide, lane, { ticks: (0, exports.calculateMinimumFractionDigits)(content.ticks), areas: content.areas, });
     };
     exports.drawLane = drawLane;
+    const drawCursorLaneTicks = (view, group, slide, lane, content) => {
+        var _a;
+        const isPrimaryLane = Model.isPrimaryLane(lane);
+        const width = exports.cursorLaneWidth;
+        const left = (0, exports.getLeftOfCursorLane)();
+        const right = left + width;
+        for (const tick of content.ticks) {
+            const value = Type.getTickValue(tick);
+            const position = Model.getPositionAt(slide, lane, tick.value, view);
+            if (0 <= position && position <= group.ownerSVGElement.viewBox.baseVal.height && "none" !== tick.type) {
+                const valueString = Calculation.complexNumberToString(value);
+                const isPrimaryTick = isPrimaryLane && 1 === value;
+                const tickTrait = config_json_6.default.render.ruler.tick[tick.type];
+                const color = Theme.resolve((_a = tick.color) !== null && _a !== void 0 ? _a : (isPrimaryTick ? config_json_6.default.render.ruler.primaryTickColor : tickTrait.color));
+                const drawLeftTick = true;
+                const drawRightTick = true;
+                if (drawLeftTick) {
+                    group.appendChild(SVG.make(Object.assign(Object.assign({ tag: "line", class: `tick tick-${tick.type}`, x1: left, y1: position, x2: left + tickTrait.length, y2: position, 
+                        // stroke: tickTrait.color,
+                        stroke: color, "stroke-width": tickTrait.width, "data-tick-value": valueString }, (tick.unit ? { "data-tick-unit": tick.unit } : {})), (tick.label ? { "data-tick-label": Locale.resolve(tick.label) } : {}))));
+                }
+                if (drawRightTick) {
+                    group.appendChild(SVG.make(Object.assign(Object.assign({ tag: "line", class: `tick tick-${tick.type}`, x1: right, y1: position, x2: right - tickTrait.length, y2: position, 
+                        // stroke: tickTrait.color,
+                        stroke: color, "stroke-width": tickTrait.width, "data-tick-value": valueString }, (tick.unit ? { "data-tick-unit": tick.unit } : {})), (tick.label ? { "data-tick-label": Locale.resolve(tick.label) } : {}))));
+                }
+            }
+        }
+    };
+    exports.drawCursorLaneTicks = drawCursorLaneTicks;
     const drawCursorLane = (view, slide, lane) => {
         const slideIndex = Model.getSlideIndex(slide);
         const group = (0, exports.makeSureSlide)(slideIndex);
@@ -11515,7 +11546,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         const width = exports.cursorLaneWidth;
         const tickGroup = SVG.makeSure(group, {
             tag: "g",
-            class: "tick-group",
+            class: "cursor-tick-group",
             // "data-lane-index": laneIndex,
         });
         const separator = isLastLane ?
@@ -11523,7 +11554,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
             config_json_6.default.render.ruler.laneSeparator;
         SVG.makeSure(group, {
             tag: "line",
-            class: "lane-separator",
+            class: "cursor-lane-separator",
             // "data-lane-index": laneIndex,
         }, {
             x1: left + width,
@@ -11536,7 +11567,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         tickGroup.innerHTML = "";
         const content = Model.designTicks(slide, view, lane, Model.makePositionTickWindowFromWindow());
         (0, exports.drawAreas)(view, tickGroup, slide, lane, content.areas);
-        (0, exports.drawTicks)(view, tickGroup, slide, lane, { ticks: (0, exports.calculateMinimumFractionDigits)(content.ticks), areas: content.areas, });
+        (0, exports.drawCursorLaneTicks)(view, tickGroup, slide, lane, { ticks: (0, exports.calculateMinimumFractionDigits)(content.ticks), areas: content.areas, });
     };
     exports.drawCursorLane = drawCursorLane;
     const getAreaFill = (isInverted, area) => {

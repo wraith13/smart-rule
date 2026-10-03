@@ -74,7 +74,8 @@ export const renderer = (model: Type.Model, view: Type.View, dirty: Set<string>,
                     {
                         x: 0,
                         y: 0,
-                        width: Model.getAllLaneCount() *config.render.ruler.laneWidth -Model.data.offset.x,
+                        // width: Model.getAllLaneCount() *config.render.ruler.laneWidth -Model.data.offset.x,
+                        width: Math.min(document.body.clientWidth, getRulerWidth()),
                         height: UI.rulerSvg.viewBox.baseVal.height,
                         fill: Theme.resolve(config.render.ruler.laneBackgroundColor),
                     }
@@ -448,6 +449,74 @@ export const drawLane = (view: Type.View, slide: Type.SlideUnit, lane: Type.Lane
     drawAreas(view, tickGroup, slide, lane, content.areas);
     drawTicks(view, tickGroup, slide, lane, { ticks: calculateMinimumFractionDigits(content.ticks), areas: content.areas, });
 };
+export const drawCursorLaneTicks = (view: Type.View, group: SVGGElement, slide: Type.SlideUnit, lane: Type.Lane, content: Type.LaneContent): void =>
+{
+    const isPrimaryLane = Model.isPrimaryLane(lane);
+    const width = cursorLaneWidth;
+    const left = getLeftOfCursorLane();
+    const right = left + width;
+    for(const tick of content.ticks)
+    {
+        const value = Type.getTickValue(tick);
+        const position = Model.getPositionAt(slide, lane, tick.value, view);
+        if (0 <= position && position <= group.ownerSVGElement!.viewBox.baseVal.height && "none" !== tick.type)
+        {
+            const valueString = Calculation.complexNumberToString(value);
+            const isPrimaryTick = isPrimaryLane && 1 === value;
+            const tickTrait = config.render.ruler.tick[tick.type];
+            const color = Theme.resolve
+            (
+                tick.color ??
+                (isPrimaryTick ? config.render.ruler.primaryTickColor: tickTrait.color)
+            );
+            const drawLeftTick = true;
+            const drawRightTick = true;
+            if (drawLeftTick)
+            {
+                group.appendChild
+                (
+                    SVG.make
+                    ({
+                        tag: "line",
+                        class: `tick tick-${tick.type}`,
+                        x1: left,
+                        y1: position,
+                        x2: left + tickTrait.length,
+                        y2: position,
+                        // stroke: tickTrait.color,
+                        stroke: color,
+                        "stroke-width": tickTrait.width,
+                        "data-tick-value": valueString,
+                        ...(tick.unit ? { "data-tick-unit": tick.unit } : {}),
+                        ...(tick.label ? { "data-tick-label": Locale.resolve(tick.label) } : {}),
+                    })
+                );
+            }
+            if (drawRightTick)
+            {
+                group.appendChild
+                (
+                    SVG.make
+                    ({
+                        tag: "line",
+                        class: `tick tick-${tick.type}`,
+                        x1: right,
+                        y1: position,
+                        x2: right - tickTrait.length,
+                        y2: position,
+                        // stroke: tickTrait.color,
+                        stroke: color,
+                        "stroke-width": tickTrait.width,
+                        "data-tick-value": valueString,
+                        ...(tick.unit ? { "data-tick-unit": tick.unit } : {}),
+                        ...(tick.label ? { "data-tick-label": Locale.resolve(tick.label) } : {}),
+                    })
+                );
+            }
+        }
+    }
+};
+
 export const drawCursorLane = (view: Type.View, slide: Type.SlideUnit, lane: Type.Lane): void =>
 {
     const slideIndex = Model.getSlideIndex(slide);
@@ -461,7 +530,7 @@ export const drawCursorLane = (view: Type.View, slide: Type.SlideUnit, lane: Typ
         group,
         {
             tag: "g",
-            class: "tick-group",
+            class: "cursor-tick-group",
             // "data-lane-index": laneIndex,
         }
     );
@@ -473,7 +542,7 @@ export const drawCursorLane = (view: Type.View, slide: Type.SlideUnit, lane: Typ
         group,
         {
             tag: "line",
-            class: "lane-separator",
+            class: "cursor-lane-separator",
             // "data-lane-index": laneIndex,
         },
         {
@@ -488,7 +557,7 @@ export const drawCursorLane = (view: Type.View, slide: Type.SlideUnit, lane: Typ
     tickGroup.innerHTML = "";
     const content = Model.designTicks(slide, view, lane, Model.makePositionTickWindowFromWindow());
     drawAreas(view, tickGroup, slide, lane, content.areas);
-    drawTicks(view, tickGroup, slide, lane, { ticks: calculateMinimumFractionDigits(content.ticks), areas: content.areas, });
+    drawCursorLaneTicks(view, tickGroup, slide, lane, { ticks: calculateMinimumFractionDigits(content.ticks), areas: content.areas, });
 };
 export const getAreaFill = (isInverted: boolean, area: Type.Area): string =>
 {
