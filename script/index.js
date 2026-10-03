@@ -10153,7 +10153,6 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                 Render.resetDirty(Render.RenderItemId.AllItems);
                 //dirty.add("DEFINES"); こいつは初回だけで良いのでここでは登録しない。 / EN: This is only necessary for the first time, so do not register it here.
                 dirty.add("BACKGROUND");
-                dirty.add("ANCHOR_LINE");
                 // for (let i = 0; i < Model.data.slides.length; ++i)
                 // {
                 //     dirty.add(`SLIDE:${i}`);
@@ -10163,6 +10162,8 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                     dirty.add(`LANE:${i}`);
                 }
                 dirty.add("CURSOR_LANE");
+                dirty.add(Render.RenderItemId.Size);
+                dirty.add("ANCHOR_LINE");
                 dirty.add(Render.RenderItemId.Popup);
                 // dirty.add(Render.Size); // Render.Size はその必要があれば自動的にセットされるのでここではセットしない。 / EN: Render.Size will be set automatically if necessary, so do not set it here.
             }

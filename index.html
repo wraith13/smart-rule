@@ -2,7 +2,7 @@
 <!--
     This file is genereted by build.js. このファイルは build.js によって生成されました。
     build options: ../build.json all
-    build at: Sat Oct 03 2026 01:42:18 GMT+0900 (日本標準時)
+    build at: Sat Oct 03 2026 02:13:04 GMT+0900 (日本標準時)
     repository: https://github.com/wraith13/smart-rule/
 -->
 <!-- license:
@@ -662,8 +662,8 @@ button:focus
 <div id="toast-panel"></div>
 <script type="text/javascript">
 const build = {
-    at: "Sat Oct 03 2026 01:42:18 GMT+0900 (日本標準時)",
-    tick: 1790959338352
+    at: "Sat Oct 03 2026 02:13:04 GMT+0900 (日本標準時)",
+    tick: 1790961184516
 };
 const evilCommonjsConfig = {
     "log": {
@@ -11178,7 +11178,6 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                 Render.resetDirty(Render.RenderItemId.AllItems);
                 //dirty.add("DEFINES"); こいつは初回だけで良いのでここでは登録しない。 / EN: This is only necessary for the first time, so do not register it here.
                 dirty.add("BACKGROUND");
-                dirty.add("ANCHOR_LINE");
                 // for (let i = 0; i < Model.data.slides.length; ++i)
                 // {
                 //     dirty.add(`SLIDE:${i}`);
@@ -11188,6 +11187,8 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                     dirty.add(`LANE:${i}`);
                 }
                 dirty.add("CURSOR_LANE");
+                dirty.add(Render.RenderItemId.Size);
+                dirty.add("ANCHOR_LINE");
                 dirty.add(Render.RenderItemId.Popup);
                 // dirty.add(Render.Size); // Render.Size はその必要があれば自動的にセットされるのでここではセットしない。 / EN: Render.Size will be set automatically if necessary, so do not set it here.
             }
