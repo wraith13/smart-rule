@@ -11059,6 +11059,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         const visibleSvgWidth = UI.rulerSvg.viewBox.baseVal.width - Model.data.offset.x;
         const color = config_json_6.default.render.ruler.lineColor;
         const handleRadius = config_json_6.default.render.ruler.handleRadius;
+        const handleCenterX = visibleSvgWidth - handleRadius;
         const lineOnBackground = SVG.makeSure(UI.rulerSvg, {
             tag: "line",
             class: "anchor-line",
@@ -11113,7 +11114,8 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
             },
         };
         const handle = SVG.makeSure(svg, {
-            tag: "circle",
+            // tag: "circle",
+            tag: "polygon",
             class: "anchor-drag-handle",
             "pointer-events": "auto",
             events: {
@@ -11156,9 +11158,10 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                 "stroke-width": config_json_6.default.render.ruler.lineWidth,
             });
             SVG.setAttributes(handle, {
-                cx: visibleSvgWidth - handleRadius,
-                cy: position,
-                r: handleRadius,
+                // cx: visibleSvgWidth -handleRadius,
+                // cy: position,
+                // r: handleRadius,
+                points: `${handleCenterX - handleRadius},${position} ${handleCenterX},${position - handleRadius} ${handleCenterX + handleRadius},${position} ${handleCenterX},${position + handleRadius}`,
                 fill: color,
             });
         }
@@ -11171,17 +11174,19 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
             });
             if (position < 0) {
                 SVG.setAttributes(handle, {
-                    cx: visibleSvgWidth - handleRadius,
-                    cy: 0,
-                    r: handleRadius,
+                    // cx: visibleSvgWidth -handleRadius,
+                    // cy: 0,
+                    // r: handleRadius,
+                    points: `${handleCenterX - handleRadius},0 ${handleCenterX + handleRadius},0 ${handleCenterX},${handleRadius}`,
                     fill: color,
                 });
             }
             else {
                 SVG.setAttributes(handle, {
-                    cx: visibleSvgWidth - handleRadius,
-                    cy: svg.viewBox.baseVal.height,
-                    r: handleRadius,
+                    // cx: visibleSvgWidth -handleRadius,
+                    // cy: svg.viewBox.baseVal.height,
+                    // r: handleRadius,
+                    points: `${handleCenterX - handleRadius},${svg.viewBox.baseVal.height} ${handleCenterX + handleRadius},${svg.viewBox.baseVal.height} ${handleCenterX},${svg.viewBox.baseVal.height - handleRadius}`,
                     fill: color,
                 });
             }

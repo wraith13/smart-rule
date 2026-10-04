@@ -1225,6 +1225,7 @@ export const drawAnchorLine = (model: Type.Model, view: Type.View, options?: Typ
     const visibleSvgWidth = UI.rulerSvg.viewBox.baseVal.width -Model.data.offset.x;
     const color = config.render.ruler.lineColor;
     const handleRadius = config.render.ruler.handleRadius;
+    const handleCenterX = visibleSvgWidth -handleRadius;
     const lineOnBackground = SVG.makeSure
     (
         UI.rulerSvg,
@@ -1302,7 +1303,8 @@ export const drawAnchorLine = (model: Type.Model, view: Type.View, options?: Typ
     (
         svg,
         {
-            tag: "circle",
+            // tag: "circle",
+            tag: "polygon",
             class: "anchor-drag-handle",
             "pointer-events": "auto",
             events:
@@ -1363,9 +1365,10 @@ export const drawAnchorLine = (model: Type.Model, view: Type.View, options?: Typ
         (
             handle,
             {
-                cx: visibleSvgWidth -handleRadius,
-                cy: position,
-                r: handleRadius,
+                // cx: visibleSvgWidth -handleRadius,
+                // cy: position,
+                // r: handleRadius,
+                points: `${handleCenterX -handleRadius},${position} ${handleCenterX},${position -handleRadius} ${handleCenterX +handleRadius},${position} ${handleCenterX},${position +handleRadius}`,
                 fill: color,
             }
         );
@@ -1392,9 +1395,10 @@ export const drawAnchorLine = (model: Type.Model, view: Type.View, options?: Typ
             (
                 handle,
                 {
-                    cx: visibleSvgWidth -handleRadius,
-                    cy: 0,
-                    r: handleRadius,
+                    // cx: visibleSvgWidth -handleRadius,
+                    // cy: 0,
+                    // r: handleRadius,
+                    points: `${handleCenterX -handleRadius},0 ${handleCenterX +handleRadius},0 ${handleCenterX},${handleRadius}`,
                     fill: color,
                 }
             );
@@ -1405,9 +1409,10 @@ export const drawAnchorLine = (model: Type.Model, view: Type.View, options?: Typ
             (
                 handle,
                 {
-                    cx: visibleSvgWidth -handleRadius,
-                    cy: svg.viewBox.baseVal.height,
-                    r: handleRadius,
+                    // cx: visibleSvgWidth -handleRadius,
+                    // cy: svg.viewBox.baseVal.height,
+                    // r: handleRadius,
+                    points: `${handleCenterX -handleRadius},${svg.viewBox.baseVal.height} ${handleCenterX +handleRadius},${svg.viewBox.baseVal.height} ${handleCenterX},${svg.viewBox.baseVal.height -handleRadius}`,
                     fill: color,
                 }
             );
