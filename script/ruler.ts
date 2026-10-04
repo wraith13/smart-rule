@@ -26,8 +26,8 @@ export const renderer = (model: Type.Model, view: Type.View, dirty: Set<string>,
         if (dirty.has(Render.RenderItemId.AllItems))
         {
             Render.resetDirty(Render.RenderItemId.AllItems);
-            //dirty.add("DEFINES"); こいつは初回だけで良いのでここでは登録しない。 / EN: This is only necessary for the first time, so do not register it here.
-            dirty.add("BACKGROUND");
+            // dirty.add("DEFINES"); こいつは初回だけで良いのでここでは登録しない。 / EN: This is only necessary for the first time, so do not register it here.
+            // dirty.add("BACKGROUND"); Render.RenderItemId.Size 内でセットされる。
             // for (let i = 0; i < Model.data.slides.length; ++i)
             // {
             //     dirty.add(`SLIDE:${i}`);
@@ -37,11 +37,10 @@ export const renderer = (model: Type.Model, view: Type.View, dirty: Set<string>,
             {
                 dirty.add(`LANE:${i}`);
             }
-            dirty.add("CURSOR_LANE");
             dirty.add(Render.RenderItemId.Size);
-            dirty.add("ANCHOR_LINE");
+            // dirty.add("CURSOR_LANE"); Render.RenderItemId.Size 内でセットされる。
+            // dirty.add("ANCHOR_LINE"); Render.RenderItemId.Size 内でセットされる。
             dirty.add(Render.RenderItemId.Popup);
-            // dirty.add(Render.Size); // Render.Size はその必要があれば自動的にセットされるのでここではセットしない。 / EN: Render.Size will be set automatically if necessary, so do not set it here.
         }
         if (dirty.has("LANE_GARBAGE_COLLECTOR"))
         {
@@ -521,7 +520,7 @@ export const drawCursorLane = (view: Type.View, slide: Type.SlideUnit, lane: Typ
 {
     const slideIndex = Model.getSlideIndex(slide);
     const group: SVGGElement = makeSureSlide(slideIndex);
-    const isLastLane = lane === slide.lanes[slide.lanes.length -1];
+    const isLastLane = true;
     //const laneIndex = Model.getAllLaneCount();
     const left = getLeftOfCursorLane();
     const width = cursorLaneWidth;
@@ -1562,11 +1561,15 @@ export const resize = () =>
             viewBox: `0 0 ${document.body.clientWidth} ${document.body.clientHeight}`,
         }
     );
+    Render.markDirty("BACKGROUND");
+    Render.markDirty("CURSOR_LANE");
+    Render.markDirty("ANCHOR_LINE");
 };
 export const getRulerWidth = (): number => LaneWidths.reduce((a, b) => a + b, 0) +cursorLaneWidth;
 export const initialize = (): void =>
 {
     Render.markDirty("DEFINES");
+    Render.markDirty("BACKGROUND");
     Render.markDirty(Render.RenderItemId.Size);
     // resize();
 };

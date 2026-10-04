@@ -10151,8 +10151,8 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         if (0 < dirty.size) {
             if (dirty.has(Render.RenderItemId.AllItems)) {
                 Render.resetDirty(Render.RenderItemId.AllItems);
-                //dirty.add("DEFINES"); こいつは初回だけで良いのでここでは登録しない。 / EN: This is only necessary for the first time, so do not register it here.
-                dirty.add("BACKGROUND");
+                // dirty.add("DEFINES"); こいつは初回だけで良いのでここでは登録しない。 / EN: This is only necessary for the first time, so do not register it here.
+                // dirty.add("BACKGROUND"); Render.RenderItemId.Size 内でセットされる。
                 // for (let i = 0; i < Model.data.slides.length; ++i)
                 // {
                 //     dirty.add(`SLIDE:${i}`);
@@ -10161,11 +10161,10 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                 for (let i = 0; i < Model.getAllLaneCount(); ++i) {
                     dirty.add(`LANE:${i}`);
                 }
-                dirty.add("CURSOR_LANE");
                 dirty.add(Render.RenderItemId.Size);
-                dirty.add("ANCHOR_LINE");
+                // dirty.add("CURSOR_LANE"); Render.RenderItemId.Size 内でセットされる。
+                // dirty.add("ANCHOR_LINE"); Render.RenderItemId.Size 内でセットされる。
                 dirty.add(Render.RenderItemId.Popup);
-                // dirty.add(Render.Size); // Render.Size はその必要があれば自動的にセットされるのでここではセットしない。 / EN: Render.Size will be set automatically if necessary, so do not set it here.
             }
             if (dirty.has("LANE_GARBAGE_COLLECTOR")) {
                 // レーンのレンダリングより必ず先に処理しておく必要がある。 / EN: This needs to be processed before rendering the lane.
@@ -10515,7 +10514,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
     const drawCursorLane = (view, slide, lane) => {
         const slideIndex = Model.getSlideIndex(slide);
         const group = (0, exports.makeSureSlide)(slideIndex);
-        const isLastLane = lane === slide.lanes[slide.lanes.length - 1];
+        const isLastLane = true;
         //const laneIndex = Model.getAllLaneCount();
         const left = (0, exports.getLeftOfCursorLane)();
         const width = exports.cursorLaneWidth;
@@ -11304,12 +11303,16 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
             height: document.body.clientHeight,
             viewBox: `0 0 ${document.body.clientWidth} ${document.body.clientHeight}`,
         });
+        Render.markDirty("BACKGROUND");
+        Render.markDirty("CURSOR_LANE");
+        Render.markDirty("ANCHOR_LINE");
     };
     exports.resize = resize;
     const getRulerWidth = () => exports.LaneWidths.reduce((a, b) => a + b, 0) + exports.cursorLaneWidth;
     exports.getRulerWidth = getRulerWidth;
     const initialize = () => {
         Render.markDirty("DEFINES");
+        Render.markDirty("BACKGROUND");
         Render.markDirty(Render.RenderItemId.Size);
         // resize();
     };
