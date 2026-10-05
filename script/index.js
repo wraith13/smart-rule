@@ -10126,7 +10126,7 @@ define("script/render", ["require", "exports", "script/view", "script/model", "r
 define("script/ruler", ["require", "exports", "script/locale", "script/type", "script/calculation", "script/model", "script/ui", "script/theme", "script/render", "script/svg", "script/comparer", "resource/config"], function (require, exports, Locale, Type, Calculation, Model, UI, Theme, Render, SVG, Comparer, config_json_6) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.getRulerWidth = exports.resize = exports.drawLaneUnitPopup = exports.drawLanePropertyPopup = exports.drawPopup = exports.drawAnchorLine = exports.slideCursor = exports.snapHorizontalPosition = exports.snapVerticalPosition = exports.getAreaPositions = exports.nextPosition = exports.snapPosition = exports.regulateReferencePositions = exports.getReferenceLaneIndexFromEvent = exports.garbageCollectLanes = exports.drawTicks = exports.calculateMinimumFractionDigits = exports.getFractionDigitsFromUnit = exports.makeShortNumberLabel = exports.makeNumberLabel = exports.makeNumberLabelPart = exports.drawAreas = exports.getAreaFill = exports.drawCursorLane = exports.drawCursorLaneTicks = exports.drawLane = exports.drawLeveledText = exports.getLeftOfCursorLane = exports.getLeftOfLane = exports.makeSureSlide = exports.makeStops = exports.makeVerticalGradient = exports.makeLinerGradient = exports.drawGradientDefines = exports.getLaneIndexFromPosition = exports.renderer = exports.setLaneWidth = exports.cursorLaneWidth = exports.LaneWidths = exports.scale = void 0;
+    exports.initialize = exports.getRulerWidth = exports.resize = exports.drawLaneUnitPopup = exports.drawLanePropertyPopup = exports.drawPopup = exports.drawAnchorLine = exports.slideCursor = exports.snapHorizontalPosition = exports.snapVerticalPosition = exports.getAreaPositions = exports.nextPosition = exports.snapPosition = exports.regulateReferencePositions = exports.getReferenceLaneIndexFromEvent = exports.garbageCollectLanes = exports.drawTicks = exports.calculateMinimumFractionDigits = exports.getFractionDigitsFromUnit = exports.makeShortNumberLabel = exports.makeNumberLabel = exports.makeNumberLabelPart = exports.drawAreas = exports.getAreaFill = exports.drawCursorLane = exports.drawCursorLaneTicks = exports.drawCursorLaneArea = exports.drawLane = exports.drawLeveledText = exports.getLeftOfCursorLane = exports.getLeftOfLane = exports.makeSureSlide = exports.makeStops = exports.makeVerticalGradient = exports.makeLinerGradient = exports.drawGradientDefines = exports.getLaneIndexFromPosition = exports.renderer = exports.setLaneWidth = exports.cursorLaneWidth = exports.LaneWidths = exports.scale = void 0;
     Locale = __importStar(Locale);
     Type = __importStar(Type);
     Calculation = __importStar(Calculation);
@@ -10481,6 +10481,49 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         (0, exports.drawTicks)(view, tickGroup, slide, lane, { ticks: (0, exports.calculateMinimumFractionDigits)(content.ticks), areas: content.areas, });
     };
     exports.drawLane = drawLane;
+    const drawCursorLaneArea = (view, group, slide, lane, areas) => {
+        const left = (0, exports.getLeftOfCursorLane)();
+        const width = exports.cursorLaneWidth;
+        const isInvert = Model.isInvertedLane(lane);
+        for (const area of areas) {
+            const lowerPosition = undefined === area.lowerBound ?
+                ((!isInvert) ? 0 : group.ownerSVGElement.viewBox.baseVal.height) :
+                Model.getPositionAt(slide, lane, area.lowerBound, view);
+            const upperPosition = undefined === area.upperBound ?
+                ((!isInvert) ? group.ownerSVGElement.viewBox.baseVal.height : 0) :
+                Model.getPositionAt(slide, lane, area.upperBound, view);
+            const y = Math.max(0, (!isInvert) ? lowerPosition : upperPosition);
+            const height = Math.min(group.ownerSVGElement.viewBox.baseVal.height - y, (!isInvert) ? upperPosition - y : lowerPosition - y);
+            if (0 < height) {
+                group.appendChild(SVG.make({
+                    tag: "rect",
+                    class: "area",
+                    x: left,
+                    y: y,
+                    width,
+                    height,
+                    fill: (0, exports.getAreaFill)(isInvert, area),
+                }));
+                // if ("none" !== (area.overlay ?? "none"))
+                // {
+                //     group.appendChild
+                //     (
+                //         SVG.make
+                //         ({
+                //             tag: "rect",
+                //             class: "area",
+                //             x: left,
+                //             y: y,
+                //             width,
+                //             height,
+                //             fill: `url(#overlay-${area.overlay}-gradient)`,
+                //         })
+                //     );
+                // }
+            }
+        }
+    };
+    exports.drawCursorLaneArea = drawCursorLaneArea;
     const drawCursorLaneTicks = (view, group, slide, lane, content) => {
         var _a;
         const isPrimaryLane = Model.isPrimaryLane(lane);
@@ -10540,7 +10583,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         });
         tickGroup.innerHTML = "";
         const content = Model.designTicks(slide, view, lane, Model.makePositionTickWindowFromWindow());
-        (0, exports.drawAreas)(view, tickGroup, slide, lane, content.areas);
+        (0, exports.drawCursorLaneArea)(view, tickGroup, slide, lane, content.areas);
         (0, exports.drawCursorLaneTicks)(view, tickGroup, slide, lane, { ticks: (0, exports.calculateMinimumFractionDigits)(content.ticks), areas: content.areas, });
     };
     exports.drawCursorLane = drawCursorLane;

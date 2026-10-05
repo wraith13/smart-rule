@@ -448,6 +448,59 @@ export const drawLane = (view: Type.View, slide: Type.SlideUnit, lane: Type.Lane
     drawAreas(view, tickGroup, slide, lane, content.areas);
     drawTicks(view, tickGroup, slide, lane, { ticks: calculateMinimumFractionDigits(content.ticks), areas: content.areas, });
 };
+export const drawCursorLaneArea = (view: Type.View, group: SVGGElement, slide: Type.SlideUnit, lane: Type.Lane, areas: Type.Area[]): void =>
+{
+    const left = getLeftOfCursorLane();
+    const width = cursorLaneWidth;
+    const isInvert = Model.isInvertedLane(lane);
+    for(const area of areas)
+    {
+        const lowerPosition = undefined === area.lowerBound ?
+            (( ! isInvert) ? 0: group.ownerSVGElement!.viewBox.baseVal.height):
+            Model.getPositionAt(slide, lane, area.lowerBound, view);
+        const upperPosition = undefined === area.upperBound ?
+            (( ! isInvert) ? group.ownerSVGElement!.viewBox.baseVal.height: 0):
+            Model.getPositionAt(slide, lane, area.upperBound, view);
+        const y = Math.max(0, ( ! isInvert) ? lowerPosition: upperPosition);
+        const height = Math.min
+        (
+            group.ownerSVGElement!.viewBox.baseVal.height -y,
+            ( ! isInvert) ? upperPosition -y: lowerPosition -y
+        );
+        if (0 < height)
+        {
+            group.appendChild
+            (
+                SVG.make
+                ({
+                    tag: "rect",
+                    class: "area",
+                    x: left,
+                    y: y,
+                    width,
+                    height,
+                    fill: getAreaFill(isInvert, area),
+                })
+            );
+            // if ("none" !== (area.overlay ?? "none"))
+            // {
+            //     group.appendChild
+            //     (
+            //         SVG.make
+            //         ({
+            //             tag: "rect",
+            //             class: "area",
+            //             x: left,
+            //             y: y,
+            //             width,
+            //             height,
+            //             fill: `url(#overlay-${area.overlay}-gradient)`,
+            //         })
+            //     );
+            // }
+        }
+    }
+};
 export const drawCursorLaneTicks = (view: Type.View, group: SVGGElement, slide: Type.SlideUnit, lane: Type.Lane, content: Type.LaneContent): void =>
 {
     const isPrimaryLane = Model.isPrimaryLane(lane);
@@ -555,7 +608,7 @@ export const drawCursorLane = (view: Type.View, slide: Type.SlideUnit, lane: Typ
     );
     tickGroup.innerHTML = "";
     const content = Model.designTicks(slide, view, lane, Model.makePositionTickWindowFromWindow());
-    drawAreas(view, tickGroup, slide, lane, content.areas);
+    drawCursorLaneArea(view, tickGroup, slide, lane, content.areas);
     drawCursorLaneTicks(view, tickGroup, slide, lane, { ticks: calculateMinimumFractionDigits(content.ticks), areas: content.areas, });
 };
 export const getAreaFill = (isInverted: boolean, area: Type.Area): string =>
