@@ -46,6 +46,7 @@ export const rulerNewSlidePanel = HTML.getElementById("div", "ruler-new-slide-pa
 export const addSlideButton = HTML.getElementById("button", "add-slide-button");
 export const addInvertedSlideButton = HTML.getElementById("button", "add-inverted-slide-button");
 //export const addLaneButton = HTML.getElementById("button", "add-lane-button");
+export const addCursorButton = HTML.getElementById("button", "add-cursor-button");
 export const addSiDigitLaneButton = HTML.getElementById("button", "add-si-digit-lane-button");
 export const addEnDigitLaneButton = HTML.getElementById("button", "add-en-digit-lane-button");
 export const addJaDigitLaneButton = HTML.getElementById("button", "add-ja-digit-lane-button");

@@ -26,6 +26,10 @@ export const addLane = (laneSeed: Type.LaneBase) =>
     slide.lanes.push(lane);
     Render.markDirty();
 };
+export const addCursor = () =>
+{
+
+};
 export const addDigitLane = (digitTable: Model.DigitTableKey) =>
 {
     const { slide } = Model.getLastSlideAndLastLane();
