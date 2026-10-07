@@ -63,9 +63,11 @@ export const getConstantTable = (name: ConstantTableKey): Type.ConstantTable =>
 export const data: Type.Model =
 {
     slides: [],
-    cursor: 0,
+    cursor: [ 0, ],
     offset: { x: 0, y: 0, },
 };
+export const addCursor = () =>
+    data.cursor.push(data.cursor[data.cursor.length -1]);
 export const ticksCache: number[][] = [];
 // export type ValueWithBasePosition = { value: number; basePosition: number; };
 // export type ExValue = number | ValueWithBasePosition;
@@ -3520,7 +3522,7 @@ export const makeSure = (): void =>
     makeSureSlide();
 };
 export const getCursorPosition = (view: Type.View): number =>
-    getPositionAt(getRootSlide(), getRootLane(), data.cursor, view);
+    getPositionAt(getRootSlide(), getRootLane(), data.cursor[0], view);
 export const getCursorValue = (slide: Type.SlideUnit, lane: Type.Lane, view: Type.View) =>
     getValueAt(slide, lane, getCursorPosition(view), view);
 export const getCursorValues = (view: Type.View) =>
@@ -3544,7 +3546,16 @@ export const hasDataArea = (areas: Type.Area[]): boolean =>
     areas.some(area => undefined !== area.label || (undefined !== area.details && hasDataArea(area.details)));
 export const initialize = () =>
 {
-    data.cursor = Calculation.parse(Url.get("cursor")) ?? config.model.defaultCursor;
-    console.log(`Model initialized: cursor=${data.cursor}`);
+    data.cursor = [ config.model.defaultCursor, ];
+    const cursorParam = Url.get("cursor");
+    if (undefined !== cursorParam)
+    {
+        const cursors = JSON.parse(cursorParam);
+        if (Array.isArray(cursors) && 0 < cursors.length && cursors.every(i => "number" === typeof i))
+        {
+            data.cursor = cursors;
+        }
+    }
+    console.log(`Model initialized: cursor=${data.cursor[0]}`);
     makeSure();
 };

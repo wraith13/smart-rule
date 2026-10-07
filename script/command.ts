@@ -28,7 +28,11 @@ export const addLane = (laneSeed: Type.LaneBase) =>
 };
 export const addCursor = () =>
 {
-
+    Model.addCursor();
+    Render.markDirty(Render.RenderItemId.Size);
+    Render.markDirty("BACKGROUND");
+    Render.markDirty("CURSOR_LANE");
+    Render.markDirty("ANCHOR_LINE");
 };
 export const addDigitLane = (digitTable: Model.DigitTableKey) =>
 {

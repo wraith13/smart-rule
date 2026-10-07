@@ -1267,7 +1267,7 @@ export const slideCursor = (model: Type.Model, view: Type.View, event: PointerEv
     const maxPosition = Model.getPositionAt(slide, lane, Calculation.MAX_VALUE, view) ?? Calculation.MAX_VALUE;
     const snappedPosition = snapVerticalPosition(event, view, position);
     const resultPosition = Math.min(maxPosition, Math.max(minPosition, snappedPosition));
-    model.cursor = Calculation.nanToNull(Calculation.getNumberOrNaN(Model.getValueAt(slide, lane, resultPosition, view)?.value)) ?? model.cursor;
+    model.cursor[0] = Calculation.nanToNull(Calculation.getNumberOrNaN(Model.getValueAt(slide, lane, resultPosition, view)?.value)) ?? model.cursor[0];
     Render.markDirty("ANCHOR_LINE");
     return snappedPosition -position;
 };
@@ -1339,7 +1339,7 @@ export const drawAnchorLine = (model: Type.Model, view: Type.View, options?: Typ
                 {
                     event.stopPropagation();
                     const position = initialDraggingAnchorPosition;
-                    model.cursor = Calculation.nanToNull(Calculation.getNumberOrNaN(Model.getValueAt(slide, lane, position, view)?.value)) ?? model.cursor;
+                    model.cursor[0] = Calculation.nanToNull(Calculation.getNumberOrNaN(Model.getValueAt(slide, lane, position, view)?.value)) ?? model.cursor[0];
                     initialDraggingAnchorPosition = undefined;
                     Render.markDirty();
                 }

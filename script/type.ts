@@ -148,7 +148,7 @@ export interface SlideUnit // 🔥 後で evil-type.ts ベースに！
 export interface Model // 🔥 後で evil-type.ts ベースに！
 {
     slides: SlideUnit[];
-    cursor: number;
+    cursor: number[];
     offset: { x: number; y: number; };
 }
 export type LaneContext = "left-end" | "center" | "right-end" | "single";
