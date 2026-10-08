@@ -10506,7 +10506,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
     exports.drawLane = drawLane;
     const drawCursorLaneArea = (view, group, slide, lane, areas) => {
         const left = (0, exports.getLeftOfCursorLane)();
-        const width = exports.cursorLaneWidth;
+        const width = exports.cursorLaneWidth * Model.data.cursor.length;
         const isInvert = Model.isInvertedLane(lane);
         for (const area of areas) {
             const lowerPosition = undefined === area.lowerBound ?
@@ -11128,7 +11128,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         const visibleSvgWidth = UI.rulerSvg.viewBox.baseVal.width;
         const color = config_json_6.default.render.ruler.lineColor;
         const handleRadius = config_json_6.default.render.ruler.handleRadius;
-        const handleCenterX = visibleSvgWidth - handleRadius;
+        const handleCenterX = visibleSvgWidth - handleRadius - ((Model.data.cursor.length - 1 - cursorIndex) * (handleRadius * 2));
         const lineOnBackground = SVG.makeSure(UI.rulerSvg, {
             tag: "line",
             class: "cursor-line",

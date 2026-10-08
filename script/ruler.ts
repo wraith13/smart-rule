@@ -470,7 +470,7 @@ export const drawLane = (view: Type.View, slide: Type.SlideUnit, lane: Type.Lane
 export const drawCursorLaneArea = (view: Type.View, group: SVGGElement, slide: Type.SlideUnit, lane: Type.Lane, areas: Type.Area[]): void =>
 {
     const left = getLeftOfCursorLane();
-    const width = cursorLaneWidth;
+    const width = cursorLaneWidth *Model.data.cursor.length;
     const isInvert = Model.isInvertedLane(lane);
     for(const area of areas)
     {
@@ -1300,7 +1300,7 @@ export const drawCursorLine = (model: Type.Model, view: Type.View, cursorIndex: 
     const visibleSvgWidth = UI.rulerSvg.viewBox.baseVal.width;
     const color = config.render.ruler.lineColor;
     const handleRadius = config.render.ruler.handleRadius;
-    const handleCenterX = visibleSvgWidth -handleRadius;
+    const handleCenterX = visibleSvgWidth -handleRadius -((Model.data.cursor.length -1 -cursorIndex) *(handleRadius *2));
     const lineOnBackground = SVG.makeSure
     (
         UI.rulerSvg,
