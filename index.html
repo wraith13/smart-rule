@@ -2,7 +2,7 @@
 <!--
     This file is genereted by build.js. このファイルは build.js によって生成されました。
     build options: ../build.json all
-    build at: Mon Oct 05 2026 05:12:21 GMT+0900 (日本標準時)
+    build at: Thu Oct 08 2026 00:59:17 GMT+0900 (日本標準時)
     repository: https://github.com/wraith13/smart-rule/
 -->
 <!-- license:
@@ -464,6 +464,7 @@ button:focus
             <button id="add-slide-button">add slide ➡️</button>
             <button id="add-inverted-slide-button">add inverted slide ➡️</button>
             <!-- button id="add-lane-button">⬅️ add lane</button -->
+            <button id="add-cursor-button">add cursor 👆</button>
             <h3>Digit:<h3>
             <button id="add-si-digit-lane-button">⬅️ add si prefix lane</button>
             <button id="add-en-digit-lane-button">⬅️ add en digit lane</button>
@@ -662,8 +663,8 @@ button:focus
 <div id="toast-panel"></div>
 <script type="text/javascript">
 const build = {
-    at: "Mon Oct 05 2026 05:12:21 GMT+0900 (日本標準時)",
-    tick: 1791144741921
+    at: "Thu Oct 08 2026 00:59:17 GMT+0900 (日本標準時)",
+    tick: 1791388757979
 };
 const evilCommonjsConfig = {
     "log": {
@@ -1493,7 +1494,7 @@ define("script/svg", ["require", "exports", "script/element"], function (require
 define("script/ui", ["require", "exports", "script/locale", "script/html", "script/svg"], function (require, exports, Locale, HTML, SVG) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.updateLanguage = exports.ToastPanel = exports.ControlPanel = exports.SettingsPanel = exports.SavePanel = exports.rulerHelpPanel = exports.addHistoryLaneButton = exports.addEmwEnergyLaneButton = exports.addEmwFrequencyLaneButton = exports.addEmwWavelengthLaneButton = exports.addSoundFrequencyLaneButton = exports.addCountingLaneButton = exports.addTemperatureLaneButton = exports.addEnergyLaneButton = exports.addSpeedLaneButton = exports.addTimeLaneButton = exports.addMassLaneButton = exports.addVolumeLaneButton = exports.addAreaLaneButton = exports.addSizeLaneButton = exports.addPrimeDecompositionLaneButton = exports.addPrimeNumbersLaneButton = exports.addArccotangentLaneButton = exports.addArccosecantLaneButton = exports.addArcsecantLaneButton = exports.addArctangentLaneButton = exports.addArccosineLaneButton = exports.addArcsineLaneButton = exports.addCotangentLaneButton = exports.addCosecantLaneButton = exports.addSecantLaneButton = exports.addTangentLaneButton = exports.addCosineLaneButton = exports.addSineLaneButton = exports.addLogarithmic10LaneButton = exports.addLogarithmic2LaneButton = exports.addLogarithmicLaneButton = exports.addExponential10LaneButton = exports.addExponential2LaneButton = exports.addExponentialLaneButton = exports.addCubeRootLaneButton = exports.addSquareRootLaneButton = exports.addCubedLaneButton = exports.addSquaredLaneButton = exports.addJaDigitLaneButton = exports.addEnDigitLaneButton = exports.addSiDigitLaneButton = exports.addInvertedSlideButton = exports.addSlideButton = exports.rulerNewSlidePanel = exports.graphView = exports.gridView = exports.rulerOverlay = exports.rulerSvg = exports.rulerView = exports.viewList = exports.updateRoundBar = exports.setAriaHidden = void 0;
+    exports.initialize = exports.updateLanguage = exports.ToastPanel = exports.ControlPanel = exports.SettingsPanel = exports.SavePanel = exports.rulerHelpPanel = exports.addHistoryLaneButton = exports.addEmwEnergyLaneButton = exports.addEmwFrequencyLaneButton = exports.addEmwWavelengthLaneButton = exports.addSoundFrequencyLaneButton = exports.addCountingLaneButton = exports.addTemperatureLaneButton = exports.addEnergyLaneButton = exports.addSpeedLaneButton = exports.addTimeLaneButton = exports.addMassLaneButton = exports.addVolumeLaneButton = exports.addAreaLaneButton = exports.addSizeLaneButton = exports.addPrimeDecompositionLaneButton = exports.addPrimeNumbersLaneButton = exports.addArccotangentLaneButton = exports.addArccosecantLaneButton = exports.addArcsecantLaneButton = exports.addArctangentLaneButton = exports.addArccosineLaneButton = exports.addArcsineLaneButton = exports.addCotangentLaneButton = exports.addCosecantLaneButton = exports.addSecantLaneButton = exports.addTangentLaneButton = exports.addCosineLaneButton = exports.addSineLaneButton = exports.addLogarithmic10LaneButton = exports.addLogarithmic2LaneButton = exports.addLogarithmicLaneButton = exports.addExponential10LaneButton = exports.addExponential2LaneButton = exports.addExponentialLaneButton = exports.addCubeRootLaneButton = exports.addSquareRootLaneButton = exports.addCubedLaneButton = exports.addSquaredLaneButton = exports.addJaDigitLaneButton = exports.addEnDigitLaneButton = exports.addSiDigitLaneButton = exports.addCursorButton = exports.addInvertedSlideButton = exports.addSlideButton = exports.rulerNewSlidePanel = exports.graphView = exports.gridView = exports.rulerOverlay = exports.rulerSvg = exports.rulerView = exports.viewList = exports.updateRoundBar = exports.setAriaHidden = void 0;
     Locale = __importStar(Locale);
     HTML = __importStar(HTML);
     SVG = __importStar(SVG);
@@ -1537,6 +1538,7 @@ define("script/ui", ["require", "exports", "script/locale", "script/html", "scri
     exports.addSlideButton = HTML.getElementById("button", "add-slide-button");
     exports.addInvertedSlideButton = HTML.getElementById("button", "add-inverted-slide-button");
     //export const addLaneButton = HTML.getElementById("button", "add-lane-button");
+    exports.addCursorButton = HTML.getElementById("button", "add-cursor-button");
     exports.addSiDigitLaneButton = HTML.getElementById("button", "add-si-digit-lane-button");
     exports.addEnDigitLaneButton = HTML.getElementById("button", "add-en-digit-lane-button");
     exports.addJaDigitLaneButton = HTML.getElementById("button", "add-ja-digit-lane-button");
@@ -7887,7 +7889,7 @@ define("resource/constant/history", [], {
 define("script/model", ["require", "exports", "script/locale", "script/calculation", "script/type", "script/url", "script/settings", "script/theme", "script/comparer", "resource/config", "resource/digit/$si", "resource/digit/en", "resource/digit/ja", "resource/angle/sin", "resource/angle/cos", "resource/angle/tan", "resource/angle/sec", "resource/angle/csc", "resource/angle/cot", "resource/constant/size", "resource/constant/area", "resource/constant/volume", "resource/constant/mass", "resource/constant/time", "resource/constant/speed", "resource/constant/energy", "resource/constant/temperature", "resource/constant/counting", "resource/constant/sound-frequency", "resource/constant/emw-wavelength", "resource/constant/emw-frequency", "resource/constant/emw-energy", "resource/constant/history"], function (require, exports, Locale, Calculation, Type, Url, Settings, Theme, Comparer, config_json_3, _si_json_1, en_json_2, ja_json_2, sin_json_1, cos_json_1, tan_json_1, sec_json_1, csc_json_1, cot_json_1, size_json_1, area_json_1, volume_json_1, mass_json_1, time_json_1, speed_json_1, energy_json_1, temperature_json_1, counting_json_1, sound_frequency_json_1, emw_wavelength_json_1, emw_frequency_json_1, emw_energy_json_1, history_json_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.hasDataArea = exports.getLaneContext = exports.getCursorValues = exports.getCursorValue = exports.getCursorPosition = exports.makeSure = exports.removeLane = exports.makeLane = exports.addConstantLane = exports.addDigitLane = exports.addLane = exports.getSlideFromLane = exports.getLane = exports.getLastSlideAndLastLane = exports.getSlideAndLane = exports.makeSureSlide = exports.makeSlide = exports.getLaneIndex = exports.getSlideIndexFromLane = exports.getSlideIndex = exports.isRootSlide = exports.getRootSlideAndRootLane = exports.getRootSlide = exports.isPrimaryLane = exports.isRootLane = exports.getRootLane = exports.makeRootLane = exports.designTicks = exports.complementMinMaxArea = exports.getBottomTick = exports.getTopTick = exports.designOscillatingTicks = exports.designPeriodicTicks = exports.getUnitList = exports.designConstantTicks = exports.makeConstantStandardTickUnit = exports.designConstantTickType = exports.designConstantTickColor = exports.designConstantAreas = exports.makeAreaSpanLabel = exports.formatUniverseEpochDurationForHuman = exports.numberToLocaleString = exports.getLocaleDigitTable = exports.designDigitTicks = exports.makeDigitLabel = exports.designPrimeDecompositionTicks = exports.factorsToString = exports.designPrimeNumbersTicks = exports.designCurvedTicks = exports.designLinearTicks = exports.designLogarithmicTicks = exports.addConstTicks = exports.designAngleTicks360 = exports.designAngleTicks90 = exports.designAngleTicks30 = exports.getMajorRateFromAngle = exports.getMajorRateCore = exports.designAngleTicks10 = exports.designAngleTicksInverted10 = exports.designAngleTicksRegular10 = exports.makeTick = exports.getDigitIndexFromWidth = exports.designCurvedTicks10 = exports.designLinearTicks10 = exports.designLogarithmicTicks10 = exports.designTickType = exports.getLongTickSpaceWidth = exports.makePositionTickWindowFromPositionAndWidth = exports.makePositionTickWindowFromWindow = exports.ValueTickWindowToPositionTickWindow = exports.PositionTickWindowToValueTickWindow = exports.getSnapReferenceLaneIndex = exports.getConvenientWidth = exports.getWidth = exports.getPositionAt = exports.getSlideOffset = exports.getAnchorSlideAndLane = exports.getRawViewPositionAt = exports.logPositionToLinearPosition = exports.linearPositionToLogPosition = exports.getLinearPositionAt = exports.getValueAt = exports.getRawValueAt = exports.angleToQuarter = exports.getPrimaryPositionAt = exports.getPrimaryValueAt = exports.getDenseLabel = exports.applySymbols = exports.applySymbolsForString = exports.applyOrSymbol = exports.getOrSymbol = exports.applyRangeSymbol = exports.getRangeSymbol = exports.applyApproximateSymbol = exports.makeApproximateLabel = exports.getApproximateSymbol = exports.applyApproximateInfinitySmallAsZero = exports.getApproximateInfinitySmallAsZero = exports.getMaxValue = exports.getMinValue = exports.getWidthValueRatioFromAngleTicks = exports.getAngleTick = exports.getAngleTable = exports.getPrimaryTick = exports.getSlidePositionAt = exports.isDiscreteLane = exports.isOscillatingLane = exports.isPeriodicLane = exports.getPrimaryPeriod = exports.getPrimaryPeriod360 = exports.getSlidePosition = exports.isInvertedSlide = exports.isInvertedLane = exports.getAllLanes = exports.getAllLaneCount = exports.RootLaneIndex = exports.RootSlideIndex = exports.ticksCache = exports.data = exports.getConstantTable = exports.constant = exports.getDigitTable = exports.digit = void 0;
+    exports.initialize = exports.hasDataArea = exports.getLaneContext = exports.getCursorValues = exports.getCursorValue = exports.getCursorPosition = exports.makeSure = exports.removeLane = exports.makeLane = exports.addConstantLane = exports.addDigitLane = exports.addLane = exports.getSlideFromLane = exports.getLane = exports.getLastSlideAndLastLane = exports.getSlideAndLane = exports.makeSureSlide = exports.makeSlide = exports.getLaneIndex = exports.getSlideIndexFromLane = exports.getSlideIndex = exports.isRootSlide = exports.getRootSlideAndRootLane = exports.getRootSlide = exports.isPrimaryLane = exports.isRootLane = exports.getRootLane = exports.makeRootLane = exports.designTicks = exports.complementMinMaxArea = exports.getBottomTick = exports.getTopTick = exports.designOscillatingTicks = exports.designPeriodicTicks = exports.getUnitList = exports.designConstantTicks = exports.makeConstantStandardTickUnit = exports.designConstantTickType = exports.designConstantTickColor = exports.designConstantAreas = exports.makeAreaSpanLabel = exports.formatUniverseEpochDurationForHuman = exports.numberToLocaleString = exports.getLocaleDigitTable = exports.designDigitTicks = exports.makeDigitLabel = exports.designPrimeDecompositionTicks = exports.factorsToString = exports.designPrimeNumbersTicks = exports.designCurvedTicks = exports.designLinearTicks = exports.designLogarithmicTicks = exports.addConstTicks = exports.designAngleTicks360 = exports.designAngleTicks90 = exports.designAngleTicks30 = exports.getMajorRateFromAngle = exports.getMajorRateCore = exports.designAngleTicks10 = exports.designAngleTicksInverted10 = exports.designAngleTicksRegular10 = exports.makeTick = exports.getDigitIndexFromWidth = exports.designCurvedTicks10 = exports.designLinearTicks10 = exports.designLogarithmicTicks10 = exports.designTickType = exports.getLongTickSpaceWidth = exports.makePositionTickWindowFromPositionAndWidth = exports.makePositionTickWindowFromWindow = exports.ValueTickWindowToPositionTickWindow = exports.PositionTickWindowToValueTickWindow = exports.getSnapReferenceLaneIndex = exports.getConvenientWidth = exports.getWidth = exports.getPositionAt = exports.getSlideOffset = exports.getAnchorSlideAndLane = exports.getRawViewPositionAt = exports.logPositionToLinearPosition = exports.linearPositionToLogPosition = exports.getLinearPositionAt = exports.getValueAt = exports.getRawValueAt = exports.angleToQuarter = exports.getPrimaryPositionAt = exports.getPrimaryValueAt = exports.getDenseLabel = exports.applySymbols = exports.applySymbolsForString = exports.applyOrSymbol = exports.getOrSymbol = exports.applyRangeSymbol = exports.getRangeSymbol = exports.applyApproximateSymbol = exports.makeApproximateLabel = exports.getApproximateSymbol = exports.applyApproximateInfinitySmallAsZero = exports.getApproximateInfinitySmallAsZero = exports.getMaxValue = exports.getMinValue = exports.getWidthValueRatioFromAngleTicks = exports.getAngleTick = exports.getAngleTable = exports.getPrimaryTick = exports.getSlidePositionAt = exports.isDiscreteLane = exports.isOscillatingLane = exports.isPeriodicLane = exports.getPrimaryPeriod = exports.getPrimaryPeriod360 = exports.getSlidePosition = exports.isInvertedSlide = exports.isInvertedLane = exports.getAllLanes = exports.getAllLaneCount = exports.RootLaneIndex = exports.RootSlideIndex = exports.ticksCache = exports.addCursor = exports.data = exports.getConstantTable = exports.constant = exports.getDigitTable = exports.digit = void 0;
     Locale = __importStar(Locale);
     Calculation = __importStar(Calculation);
     Type = __importStar(Type);
@@ -7946,9 +7948,11 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
     exports.getConstantTable = getConstantTable;
     exports.data = {
         slides: [],
-        cursor: 0,
+        cursor: [0,],
         offset: { x: 0, y: 0, },
     };
+    const addCursor = () => exports.data.cursor.push(exports.data.cursor[exports.data.cursor.length - 1]);
+    exports.addCursor = addCursor;
     exports.ticksCache = [];
     // export type ValueWithBasePosition = { value: number; basePosition: number; };
     // export type ExValue = number | ValueWithBasePosition;
@@ -10890,7 +10894,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
         (0, exports.makeSureSlide)();
     };
     exports.makeSure = makeSure;
-    const getCursorPosition = (view) => (0, exports.getPositionAt)((0, exports.getRootSlide)(), (0, exports.getRootLane)(), exports.data.cursor, view);
+    const getCursorPosition = (view) => (0, exports.getPositionAt)((0, exports.getRootSlide)(), (0, exports.getRootLane)(), exports.data.cursor[0], view);
     exports.getCursorPosition = getCursorPosition;
     const getCursorValue = (slide, lane, view) => (0, exports.getValueAt)(slide, lane, (0, exports.getCursorPosition)(view), view);
     exports.getCursorValue = getCursorValue;
@@ -10913,9 +10917,15 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
     const hasDataArea = (areas) => areas.some(area => undefined !== area.label || (undefined !== area.details && (0, exports.hasDataArea)(area.details)));
     exports.hasDataArea = hasDataArea;
     const initialize = () => {
-        var _a;
-        exports.data.cursor = (_a = Calculation.parse(Url.get("cursor"))) !== null && _a !== void 0 ? _a : config_json_3.default.model.defaultCursor;
-        console.log(`Model initialized: cursor=${exports.data.cursor}`);
+        exports.data.cursor = [config_json_3.default.model.defaultCursor,];
+        const cursorParam = Url.get("cursor");
+        if (undefined !== cursorParam) {
+            const cursors = JSON.parse(cursorParam);
+            if (Array.isArray(cursors) && 0 < cursors.length && cursors.every(i => "number" === typeof i)) {
+                exports.data.cursor = cursors;
+            }
+        }
+        console.log(`Model initialized: cursor=${exports.data.cursor[0]}`);
         (0, exports.makeSure)();
     };
     exports.initialize = initialize;
@@ -11151,7 +11161,7 @@ define("script/render", ["require", "exports", "script/view", "script/model", "r
 define("script/ruler", ["require", "exports", "script/locale", "script/type", "script/calculation", "script/model", "script/ui", "script/theme", "script/render", "script/svg", "script/comparer", "resource/config"], function (require, exports, Locale, Type, Calculation, Model, UI, Theme, Render, SVG, Comparer, config_json_6) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.getRulerWidth = exports.resize = exports.drawLaneUnitPopup = exports.drawLanePropertyPopup = exports.drawPopup = exports.drawAnchorLine = exports.slideCursor = exports.snapHorizontalPosition = exports.snapVerticalPosition = exports.getAreaPositions = exports.nextPosition = exports.snapPosition = exports.regulateReferencePositions = exports.getReferenceLaneIndexFromEvent = exports.garbageCollectLanes = exports.drawTicks = exports.calculateMinimumFractionDigits = exports.getFractionDigitsFromUnit = exports.makeShortNumberLabel = exports.makeNumberLabel = exports.makeNumberLabelPart = exports.drawAreas = exports.getAreaFill = exports.drawCursorLane = exports.drawCursorLaneTicks = exports.drawCursorLaneArea = exports.drawLane = exports.drawLeveledText = exports.getLeftOfCursorLane = exports.getLeftOfLane = exports.makeSureSlide = exports.makeStops = exports.makeVerticalGradient = exports.makeLinerGradient = exports.drawGradientDefines = exports.getLaneIndexFromPosition = exports.renderer = exports.setLaneWidth = exports.cursorLaneWidth = exports.LaneWidths = exports.scale = void 0;
+    exports.initialize = exports.getRulerWidth = exports.resize = exports.drawLaneUnitPopup = exports.drawLanePropertyPopup = exports.drawPopup = exports.drawCursorLine = exports.slideCursor = exports.snapHorizontalPosition = exports.snapVerticalPosition = exports.getAreaPositions = exports.nextPosition = exports.snapPosition = exports.regulateReferencePositions = exports.getReferenceLaneIndexFromEvent = exports.garbageCollectCursors = exports.garbageCollectLanes = exports.drawTicks = exports.calculateMinimumFractionDigits = exports.getFractionDigitsFromUnit = exports.makeShortNumberLabel = exports.makeNumberLabel = exports.makeNumberLabelPart = exports.drawAreas = exports.getAreaFill = exports.drawCursorLane = exports.drawCursorLaneTicks = exports.drawCursorLaneArea = exports.drawLane = exports.drawLeveledText = exports.getLeftOfCursorLane = exports.getLeftOfLane = exports.makeSureSlide = exports.makeStops = exports.makeVerticalGradient = exports.makeLinerGradient = exports.drawGradientDefines = exports.getLaneIndexFromPosition = exports.renderer = exports.setLaneWidth = exports.cursorLaneWidth = exports.LaneWidths = exports.scale = void 0;
     Locale = __importStar(Locale);
     Type = __importStar(Type);
     Calculation = __importStar(Calculation);
@@ -11187,14 +11197,19 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                     dirty.add(`LANE:${i}`);
                 }
                 dirty.add(Render.RenderItemId.Size);
+                dirty.add("CURSOR_GARBAGE_COLLECTOR");
                 // dirty.add("CURSOR_LANE"); Render.RenderItemId.Size 内でセットされる。
-                // dirty.add("ANCHOR_LINE"); Render.RenderItemId.Size 内でセットされる。
+                // dirty.add("CURSOR_LINE"); Render.RenderItemId.Size 内でセットされる。
                 dirty.add(Render.RenderItemId.Popup);
             }
             if (dirty.has("LANE_GARBAGE_COLLECTOR")) {
                 // レーンのレンダリングより必ず先に処理しておく必要がある。 / EN: This needs to be processed before rendering the lane.
                 (0, exports.garbageCollectLanes)(view);
                 dirty.delete("LANE_GARBAGE_COLLECTOR");
+            }
+            if (dirty.has("CURSOR_GARBAGE_COLLECTOR")) {
+                (0, exports.garbageCollectCursors)(view);
+                dirty.delete("CURSOR_GARBAGE_COLLECTOR");
             }
             for (const i of dirty) {
                 switch (i) {
@@ -11218,8 +11233,8 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                             fill: Theme.resolve(config_json_6.default.render.ruler.laneBackgroundColor),
                         });
                         break;
-                    case "ANCHOR_LINE":
-                        (0, exports.drawAnchorLine)(model, view, options);
+                    case "CURSOR_LINE":
+                        (0, exports.drawCursorLine)(model, view, 0, options);
                         break;
                     case Render.RenderItemId.Popup:
                         (0, exports.drawPopup)(view);
@@ -11237,6 +11252,15 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                             }
                             else {
                                 console.warn(`🦋 FIXME: Lane not found for dirty item: ${i}`);
+                            }
+                        }
+                        else if (i.startsWith("CURSOR_LINE:")) {
+                            const cursorIndex = Number.parseInt(i.substring("CURSOR_LINE:".length));
+                            if (undefined !== cursorIndex && cursorIndex < Model.data.cursor.length) {
+                                (0, exports.drawCursorLine)(model, view, cursorIndex, options);
+                            }
+                            else {
+                                console.warn(`🦋 FIXME: Cursor not found for dirty item: ${i}`);
                             }
                         }
                         else {
@@ -11968,6 +11992,9 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         }
     };
     exports.garbageCollectLanes = garbageCollectLanes;
+    const garbageCollectCursors = (_view) => {
+    };
+    exports.garbageCollectCursors = garbageCollectCursors;
     let anchorDragStartY = 0;
     let initialDraggingAnchorPosition = undefined;
     const getReferenceLaneIndexFromEvent = (event) => {
@@ -12116,26 +12143,30 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         const maxPosition = (_b = Model.getPositionAt(slide, lane, Calculation.MAX_VALUE, view)) !== null && _b !== void 0 ? _b : Calculation.MAX_VALUE;
         const snappedPosition = (0, exports.snapVerticalPosition)(event, view, position);
         const resultPosition = Math.min(maxPosition, Math.max(minPosition, snappedPosition));
-        model.cursor = (_d = Calculation.nanToNull(Calculation.getNumberOrNaN((_c = Model.getValueAt(slide, lane, resultPosition, view)) === null || _c === void 0 ? void 0 : _c.value))) !== null && _d !== void 0 ? _d : model.cursor;
-        Render.markDirty("ANCHOR_LINE");
+        model.cursor[0] = (_d = Calculation.nanToNull(Calculation.getNumberOrNaN((_c = Model.getValueAt(slide, lane, resultPosition, view)) === null || _c === void 0 ? void 0 : _c.value))) !== null && _d !== void 0 ? _d : model.cursor[0];
+        Render.markDirty("CURSOR_LINE");
         return snappedPosition - position;
     };
     exports.slideCursor = slideCursor;
-    const drawAnchorLine = (model, view, options) => {
+    const drawCursorLine = (model, view, cursorIndex, options) => {
         const { slide, lane } = Model.getRootSlideAndRootLane();
         const svg = UI.rulerOverlay;
-        const visibleSvgWidth = UI.rulerSvg.viewBox.baseVal.width - Model.data.offset.x;
+        const visibleSvgWidth = UI.rulerSvg.viewBox.baseVal.width;
         const color = config_json_6.default.render.ruler.lineColor;
         const handleRadius = config_json_6.default.render.ruler.handleRadius;
         const handleCenterX = visibleSvgWidth - handleRadius;
         const lineOnBackground = SVG.makeSure(UI.rulerSvg, {
             tag: "line",
-            class: "anchor-line",
+            class: "cursor-line",
         });
-        const lineOnOverlay = SVG.makeSure(UI.rulerOverlay, {
-            tag: "line",
-            class: "anchor-line",
-        });
+        // const lineOnOverlay = SVG.makeSure
+        // (
+        //     UI.rulerOverlay,
+        //     {
+        //         tag: "line",
+        //         class: "cursor-line",
+        //     }
+        // );
         const events = {
             pointermove: {
                 listener: event => {
@@ -12169,7 +12200,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                     if (undefined !== initialDraggingAnchorPosition) {
                         event.stopPropagation();
                         const position = initialDraggingAnchorPosition;
-                        model.cursor = (_b = Calculation.nanToNull(Calculation.getNumberOrNaN((_a = Model.getValueAt(slide, lane, position, view)) === null || _a === void 0 ? void 0 : _a.value))) !== null && _b !== void 0 ? _b : model.cursor;
+                        model.cursor[0] = (_b = Calculation.nanToNull(Calculation.getNumberOrNaN((_a = Model.getValueAt(slide, lane, position, view)) === null || _a === void 0 ? void 0 : _a.value))) !== null && _b !== void 0 ? _b : model.cursor[0];
                         initialDraggingAnchorPosition = undefined;
                         Render.markDirty();
                     }
@@ -12184,12 +12215,12 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         const handle = SVG.makeSure(svg, {
             // tag: "circle",
             tag: "polygon",
-            class: "anchor-drag-handle",
+            class: "cursor-drag-handle",
             "pointer-events": "auto",
             events: {
                 pointerdown: {
                     listener: event => {
-                        initialDraggingAnchorPosition = Model.getPositionAt(slide, lane, model.cursor, view);
+                        initialDraggingAnchorPosition = Model.getPositionAt(slide, lane, model.cursor[cursorIndex], view);
                         if (undefined !== initialDraggingAnchorPosition) {
                             event.preventDefault();
                             event.stopPropagation();
@@ -12204,7 +12235,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                 },
             },
         });
-        const position = Model.getPositionAt(slide, lane, model.cursor, view);
+        const position = Model.getPositionAt(slide, lane, model.cursor[cursorIndex], view);
         if (0 <= position && position <= UI.rulerSvg.viewBox.baseVal.height && false !== (options === null || options === void 0 ? void 0 : options.showCursor)) {
             //const color = "red";
             SVG.setAttributes(lineOnBackground, {
@@ -12216,15 +12247,19 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                 stroke: color,
                 "stroke-width": config_json_6.default.render.ruler.lineWidth,
             });
-            SVG.setAttributes(lineOnOverlay, {
-                visibility: "visible",
-                x1: visibleSvgWidth,
-                y1: position,
-                x2: visibleSvgWidth - (handleRadius * 2),
-                y2: position,
-                stroke: color,
-                "stroke-width": config_json_6.default.render.ruler.lineWidth,
-            });
+            // SVG.setAttributes
+            // (
+            //     lineOnOverlay,
+            //     {
+            //         visibility: "visible",
+            //         x1: visibleSvgWidth,
+            //         y1: position,
+            //         x2: visibleSvgWidth -(handleRadius *2),
+            //         y2: position,
+            //         stroke: color,
+            //         "stroke-width": config.render.ruler.lineWidth,
+            //     }
+            // );
             SVG.setAttributes(handle, {
                 // cx: visibleSvgWidth -handleRadius,
                 // cy: position,
@@ -12237,9 +12272,13 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
             SVG.setAttributes(lineOnBackground, {
                 visibility: "hidden",
             });
-            SVG.setAttributes(lineOnOverlay, {
-                visibility: "hidden",
-            });
+            // SVG.setAttributes
+            // (
+            //     lineOnOverlay,
+            //     {
+            //         visibility: "hidden",
+            //     }
+            // );
             if (position < 0) {
                 SVG.setAttributes(handle, {
                     // cx: visibleSvgWidth -handleRadius,
@@ -12260,7 +12299,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
             }
         }
     };
-    exports.drawAnchorLine = drawAnchorLine;
+    exports.drawCursorLine = drawCursorLine;
     const drawPopup = (view, popup = null) => {
         var _a;
         console.warn(`🦋 drawPopup: ${(_a = popup === null || popup === void 0 ? void 0 : popup.popupType) !== null && _a !== void 0 ? _a : "null"}`);
@@ -12362,10 +12401,10 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
     exports.drawLaneUnitPopup = drawLaneUnitPopup;
     const resize = () => {
         const laneIndex = Model.getAllLaneCount();
-        const left = (0, exports.getLeftOfLane)(laneIndex) + exports.cursorLaneWidth;
+        const left = (0, exports.getLeftOfLane)(laneIndex) + (exports.cursorLaneWidth * Model.data.cursor.length);
         UI.rulerNewSlidePanel.style.left = `${left}px`;
         UI.rulerHelpPanel.style.left = `${UI.rulerNewSlidePanel.clientWidth + left}px`;
-        const width = Math.min(document.body.clientWidth, (0, exports.getRulerWidth)());
+        const width = Math.min(document.body.clientWidth, (0, exports.getRulerWidth)() - Model.data.offset.x);
         SVG.setAttributes(UI.rulerSvg, {
             width: width,
             height: document.body.clientHeight,
@@ -12378,10 +12417,13 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         });
         Render.markDirty("BACKGROUND");
         Render.markDirty("CURSOR_LANE");
-        Render.markDirty("ANCHOR_LINE");
+        Render.markDirty("CURSOR_LINE");
+        for (let i = 0; i < Model.data.cursor.length; ++i) {
+            Render.markDirty(`CURSOR_LINE:${i}`);
+        }
     };
     exports.resize = resize;
-    const getRulerWidth = () => exports.LaneWidths.reduce((a, b) => a + b, 0) + exports.cursorLaneWidth;
+    const getRulerWidth = () => exports.LaneWidths.reduce((a, b) => a + b, 0) + (exports.cursorLaneWidth * Model.data.cursor.length);
     exports.getRulerWidth = getRulerWidth;
     const initialize = () => {
         Render.markDirty("DEFINES");
@@ -12506,7 +12548,7 @@ define("script/json-eval-updater", ["require", "exports", "script/url", "script/
 define("script/command", ["require", "exports", "script/locale", "script/url", "script/calculation", "script/type", "script/ui", "script/settings", "script/theme", "script/model", "script/view", "script/render", "script/ruler", "resource/config"], function (require, exports, Locale, Url, Calculation, Type, UI, Settings, Theme, Model, View, Render, Ruler, config_json_8) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.updateTheme = exports.updateLanguage = exports.loadFromUrl = exports.updateViewLockRoundBar = exports.updateViewScaleRoundBar = exports.getViewScaleExponentFromRate = exports.getViewScaleRate = exports.updateViewModeRoundBar = exports.copyAsUrl = exports.saveAsPngImage = exports.saveAsSvgImage = exports.addHistoryLane = exports.addEmwEnergyLane = exports.addEmwFrequencyLane = exports.addEmwWavelengthLane = exports.addSoundFrequencyLane = exports.addCountingLane = exports.addTemperatureLane = exports.addEnergyLane = exports.addSpeedLane = exports.addTimeLane = exports.addMassLane = exports.addVolumeLane = exports.addAreaLane = exports.addSizeLane = exports.addConstantLane = exports.addJaDigitLane = exports.addEnDigitLane = exports.addSiDigitLane = exports.addDigitLane = exports.addLane = exports.addSlide = void 0;
+    exports.initialize = exports.updateTheme = exports.updateLanguage = exports.loadFromUrl = exports.updateViewLockRoundBar = exports.updateViewScaleRoundBar = exports.getViewScaleExponentFromRate = exports.getViewScaleRate = exports.updateViewModeRoundBar = exports.copyAsUrl = exports.saveAsPngImage = exports.saveAsSvgImage = exports.addHistoryLane = exports.addEmwEnergyLane = exports.addEmwFrequencyLane = exports.addEmwWavelengthLane = exports.addSoundFrequencyLane = exports.addCountingLane = exports.addTemperatureLane = exports.addEnergyLane = exports.addSpeedLane = exports.addTimeLane = exports.addMassLane = exports.addVolumeLane = exports.addAreaLane = exports.addSizeLane = exports.addConstantLane = exports.addJaDigitLane = exports.addEnDigitLane = exports.addSiDigitLane = exports.addDigitLane = exports.addCursor = exports.addLane = exports.addSlide = void 0;
     Locale = __importStar(Locale);
     Url = __importStar(Url);
     Calculation = __importStar(Calculation);
@@ -12536,6 +12578,14 @@ define("script/command", ["require", "exports", "script/locale", "script/url", "
         Render.markDirty();
     };
     exports.addLane = addLane;
+    const addCursor = () => {
+        Model.addCursor();
+        Render.markDirty(Render.RenderItemId.Size);
+        Render.markDirty("BACKGROUND");
+        Render.markDirty("CURSOR_LANE");
+        Render.markDirty("ANCHOR_LINE");
+    };
+    exports.addCursor = addCursor;
     const addDigitLane = (digitTable) => {
         const { slide } = Model.getLastSlideAndLastLane();
         Model.addDigitLane(slide, digitTable);
@@ -12791,7 +12841,7 @@ define("script/event", ["require", "exports", "script/url", "script/type", "scri
     exports.zoomOut = zoomOut;
     const getZoomCenter = (event) => {
         const { slide, lane } = Model.getRootSlideAndRootLane();
-        const cursorPosition = Model.getPositionAt(slide, lane, Model.data.cursor, View.data);
+        const cursorPosition = Model.getPositionAt(slide, lane, Model.data.cursor[0], View.data);
         if (undefined !== event) {
             const zoomCenter = event.clientY;
             if (0 <= zoomCenter && zoomCenter <= window.innerHeight && 50 <= Math.abs(zoomCenter - cursorPosition)) {
@@ -12887,7 +12937,7 @@ define("script/event", ["require", "exports", "script/url", "script/type", "scri
         updateHorizontalSnapDelta(snappedPosition - next);
         Model.data.offset.x = snappedPosition;
         Render.markDirty();
-        Render.resize();
+        // Render.resize();
     };
     exports.horizontalScroll = horizontalScroll;
     const resetZoom = () => {
@@ -12927,9 +12977,9 @@ define("script/event", ["require", "exports", "script/url", "script/type", "scri
             if (Environment.isApple() ? (event.metaKey && event.ctrlKey) : (event.ctrlKey && event.altKey)) {
                 event.preventDefault();
                 const { slide, lane } = Model.getRootSlideAndRootLane();
-                const cursorPosition = (_a = Model.getPositionAt(slide, lane, Model.data.cursor, View.data)) !== null && _a !== void 0 ? _a : 0;
+                const cursorPosition = (_a = Model.getPositionAt(slide, lane, Model.data.cursor[0], View.data)) !== null && _a !== void 0 ? _a : 0;
                 updateVerticalSnapDelta(Ruler.slideCursor(Model.data, View.data, event, cursorPosition - (-event.deltaY + verticalSnapDelta)));
-                const newCursorPosition = (_b = Model.getPositionAt(slide, lane, Model.data.cursor, View.data)) !== null && _b !== void 0 ? _b : 0;
+                const newCursorPosition = (_b = Model.getPositionAt(slide, lane, Model.data.cursor[0], View.data)) !== null && _b !== void 0 ? _b : 0;
                 const cursorDelta = newCursorPosition - cursorPosition;
                 (0, exports.verticalScroll)(event, cursorDelta, Model.getRootSlide());
             }
@@ -12940,7 +12990,7 @@ define("script/event", ["require", "exports", "script/url", "script/type", "scri
             else if (Environment.isApple() ? event.ctrlKey : event.altKey) {
                 event.preventDefault();
                 const { slide, lane } = Model.getRootSlideAndRootLane();
-                const cursorPosition = (_c = Model.getPositionAt(slide, lane, Model.data.cursor, View.data)) !== null && _c !== void 0 ? _c : 0;
+                const cursorPosition = (_c = Model.getPositionAt(slide, lane, Model.data.cursor[0], View.data)) !== null && _c !== void 0 ? _c : 0;
                 updateVerticalSnapDelta(Ruler.slideCursor(Model.data, View.data, event, cursorPosition - (event.deltaY + verticalSnapDelta)));
             }
             else {
@@ -13125,6 +13175,7 @@ define("script/event", ["require", "exports", "script/url", "script/type", "scri
         (0, exports.bindCommandToButton)(UI.ControlPanel.fullscreenButton, exports.toggleFullScreen);
         (0, exports.bindCommandToButton)(UI.addSlideButton, () => Command.addSlide({ type: "primary", name: "x" }));
         (0, exports.bindCommandToButton)(UI.addInvertedSlideButton, () => Command.addSlide({ type: "invert", name: "1/x" }));
+        (0, exports.bindCommandToButton)(UI.addCursorButton, () => Command.addCursor());
         (0, exports.bindCommandToButton)(UI.addSiDigitLaneButton, Command.addSiDigitLane);
         (0, exports.bindCommandToButton)(UI.addEnDigitLaneButton, Command.addEnDigitLane);
         (0, exports.bindCommandToButton)(UI.addJaDigitLaneButton, Command.addJaDigitLane);

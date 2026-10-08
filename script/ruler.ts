@@ -38,8 +38,9 @@ export const renderer = (model: Type.Model, view: Type.View, dirty: Set<string>,
                 dirty.add(`LANE:${i}`);
             }
             dirty.add(Render.RenderItemId.Size);
+            dirty.add("CURSOR_GARBAGE_COLLECTOR");
             // dirty.add("CURSOR_LANE"); Render.RenderItemId.Size 内でセットされる。
-            // dirty.add("ANCHOR_LINE"); Render.RenderItemId.Size 内でセットされる。
+            // dirty.add("CURSOR_LINE"); Render.RenderItemId.Size 内でセットされる。
             dirty.add(Render.RenderItemId.Popup);
         }
         if (dirty.has("LANE_GARBAGE_COLLECTOR"))
@@ -47,6 +48,11 @@ export const renderer = (model: Type.Model, view: Type.View, dirty: Set<string>,
             // レーンのレンダリングより必ず先に処理しておく必要がある。 / EN: This needs to be processed before rendering the lane.
             garbageCollectLanes(view);
             dirty.delete("LANE_GARBAGE_COLLECTOR");
+        }
+        if (dirty.has("CURSOR_GARBAGE_COLLECTOR"))
+        {
+            garbageCollectCursors(view);
+            dirty.delete("CURSOR_GARBAGE_COLLECTOR");
         }
         for(const i of dirty)
         {
@@ -80,8 +86,8 @@ export const renderer = (model: Type.Model, view: Type.View, dirty: Set<string>,
                     }
                 );
                 break;
-            case "ANCHOR_LINE":
-                drawAnchorLine(model, view, options);
+            case "CURSOR_LINE":
+                drawCursorLine(model, view, 0, options);
                 break;
             case Render.RenderItemId.Popup:
                 drawPopup(view);
@@ -102,6 +108,19 @@ export const renderer = (model: Type.Model, view: Type.View, dirty: Set<string>,
                     else
                     {
                         console.warn(`🦋 FIXME: Lane not found for dirty item: ${i}`);
+                    }
+                }
+                else
+                if (i.startsWith("CURSOR_LINE:"))
+                {
+                    const cursorIndex = Number.parseInt(i.substring("CURSOR_LINE:".length));
+                    if (undefined !== cursorIndex && cursorIndex < Model.data.cursor.length)
+                    {
+                        drawCursorLine(model, view, cursorIndex, options);
+                    }
+                    else
+                    {
+                        console.warn(`🦋 FIXME: Cursor not found for dirty item: ${i}`);
                     }
                 }
                 else
@@ -1097,6 +1116,9 @@ export const garbageCollectLanes = (_view: Type.View): void =>
         }
     }
 };
+export const garbageCollectCursors = (_view: Type.View): void =>
+{
+};
 let anchorDragStartY = 0;
 let initialDraggingAnchorPosition: number | undefined = undefined;
 export type SnapPositionEvent = KeyboardEvent | PointerEvent | WheelEvent | TouchEvent | MouseEvent | "NOSNAP";
@@ -1268,14 +1290,14 @@ export const slideCursor = (model: Type.Model, view: Type.View, event: PointerEv
     const snappedPosition = snapVerticalPosition(event, view, position);
     const resultPosition = Math.min(maxPosition, Math.max(minPosition, snappedPosition));
     model.cursor[0] = Calculation.nanToNull(Calculation.getNumberOrNaN(Model.getValueAt(slide, lane, resultPosition, view)?.value)) ?? model.cursor[0];
-    Render.markDirty("ANCHOR_LINE");
+    Render.markDirty("CURSOR_LINE");
     return snappedPosition -position;
 };
-export const drawAnchorLine = (model: Type.Model, view: Type.View, options?: Type.RenderingOptions): void =>
+export const drawCursorLine = (model: Type.Model, view: Type.View, cursorIndex: number, options?: Type.RenderingOptions): void =>
 {
     const { slide, lane } = Model.getRootSlideAndRootLane();
     const svg = UI.rulerOverlay;
-    const visibleSvgWidth = UI.rulerSvg.viewBox.baseVal.width -Model.data.offset.x;
+    const visibleSvgWidth = UI.rulerSvg.viewBox.baseVal.width;
     const color = config.render.ruler.lineColor;
     const handleRadius = config.render.ruler.handleRadius;
     const handleCenterX = visibleSvgWidth -handleRadius;
@@ -1284,17 +1306,17 @@ export const drawAnchorLine = (model: Type.Model, view: Type.View, options?: Typ
         UI.rulerSvg,
         {
             tag: "line",
-            class: "anchor-line",
+            class: "cursor-line",
         }
     );
-    const lineOnOverlay = SVG.makeSure
-    (
-        UI.rulerOverlay,
-        {
-            tag: "line",
-            class: "anchor-line",
-        }
-    );
+    // const lineOnOverlay = SVG.makeSure
+    // (
+    //     UI.rulerOverlay,
+    //     {
+    //         tag: "line",
+    //         class: "cursor-line",
+    //     }
+    // );
     const events: SVG.Events =
     {
         pointermove:
@@ -1358,7 +1380,7 @@ export const drawAnchorLine = (model: Type.Model, view: Type.View, options?: Typ
         {
             // tag: "circle",
             tag: "polygon",
-            class: "anchor-drag-handle",
+            class: "cursor-drag-handle",
             "pointer-events": "auto",
             events:
             {
@@ -1366,7 +1388,7 @@ export const drawAnchorLine = (model: Type.Model, view: Type.View, options?: Typ
                 {
                     listener: event =>
                     {
-                        initialDraggingAnchorPosition = Model.getPositionAt(slide, lane, model.cursor, view);
+                        initialDraggingAnchorPosition = Model.getPositionAt(slide, lane, model.cursor[cursorIndex], view);
                         if (undefined !== initialDraggingAnchorPosition)
                         {
                             event.preventDefault();
@@ -1384,7 +1406,7 @@ export const drawAnchorLine = (model: Type.Model, view: Type.View, options?: Typ
             },
         }
     );
-    const position = Model.getPositionAt(slide, lane, model.cursor, view);
+    const position = Model.getPositionAt(slide, lane, model.cursor[cursorIndex], view);
     if (0 <= position && position <= UI.rulerSvg.viewBox.baseVal.height && false !== options?.showCursor)
     {
         //const color = "red";
@@ -1401,19 +1423,19 @@ export const drawAnchorLine = (model: Type.Model, view: Type.View, options?: Typ
                 "stroke-width": config.render.ruler.lineWidth,
             }
         );
-        SVG.setAttributes
-        (
-            lineOnOverlay,
-            {
-                visibility: "visible",
-                x1: visibleSvgWidth,
-                y1: position,
-                x2: visibleSvgWidth -(handleRadius *2),
-                y2: position,
-                stroke: color,
-                "stroke-width": config.render.ruler.lineWidth,
-            }
-        );
+        // SVG.setAttributes
+        // (
+        //     lineOnOverlay,
+        //     {
+        //         visibility: "visible",
+        //         x1: visibleSvgWidth,
+        //         y1: position,
+        //         x2: visibleSvgWidth -(handleRadius *2),
+        //         y2: position,
+        //         stroke: color,
+        //         "stroke-width": config.render.ruler.lineWidth,
+        //     }
+        // );
         SVG.setAttributes
         (
             handle,
@@ -1435,13 +1457,13 @@ export const drawAnchorLine = (model: Type.Model, view: Type.View, options?: Typ
                 visibility: "hidden",
             }
         );
-        SVG.setAttributes
-        (
-            lineOnOverlay,
-            {
-                visibility: "hidden",
-            }
-        );
+        // SVG.setAttributes
+        // (
+        //     lineOnOverlay,
+        //     {
+        //         visibility: "hidden",
+        //     }
+        // );
         if (position < 0)
         {
             SVG.setAttributes
@@ -1597,10 +1619,10 @@ export const drawLaneUnitPopup = (_view: Type.View, popup: Type.LaneUnitPopup): 
 export const resize = () =>
 {
     const laneIndex = Model.getAllLaneCount();
-    const left = getLeftOfLane(laneIndex) +cursorLaneWidth;
+    const left = getLeftOfLane(laneIndex) +(cursorLaneWidth *Model.data.cursor.length);
     UI.rulerNewSlidePanel.style.left = `${left}px`;
     UI.rulerHelpPanel.style.left = `${UI.rulerNewSlidePanel.clientWidth +left}px`;
-    const width = Math.min(document.body.clientWidth, getRulerWidth());
+    const width = Math.min(document.body.clientWidth, getRulerWidth()  -Model.data.offset.x);
     SVG.setAttributes
     (
         UI.rulerSvg,
@@ -1621,9 +1643,14 @@ export const resize = () =>
     );
     Render.markDirty("BACKGROUND");
     Render.markDirty("CURSOR_LANE");
-    Render.markDirty("ANCHOR_LINE");
+    Render.markDirty("CURSOR_LINE");
+    for (let i = 0; i < Model.data.cursor.length; ++i)
+    {
+        Render.markDirty(`CURSOR_LINE:${i}`);
+    }
 };
-export const getRulerWidth = (): number => LaneWidths.reduce((a, b) => a + b, 0) +cursorLaneWidth;
+export const getRulerWidth = (): number =>
+    LaneWidths.reduce((a, b) => a + b, 0) +(cursorLaneWidth *Model.data.cursor.length);
 export const initialize = (): void =>
 {
     Render.markDirty("DEFINES");

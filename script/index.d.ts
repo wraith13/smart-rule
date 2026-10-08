@@ -212,6 +212,7 @@ declare module "script/ui" {
     export const rulerNewSlidePanel: HTMLDivElement;
     export const addSlideButton: HTMLButtonElement;
     export const addInvertedSlideButton: HTMLButtonElement;
+    export const addCursorButton: HTMLButtonElement;
     export const addSiDigitLaneButton: HTMLButtonElement;
     export const addEnDigitLaneButton: HTMLButtonElement;
     export const addJaDigitLaneButton: HTMLButtonElement;
@@ -536,7 +537,7 @@ declare module "script/type" {
     }
     export interface Model {
         slides: SlideUnit[];
-        cursor: number;
+        cursor: number[];
         offset: {
             x: number;
             y: number;
@@ -1563,6 +1564,7 @@ declare module "script/model" {
     export type ConstantTableKey = keyof typeof constant;
     export const getConstantTable: (name: ConstantTableKey) => Type.ConstantTable;
     export const data: Type.Model;
+    export const addCursor: () => number;
     export const ticksCache: number[][];
     export const RootSlideIndex = 0;
     export const RootLaneIndex = 0;
@@ -1815,6 +1817,7 @@ declare module "script/ruler" {
     export const calculateMinimumFractionDigits: (ticks: Type.Tick[]) => Type.Tick[];
     export const drawTicks: (view: Type.View, group: SVGGElement, slide: Type.SlideUnit, lane: Type.Lane, content: Type.LaneContent) => void;
     export const garbageCollectLanes: (_view: Type.View) => void;
+    export const garbageCollectCursors: (_view: Type.View) => void;
     export type SnapPositionEvent = KeyboardEvent | PointerEvent | WheelEvent | TouchEvent | MouseEvent | "NOSNAP";
     export const getReferenceLaneIndexFromEvent: (event: SnapPositionEvent) => number | null;
     export const regulateReferencePositions: (referencePositions: number[]) => number[];
@@ -1824,7 +1827,7 @@ declare module "script/ruler" {
     export const snapVerticalPosition: (event: SnapPositionEvent, view: Type.View, position: number, referenceLaneIndex?: number) => number;
     export const snapHorizontalPosition: (event: SnapPositionEvent, position: number) => number;
     export const slideCursor: (model: Type.Model, view: Type.View, event: PointerEvent | WheelEvent, position: number) => number;
-    export const drawAnchorLine: (model: Type.Model, view: Type.View, options?: Type.RenderingOptions) => void;
+    export const drawCursorLine: (model: Type.Model, view: Type.View, cursorIndex: number, options?: Type.RenderingOptions) => void;
     export const drawPopup: (view: Type.View, popup?: Type.ViewPopup | null) => void;
     export const drawLanePropertyPopup: (_view: Type.View, _popup: Type.LanePropertyPopup) => void;
     export const drawLaneUnitPopup: (_view: Type.View, popup: Type.LaneUnitPopup) => void;
@@ -2104,6 +2107,7 @@ declare module "script/command" {
     import * as Model from "script/model";
     export const addSlide: (laneSeed: Type.LaneBase) => void;
     export const addLane: (laneSeed: Type.LaneBase) => void;
+    export const addCursor: () => void;
     export const addDigitLane: (digitTable: Model.DigitTableKey) => void;
     export const addSiDigitLane: () => void;
     export const addEnDigitLane: () => void;
