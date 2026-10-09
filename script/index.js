@@ -10326,7 +10326,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
     // };
     const getLeftOfLane = (laneIndex) => exports.LaneWidths.slice(0, laneIndex).reduce((a, b) => a + b, 0) - Model.data.offset.x;
     exports.getLeftOfLane = getLeftOfLane;
-    const getLeftOfCursorLane = () => exports.LaneWidths.reduce((a, b) => a + b, 0) - Model.data.offset.x;
+    const getLeftOfCursorLane = (cursorIndex) => exports.LaneWidths.reduce((a, b) => a + b, 0) + (cursorIndex * 2 * config_json_6.default.render.ruler.handleRadius) - Model.data.offset.x;
     exports.getLeftOfCursorLane = getLeftOfCursorLane;
     const drawLeveledText = (label, text, option = { dx: 0, }) => {
         let currentDx = option.dx;
@@ -10505,7 +10505,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
     };
     exports.drawLane = drawLane;
     const drawCursorLaneArea = (view, group, slide, lane, areas) => {
-        const left = (0, exports.getLeftOfCursorLane)();
+        const left = (0, exports.getLeftOfCursorLane)(0);
         const width = exports.cursorLaneWidth * Model.data.cursor.length;
         const isInvert = Model.isInvertedLane(lane);
         for (const area of areas) {
@@ -10549,29 +10549,31 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
     exports.drawCursorLaneArea = drawCursorLaneArea;
     const drawCursorLaneTicks = (view, group, slide, lane, content) => {
         var _a;
-        const isPrimaryLane = Model.isPrimaryLane(lane);
-        const width = exports.cursorLaneWidth;
-        const left = (0, exports.getLeftOfCursorLane)();
-        const right = left + width;
-        for (const tick of content.ticks) {
-            const value = Type.getTickValue(tick);
-            const position = Model.getPositionAt(slide, lane, tick.value, view);
-            if (0 <= position && position <= group.ownerSVGElement.viewBox.baseVal.height && "none" !== tick.type) {
-                const valueString = Calculation.complexNumberToString(value);
-                const isPrimaryTick = isPrimaryLane && 1 === value;
-                const tickTrait = config_json_6.default.render.ruler.tick[tick.type];
-                const color = Theme.resolve((_a = tick.color) !== null && _a !== void 0 ? _a : (isPrimaryTick ? config_json_6.default.render.ruler.primaryTickColor : tickTrait.color));
-                const drawLeftTick = true;
-                const drawRightTick = true;
-                if (drawLeftTick) {
-                    group.appendChild(SVG.make(Object.assign(Object.assign({ tag: "line", class: `tick tick-${tick.type}`, x1: left, y1: position, x2: left + tickTrait.length, y2: position, 
-                        // stroke: tickTrait.color,
-                        stroke: color, "stroke-width": tickTrait.width, "data-tick-value": valueString }, (tick.unit ? { "data-tick-unit": tick.unit } : {})), (tick.label ? { "data-tick-label": Locale.resolve(tick.label) } : {}))));
-                }
-                if (drawRightTick) {
-                    group.appendChild(SVG.make(Object.assign(Object.assign({ tag: "line", class: `tick tick-${tick.type}`, x1: right, y1: position, x2: right - tickTrait.length, y2: position, 
-                        // stroke: tickTrait.color,
-                        stroke: color, "stroke-width": tickTrait.width, "data-tick-value": valueString }, (tick.unit ? { "data-tick-unit": tick.unit } : {})), (tick.label ? { "data-tick-label": Locale.resolve(tick.label) } : {}))));
+        for (let cursorIndex = 0; cursorIndex < Model.data.cursor.length; ++cursorIndex) {
+            const isPrimaryLane = Model.isPrimaryLane(lane);
+            const width = exports.cursorLaneWidth;
+            const left = (0, exports.getLeftOfCursorLane)(cursorIndex);
+            const right = left + width;
+            for (const tick of content.ticks) {
+                const value = Type.getTickValue(tick);
+                const position = Model.getPositionAt(slide, lane, tick.value, view);
+                if (0 <= position && position <= group.ownerSVGElement.viewBox.baseVal.height && "none" !== tick.type) {
+                    const valueString = Calculation.complexNumberToString(value);
+                    const isPrimaryTick = isPrimaryLane && 1 === value;
+                    const tickTrait = config_json_6.default.render.ruler.tick[tick.type];
+                    const color = Theme.resolve((_a = tick.color) !== null && _a !== void 0 ? _a : (isPrimaryTick ? config_json_6.default.render.ruler.primaryTickColor : tickTrait.color));
+                    const drawLeftTick = true;
+                    const drawRightTick = true;
+                    if (drawLeftTick) {
+                        group.appendChild(SVG.make(Object.assign(Object.assign({ tag: "line", class: `tick tick-${tick.type}`, x1: left, y1: position, x2: left + tickTrait.length, y2: position, 
+                            // stroke: tickTrait.color,
+                            stroke: color, "stroke-width": tickTrait.width, "data-tick-value": valueString }, (tick.unit ? { "data-tick-unit": tick.unit } : {})), (tick.label ? { "data-tick-label": Locale.resolve(tick.label) } : {}))));
+                    }
+                    if (drawRightTick) {
+                        group.appendChild(SVG.make(Object.assign(Object.assign({ tag: "line", class: `tick tick-${tick.type}`, x1: right, y1: position, x2: right - tickTrait.length, y2: position, 
+                            // stroke: tickTrait.color,
+                            stroke: color, "stroke-width": tickTrait.width, "data-tick-value": valueString }, (tick.unit ? { "data-tick-unit": tick.unit } : {})), (tick.label ? { "data-tick-label": Locale.resolve(tick.label) } : {}))));
+                    }
                 }
             }
         }
@@ -10582,7 +10584,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         const group = (0, exports.makeSureSlide)(slideIndex);
         const isLastLane = true;
         //const laneIndex = Model.getAllLaneCount();
-        const left = (0, exports.getLeftOfCursorLane)();
+        const left = (0, exports.getLeftOfCursorLane)(0);
         const width = exports.cursorLaneWidth;
         const tickGroup = SVG.makeSure(group, {
             tag: "g",

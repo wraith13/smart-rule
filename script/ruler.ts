@@ -231,8 +231,8 @@ export const makeSureSlide = (slideIndex: number): SVGGElement => SVG.makeSure
 // };
 export const getLeftOfLane = (laneIndex: number): number =>
     LaneWidths.slice(0, laneIndex).reduce((a, b) => a + b, 0) -Model.data.offset.x;
-export const getLeftOfCursorLane = (): number =>
-    LaneWidths.reduce((a, b) => a + b, 0) -Model.data.offset.x;
+export const getLeftOfCursorLane = (cursorIndex: number): number =>
+    LaneWidths.reduce((a, b) => a + b, 0) +(cursorIndex *2 *config.render.ruler.handleRadius) -Model.data.offset.x;
 export const drawLeveledText = (label: SVGTextElement, text: string, option: { dx: number; } = { dx: 0, }) =>
 {
     let currentDx = option.dx;
@@ -469,7 +469,7 @@ export const drawLane = (view: Type.View, slide: Type.SlideUnit, lane: Type.Lane
 };
 export const drawCursorLaneArea = (view: Type.View, group: SVGGElement, slide: Type.SlideUnit, lane: Type.Lane, areas: Type.Area[]): void =>
 {
-    const left = getLeftOfCursorLane();
+    const left = getLeftOfCursorLane(0);
     const width = cursorLaneWidth *Model.data.cursor.length;
     const isInvert = Model.isInvertedLane(lane);
     for(const area of areas)
@@ -522,79 +522,81 @@ export const drawCursorLaneArea = (view: Type.View, group: SVGGElement, slide: T
 };
 export const drawCursorLaneTicks = (view: Type.View, group: SVGGElement, slide: Type.SlideUnit, lane: Type.Lane, content: Type.LaneContent): void =>
 {
-    const isPrimaryLane = Model.isPrimaryLane(lane);
-    const width = cursorLaneWidth;
-    const left = getLeftOfCursorLane();
-    const right = left + width;
-    for(const tick of content.ticks)
+    for(let cursorIndex = 0; cursorIndex < Model.data.cursor.length; ++cursorIndex)
     {
-        const value = Type.getTickValue(tick);
-        const position = Model.getPositionAt(slide, lane, tick.value, view);
-        if (0 <= position && position <= group.ownerSVGElement!.viewBox.baseVal.height && "none" !== tick.type)
+        const isPrimaryLane = Model.isPrimaryLane(lane);
+        const width = cursorLaneWidth;
+        const left = getLeftOfCursorLane(cursorIndex);
+        const right = left + width;
+        for(const tick of content.ticks)
         {
-            const valueString = Calculation.complexNumberToString(value);
-            const isPrimaryTick = isPrimaryLane && 1 === value;
-            const tickTrait = config.render.ruler.tick[tick.type];
-            const color = Theme.resolve
-            (
-                tick.color ??
-                (isPrimaryTick ? config.render.ruler.primaryTickColor: tickTrait.color)
-            );
-            const drawLeftTick = true;
-            const drawRightTick = true;
-            if (drawLeftTick)
+            const value = Type.getTickValue(tick);
+            const position = Model.getPositionAt(slide, lane, tick.value, view);
+            if (0 <= position && position <= group.ownerSVGElement!.viewBox.baseVal.height && "none" !== tick.type)
             {
-                group.appendChild
+                const valueString = Calculation.complexNumberToString(value);
+                const isPrimaryTick = isPrimaryLane && 1 === value;
+                const tickTrait = config.render.ruler.tick[tick.type];
+                const color = Theme.resolve
                 (
-                    SVG.make
-                    ({
-                        tag: "line",
-                        class: `tick tick-${tick.type}`,
-                        x1: left,
-                        y1: position,
-                        x2: left + tickTrait.length,
-                        y2: position,
-                        // stroke: tickTrait.color,
-                        stroke: color,
-                        "stroke-width": tickTrait.width,
-                        "data-tick-value": valueString,
-                        ...(tick.unit ? { "data-tick-unit": tick.unit } : {}),
-                        ...(tick.label ? { "data-tick-label": Locale.resolve(tick.label) } : {}),
-                    })
+                    tick.color ??
+                    (isPrimaryTick ? config.render.ruler.primaryTickColor: tickTrait.color)
                 );
-            }
-            if (drawRightTick)
-            {
-                group.appendChild
-                (
-                    SVG.make
-                    ({
-                        tag: "line",
-                        class: `tick tick-${tick.type}`,
-                        x1: right,
-                        y1: position,
-                        x2: right - tickTrait.length,
-                        y2: position,
-                        // stroke: tickTrait.color,
-                        stroke: color,
-                        "stroke-width": tickTrait.width,
-                        "data-tick-value": valueString,
-                        ...(tick.unit ? { "data-tick-unit": tick.unit } : {}),
-                        ...(tick.label ? { "data-tick-label": Locale.resolve(tick.label) } : {}),
-                    })
-                );
+                const drawLeftTick = true;
+                const drawRightTick = true;
+                if (drawLeftTick)
+                {
+                    group.appendChild
+                    (
+                        SVG.make
+                        ({
+                            tag: "line",
+                            class: `tick tick-${tick.type}`,
+                            x1: left,
+                            y1: position,
+                            x2: left + tickTrait.length,
+                            y2: position,
+                            // stroke: tickTrait.color,
+                            stroke: color,
+                            "stroke-width": tickTrait.width,
+                            "data-tick-value": valueString,
+                            ...(tick.unit ? { "data-tick-unit": tick.unit } : {}),
+                            ...(tick.label ? { "data-tick-label": Locale.resolve(tick.label) } : {}),
+                        })
+                    );
+                }
+                if (drawRightTick)
+                {
+                    group.appendChild
+                    (
+                        SVG.make
+                        ({
+                            tag: "line",
+                            class: `tick tick-${tick.type}`,
+                            x1: right,
+                            y1: position,
+                            x2: right - tickTrait.length,
+                            y2: position,
+                            // stroke: tickTrait.color,
+                            stroke: color,
+                            "stroke-width": tickTrait.width,
+                            "data-tick-value": valueString,
+                            ...(tick.unit ? { "data-tick-unit": tick.unit } : {}),
+                            ...(tick.label ? { "data-tick-label": Locale.resolve(tick.label) } : {}),
+                        })
+                    );
+                }
             }
         }
     }
 };
-
 export const drawCursorLane = (view: Type.View, slide: Type.SlideUnit, lane: Type.Lane): void =>
 {
     const slideIndex = Model.getSlideIndex(slide);
     const group: SVGGElement = makeSureSlide(slideIndex);
     const isLastLane = true;
     //const laneIndex = Model.getAllLaneCount();
-    const left = getLeftOfCursorLane();
+    const left = getLeftOfCursorLane(0);
     const width = cursorLaneWidth;
     const tickGroup = SVG.makeSure
     (

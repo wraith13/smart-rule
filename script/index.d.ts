@@ -1798,7 +1798,7 @@ declare module "script/ruler" {
     }[];
     export const makeSureSlide: (slideIndex: number) => SVGGElement;
     export const getLeftOfLane: (laneIndex: number) => number;
-    export const getLeftOfCursorLane: () => number;
+    export const getLeftOfCursorLane: (cursorIndex: number) => number;
     export const drawLeveledText: (label: SVGTextElement, text: string, option?: {
         dx: number;
     }) => {
