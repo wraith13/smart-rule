@@ -10582,30 +10582,33 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
     const drawCursorLane = (view, slide, lane) => {
         const slideIndex = Model.getSlideIndex(slide);
         const group = (0, exports.makeSureSlide)(slideIndex);
-        const isLastLane = true;
         //const laneIndex = Model.getAllLaneCount();
-        const left = (0, exports.getLeftOfCursorLane)(0);
         const width = exports.cursorLaneWidth;
         const tickGroup = SVG.makeSure(group, {
             tag: "g",
             class: "cursor-tick-group",
             // "data-lane-index": laneIndex,
         });
-        const separator = isLastLane ?
-            config_json_6.default.render.ruler.slideSeparator :
-            config_json_6.default.render.ruler.laneSeparator;
-        SVG.makeSure(group, {
-            tag: "line",
-            class: "cursor-lane-separator",
-            // "data-lane-index": laneIndex,
-        }, {
-            x1: left + width,
-            y1: 0,
-            x2: left + width,
-            y2: group.ownerSVGElement.viewBox.baseVal.height,
-            stroke: Theme.resolve(separator.color),
-            "stroke-width": separator.width,
-        });
+        for (let cursorIndex = 0; cursorIndex < Model.data.cursor.length; ++cursorIndex) {
+            // const isLastLane = cursorIndex === Model.data.cursor.length -1;
+            // const separator = isLastLane ?
+            //     config.render.ruler.slideSeparator:
+            //     config.render.ruler.laneSeparator;
+            const separator = config_json_6.default.render.ruler.slideSeparator;
+            const left = (0, exports.getLeftOfCursorLane)(cursorIndex);
+            SVG.makeSure(group, {
+                tag: "line",
+                class: "cursor-lane-separator",
+                "data-cursor-index": cursorIndex,
+            }, {
+                x1: left + width,
+                y1: 0,
+                x2: left + width,
+                y2: group.ownerSVGElement.viewBox.baseVal.height,
+                stroke: Theme.resolve(separator.color),
+                "stroke-width": separator.width,
+            });
+        }
         tickGroup.innerHTML = "";
         const content = Model.designTicks(slide, view, lane, Model.makePositionTickWindowFromWindow());
         (0, exports.drawCursorLaneArea)(view, tickGroup, slide, lane, content.areas);
@@ -11134,6 +11137,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         const lineOnBackground = SVG.makeSure(UI.rulerSvg, {
             tag: "line",
             class: "cursor-line",
+            "data-cursor-index": cursorIndex,
         });
         // const lineOnOverlay = SVG.makeSure
         // (
@@ -11192,6 +11196,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
             // tag: "circle",
             tag: "polygon",
             class: "cursor-drag-handle",
+            "data-cursor-index": cursorIndex,
             "pointer-events": "auto",
             events: {
                 pointerdown: {

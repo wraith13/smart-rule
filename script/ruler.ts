@@ -594,9 +594,7 @@ export const drawCursorLane = (view: Type.View, slide: Type.SlideUnit, lane: Typ
 {
     const slideIndex = Model.getSlideIndex(slide);
     const group: SVGGElement = makeSureSlide(slideIndex);
-    const isLastLane = true;
     //const laneIndex = Model.getAllLaneCount();
-    const left = getLeftOfCursorLane(0);
     const width = cursorLaneWidth;
     const tickGroup = SVG.makeSure
     (
@@ -607,26 +605,32 @@ export const drawCursorLane = (view: Type.View, slide: Type.SlideUnit, lane: Typ
             // "data-lane-index": laneIndex,
         }
     );
-    const separator = isLastLane ?
-        config.render.ruler.slideSeparator:
-        config.render.ruler.laneSeparator;
-    SVG.makeSure
-    (
-        group,
-        {
-            tag: "line",
-            class: "cursor-lane-separator",
-            // "data-lane-index": laneIndex,
-        },
-        {
-            x1: left + width,
-            y1: 0,
-            x2: left + width,
-            y2: group.ownerSVGElement!.viewBox.baseVal.height,
-            stroke: Theme.resolve(separator.color),
-            "stroke-width": separator.width,
-        }
-    );
+    for(let cursorIndex = 0; cursorIndex < Model.data.cursor.length; ++cursorIndex)
+    {
+        // const isLastLane = cursorIndex === Model.data.cursor.length -1;
+        // const separator = isLastLane ?
+        //     config.render.ruler.slideSeparator:
+        //     config.render.ruler.laneSeparator;
+        const separator = config.render.ruler.slideSeparator;
+        const left = getLeftOfCursorLane(cursorIndex);
+        SVG.makeSure
+        (
+            group,
+            {
+                tag: "line",
+                class: "cursor-lane-separator",
+                "data-cursor-index": cursorIndex,
+            },
+            {
+                x1: left + width,
+                y1: 0,
+                x2: left + width,
+                y2: group.ownerSVGElement!.viewBox.baseVal.height,
+                stroke: Theme.resolve(separator.color),
+                "stroke-width": separator.width,
+            }
+        );
+    }
     tickGroup.innerHTML = "";
     const content = Model.designTicks(slide, view, lane, Model.makePositionTickWindowFromWindow());
     drawCursorLaneArea(view, tickGroup, slide, lane, content.areas);
@@ -1309,6 +1313,7 @@ export const drawCursorLine = (model: Type.Model, view: Type.View, cursorIndex: 
         {
             tag: "line",
             class: "cursor-line",
+            "data-cursor-index": cursorIndex,
         }
     );
     // const lineOnOverlay = SVG.makeSure
@@ -1383,6 +1388,7 @@ export const drawCursorLine = (model: Type.Model, view: Type.View, cursorIndex: 
             // tag: "circle",
             tag: "polygon",
             class: "cursor-drag-handle",
+            "data-cursor-index": cursorIndex,
             "pointer-events": "auto",
             events:
             {
