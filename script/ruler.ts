@@ -1125,8 +1125,17 @@ export const garbageCollectLanes = (_view: Type.View): void =>
 export const garbageCollectCursors = (_view: Type.View): void =>
 {
 };
-let anchorDragStartY = 0;
-let initialDraggingAnchorPosition: number | undefined = undefined;
+const cursorProperties: { anchorDragStartY: number, initialDraggingAnchorPosition: number | undefined,}[] = [];
+// let anchorDragStartY = 0;
+// let initialDraggingAnchorPosition: number | undefined = undefined;
+const makeSureCursorProperties = (cursorIndex: number) =>
+{
+    while(cursorProperties.length <= cursorIndex)
+    {
+        cursorProperties.push({ anchorDragStartY: 0, initialDraggingAnchorPosition: undefined, });
+    }
+    return cursorProperties[cursorIndex];
+};
 export type SnapPositionEvent = KeyboardEvent | PointerEvent | WheelEvent | TouchEvent | MouseEvent | "NOSNAP";
 export const getReferenceLaneIndexFromEvent = (event: SnapPositionEvent): number | null =>
 {
@@ -1288,15 +1297,15 @@ export const snapHorizontalPosition = (event: SnapPositionEvent, position: numbe
         return position;
     }
 }
-export const slideCursor = (model: Type.Model, view: Type.View, event: PointerEvent | WheelEvent, position: number): number =>
+export const slideCursor = (model: Type.Model, view: Type.View, cursorIndex: number, event: PointerEvent | WheelEvent, position: number): number =>
 {
     const { slide, lane } = Model.getRootSlideAndRootLane();
     const minPosition = Model.getPositionAt(slide, lane, Calculation.MIN_VALUE, view) ?? -Calculation.MAX_VALUE;
     const maxPosition = Model.getPositionAt(slide, lane, Calculation.MAX_VALUE, view) ?? Calculation.MAX_VALUE;
     const snappedPosition = snapVerticalPosition(event, view, position);
     const resultPosition = Math.min(maxPosition, Math.max(minPosition, snappedPosition));
-    model.cursor[0] = Calculation.nanToNull(Calculation.getNumberOrNaN(Model.getValueAt(slide, lane, resultPosition, view)?.value)) ?? model.cursor[0];
-    Render.markDirty("CURSOR_LINE");
+    model.cursor[cursorIndex] = Calculation.nanToNull(Calculation.getNumberOrNaN(Model.getValueAt(slide, lane, resultPosition, view)?.value)) ?? model.cursor[cursorIndex];
+    Render.markDirty(`CURSOR_LINE:${cursorIndex}`);
     return snappedPosition -position;
 };
 export const drawCursorLine = (model: Type.Model, view: Type.View, cursorIndex: number, options?: Type.RenderingOptions): void =>
@@ -1307,6 +1316,7 @@ export const drawCursorLine = (model: Type.Model, view: Type.View, cursorIndex: 
     const color = config.render.ruler.lineColor;
     const handleRadius = config.render.ruler.handleRadius;
     const handleCenterX = visibleSvgWidth -handleRadius -((Model.data.cursor.length -1 -cursorIndex) *(handleRadius *2));
+    const properties = makeSureCursorProperties(cursorIndex);
     const lineOnBackground = SVG.makeSure
     (
         UI.rulerSvg,
@@ -1330,11 +1340,11 @@ export const drawCursorLine = (model: Type.Model, view: Type.View, cursorIndex: 
         {
             listener: event =>
             {
-                if (undefined !== initialDraggingAnchorPosition)
+                if (undefined !== properties.initialDraggingAnchorPosition)
                 {
                     event.stopPropagation();
-                    const deltaY = event.clientY - anchorDragStartY;
-                    slideCursor(model, view, event, initialDraggingAnchorPosition + deltaY);
+                    const deltaY = event.clientY - properties.anchorDragStartY;
+                    slideCursor(model, view, cursorIndex, event, properties.initialDraggingAnchorPosition + deltaY);
                 }
             },
             options:
@@ -1346,11 +1356,11 @@ export const drawCursorLine = (model: Type.Model, view: Type.View, cursorIndex: 
         {
             listener: event =>
             {
-                if (undefined !== initialDraggingAnchorPosition)
+                if (undefined !== properties.initialDraggingAnchorPosition)
                 {
                     event.stopPropagation();
-                    const deltaY = event.clientY - anchorDragStartY;
-                    slideCursor(model, view, event, initialDraggingAnchorPosition + deltaY);
+                    const deltaY = event.clientY - properties.anchorDragStartY;
+                    slideCursor(model, view, cursorIndex, event, properties.initialDraggingAnchorPosition + deltaY);
                 }
                 SVG.removeEvents(UI.rulerOverlay, events);
                 SVG.setAttribute(UI.rulerOverlay, "pointer-events", "none");
@@ -1364,12 +1374,12 @@ export const drawCursorLine = (model: Type.Model, view: Type.View, cursorIndex: 
         {
             listener: event =>
             {
-                if (undefined !== initialDraggingAnchorPosition)
+                if (undefined !== properties.initialDraggingAnchorPosition)
                 {
                     event.stopPropagation();
-                    const position = initialDraggingAnchorPosition;
-                    model.cursor[0] = Calculation.nanToNull(Calculation.getNumberOrNaN(Model.getValueAt(slide, lane, position, view)?.value)) ?? model.cursor[0];
-                    initialDraggingAnchorPosition = undefined;
+                    const position = properties.initialDraggingAnchorPosition;
+                    model.cursor[cursorIndex] = Calculation.nanToNull(Calculation.getNumberOrNaN(Model.getValueAt(slide, lane, position, view)?.value)) ?? model.cursor[cursorIndex];
+                    properties.initialDraggingAnchorPosition = undefined;
                     Render.markDirty();
                 }
                 SVG.removeEvents(UI.rulerOverlay, events);
@@ -1396,12 +1406,12 @@ export const drawCursorLine = (model: Type.Model, view: Type.View, cursorIndex: 
                 {
                     listener: event =>
                     {
-                        initialDraggingAnchorPosition = Model.getPositionAt(slide, lane, model.cursor[cursorIndex], view);
-                        if (undefined !== initialDraggingAnchorPosition)
+                        properties.initialDraggingAnchorPosition = Model.getPositionAt(slide, lane, model.cursor[cursorIndex], view);
+                        if (undefined !== properties.initialDraggingAnchorPosition)
                         {
                             event.preventDefault();
                             event.stopPropagation();
-                            anchorDragStartY = event.clientY;
+                            properties.anchorDragStartY = event.clientY;
                             SVG.addEvents(UI.rulerOverlay, events);
                             SVG.setAttribute(UI.rulerOverlay, "pointer-events", "auto");
                         }

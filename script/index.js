@@ -10974,8 +10974,15 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
     const garbageCollectCursors = (_view) => {
     };
     exports.garbageCollectCursors = garbageCollectCursors;
-    let anchorDragStartY = 0;
-    let initialDraggingAnchorPosition = undefined;
+    const cursorProperties = [];
+    // let anchorDragStartY = 0;
+    // let initialDraggingAnchorPosition: number | undefined = undefined;
+    const makeSureCursorProperties = (cursorIndex) => {
+        while (cursorProperties.length <= cursorIndex) {
+            cursorProperties.push({ anchorDragStartY: 0, initialDraggingAnchorPosition: undefined, });
+        }
+        return cursorProperties[cursorIndex];
+    };
     const getReferenceLaneIndexFromEvent = (event) => {
         if ("NOSNAP" !== event && "clientX" in event) {
             return (0, exports.getLaneIndexFromPosition)(event.clientX + Model.data.offset.x);
@@ -11115,15 +11122,15 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         }
     };
     exports.snapHorizontalPosition = snapHorizontalPosition;
-    const slideCursor = (model, view, event, position) => {
+    const slideCursor = (model, view, cursorIndex, event, position) => {
         var _a, _b, _c, _d;
         const { slide, lane } = Model.getRootSlideAndRootLane();
         const minPosition = (_a = Model.getPositionAt(slide, lane, Calculation.MIN_VALUE, view)) !== null && _a !== void 0 ? _a : -Calculation.MAX_VALUE;
         const maxPosition = (_b = Model.getPositionAt(slide, lane, Calculation.MAX_VALUE, view)) !== null && _b !== void 0 ? _b : Calculation.MAX_VALUE;
         const snappedPosition = (0, exports.snapVerticalPosition)(event, view, position);
         const resultPosition = Math.min(maxPosition, Math.max(minPosition, snappedPosition));
-        model.cursor[0] = (_d = Calculation.nanToNull(Calculation.getNumberOrNaN((_c = Model.getValueAt(slide, lane, resultPosition, view)) === null || _c === void 0 ? void 0 : _c.value))) !== null && _d !== void 0 ? _d : model.cursor[0];
-        Render.markDirty("CURSOR_LINE");
+        model.cursor[cursorIndex] = (_d = Calculation.nanToNull(Calculation.getNumberOrNaN((_c = Model.getValueAt(slide, lane, resultPosition, view)) === null || _c === void 0 ? void 0 : _c.value))) !== null && _d !== void 0 ? _d : model.cursor[cursorIndex];
+        Render.markDirty(`CURSOR_LINE:${cursorIndex}`);
         return snappedPosition - position;
     };
     exports.slideCursor = slideCursor;
@@ -11134,6 +11141,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         const color = config_json_6.default.render.ruler.lineColor;
         const handleRadius = config_json_6.default.render.ruler.handleRadius;
         const handleCenterX = visibleSvgWidth - handleRadius - ((Model.data.cursor.length - 1 - cursorIndex) * (handleRadius * 2));
+        const properties = makeSureCursorProperties(cursorIndex);
         const lineOnBackground = SVG.makeSure(UI.rulerSvg, {
             tag: "line",
             class: "cursor-line",
@@ -11150,10 +11158,10 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         const events = {
             pointermove: {
                 listener: event => {
-                    if (undefined !== initialDraggingAnchorPosition) {
+                    if (undefined !== properties.initialDraggingAnchorPosition) {
                         event.stopPropagation();
-                        const deltaY = event.clientY - anchorDragStartY;
-                        (0, exports.slideCursor)(model, view, event, initialDraggingAnchorPosition + deltaY);
+                        const deltaY = event.clientY - properties.anchorDragStartY;
+                        (0, exports.slideCursor)(model, view, cursorIndex, event, properties.initialDraggingAnchorPosition + deltaY);
                     }
                 },
                 options: {
@@ -11162,10 +11170,10 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
             },
             pointerup: {
                 listener: event => {
-                    if (undefined !== initialDraggingAnchorPosition) {
+                    if (undefined !== properties.initialDraggingAnchorPosition) {
                         event.stopPropagation();
-                        const deltaY = event.clientY - anchorDragStartY;
-                        (0, exports.slideCursor)(model, view, event, initialDraggingAnchorPosition + deltaY);
+                        const deltaY = event.clientY - properties.anchorDragStartY;
+                        (0, exports.slideCursor)(model, view, cursorIndex, event, properties.initialDraggingAnchorPosition + deltaY);
                     }
                     SVG.removeEvents(UI.rulerOverlay, events);
                     SVG.setAttribute(UI.rulerOverlay, "pointer-events", "none");
@@ -11177,11 +11185,11 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
             pointercancel: {
                 listener: event => {
                     var _a, _b;
-                    if (undefined !== initialDraggingAnchorPosition) {
+                    if (undefined !== properties.initialDraggingAnchorPosition) {
                         event.stopPropagation();
-                        const position = initialDraggingAnchorPosition;
-                        model.cursor[0] = (_b = Calculation.nanToNull(Calculation.getNumberOrNaN((_a = Model.getValueAt(slide, lane, position, view)) === null || _a === void 0 ? void 0 : _a.value))) !== null && _b !== void 0 ? _b : model.cursor[0];
-                        initialDraggingAnchorPosition = undefined;
+                        const position = properties.initialDraggingAnchorPosition;
+                        model.cursor[cursorIndex] = (_b = Calculation.nanToNull(Calculation.getNumberOrNaN((_a = Model.getValueAt(slide, lane, position, view)) === null || _a === void 0 ? void 0 : _a.value))) !== null && _b !== void 0 ? _b : model.cursor[cursorIndex];
+                        properties.initialDraggingAnchorPosition = undefined;
                         Render.markDirty();
                     }
                     SVG.removeEvents(UI.rulerOverlay, events);
@@ -11201,11 +11209,11 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
             events: {
                 pointerdown: {
                     listener: event => {
-                        initialDraggingAnchorPosition = Model.getPositionAt(slide, lane, model.cursor[cursorIndex], view);
-                        if (undefined !== initialDraggingAnchorPosition) {
+                        properties.initialDraggingAnchorPosition = Model.getPositionAt(slide, lane, model.cursor[cursorIndex], view);
+                        if (undefined !== properties.initialDraggingAnchorPosition) {
                             event.preventDefault();
                             event.stopPropagation();
-                            anchorDragStartY = event.clientY;
+                            properties.anchorDragStartY = event.clientY;
                             SVG.addEvents(UI.rulerOverlay, events);
                             SVG.setAttribute(UI.rulerOverlay, "pointer-events", "auto");
                         }
@@ -11959,7 +11967,7 @@ define("script/event", ["require", "exports", "script/url", "script/type", "scri
                 event.preventDefault();
                 const { slide, lane } = Model.getRootSlideAndRootLane();
                 const cursorPosition = (_a = Model.getPositionAt(slide, lane, Model.data.cursor[0], View.data)) !== null && _a !== void 0 ? _a : 0;
-                updateVerticalSnapDelta(Ruler.slideCursor(Model.data, View.data, event, cursorPosition - (-event.deltaY + verticalSnapDelta)));
+                updateVerticalSnapDelta(Ruler.slideCursor(Model.data, View.data, 0, event, cursorPosition - (-event.deltaY + verticalSnapDelta)));
                 const newCursorPosition = (_b = Model.getPositionAt(slide, lane, Model.data.cursor[0], View.data)) !== null && _b !== void 0 ? _b : 0;
                 const cursorDelta = newCursorPosition - cursorPosition;
                 (0, exports.verticalScroll)(event, cursorDelta, Model.getRootSlide());
@@ -11972,7 +11980,7 @@ define("script/event", ["require", "exports", "script/url", "script/type", "scri
                 event.preventDefault();
                 const { slide, lane } = Model.getRootSlideAndRootLane();
                 const cursorPosition = (_c = Model.getPositionAt(slide, lane, Model.data.cursor[0], View.data)) !== null && _c !== void 0 ? _c : 0;
-                updateVerticalSnapDelta(Ruler.slideCursor(Model.data, View.data, event, cursorPosition - (event.deltaY + verticalSnapDelta)));
+                updateVerticalSnapDelta(Ruler.slideCursor(Model.data, View.data, 0, event, cursorPosition - (event.deltaY + verticalSnapDelta)));
             }
             else {
                 (0, exports.verticalScroll)(event, event.deltaY, Model.getSlideFromLane(Model.getLane((_d = Ruler.getLaneIndexFromPosition(event.clientX + Model.data.offset.x)) !== null && _d !== void 0 ? _d : 0)));

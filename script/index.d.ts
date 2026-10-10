@@ -1826,7 +1826,7 @@ declare module "script/ruler" {
     export const getAreaPositions: (slide: Type.SlideUnit, lane: Type.Lane, view: Type.View, areas: Type.Area[]) => number[];
     export const snapVerticalPosition: (event: SnapPositionEvent, view: Type.View, position: number, referenceLaneIndex?: number) => number;
     export const snapHorizontalPosition: (event: SnapPositionEvent, position: number) => number;
-    export const slideCursor: (model: Type.Model, view: Type.View, event: PointerEvent | WheelEvent, position: number) => number;
+    export const slideCursor: (model: Type.Model, view: Type.View, cursorIndex: number, event: PointerEvent | WheelEvent, position: number) => number;
     export const drawCursorLine: (model: Type.Model, view: Type.View, cursorIndex: number, options?: Type.RenderingOptions) => void;
     export const drawPopup: (view: Type.View, popup?: Type.ViewPopup | null) => void;
     export const drawLanePropertyPopup: (_view: Type.View, _popup: Type.LanePropertyPopup) => void;

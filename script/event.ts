@@ -218,7 +218,7 @@ export const initialize = () =>
                 event.preventDefault();
                 const { slide, lane } = Model.getRootSlideAndRootLane();
                 const cursorPosition = Model.getPositionAt(slide, lane, Model.data.cursor[0], View.data) ?? 0;
-                updateVerticalSnapDelta(Ruler.slideCursor(Model.data, View.data, event, cursorPosition -(-event.deltaY +verticalSnapDelta)));
+                updateVerticalSnapDelta(Ruler.slideCursor(Model.data, View.data, 0, event, cursorPosition -(-event.deltaY +verticalSnapDelta)));
                 const newCursorPosition = Model.getPositionAt(slide, lane, Model.data.cursor[0], View.data) ?? 0;
                 const cursorDelta = newCursorPosition -cursorPosition;
                 verticalScroll(event, cursorDelta, Model.getRootSlide());
@@ -235,7 +235,7 @@ export const initialize = () =>
                 event.preventDefault();
                 const { slide, lane } = Model.getRootSlideAndRootLane();
                 const cursorPosition = Model.getPositionAt(slide, lane, Model.data.cursor[0], View.data) ?? 0;
-                updateVerticalSnapDelta(Ruler.slideCursor(Model.data, View.data, event, cursorPosition -(event.deltaY +verticalSnapDelta)));
+                updateVerticalSnapDelta(Ruler.slideCursor(Model.data, View.data, 0, event, cursorPosition -(event.deltaY +verticalSnapDelta)));
             }
             else
             {
