@@ -141,7 +141,8 @@
                 "#888800CC",
                 "#0000DDCC",
                 "#008888CC",
-                "#00BB00CC"
+                "#00BB00CC",
+                "#888888CC"
             ],
             "cursorWidth": 2,
             "laneBackgroundColor": {
@@ -150,6 +151,7 @@
             },
             "laneWidth": 210,
             "handleRadius": 24,
+            "cursorLaneBezelWidth": 16,
             "slideSeparator":
             {
                 "width": 1,

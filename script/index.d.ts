@@ -1769,6 +1769,7 @@ declare module "script/ruler" {
     import * as Calculation from "script/calculation";
     export let scale: number;
     export let LaneWidths: number[];
+    export let isFoldedCursorLane: boolean;
     export const cursorLaneWidth: number;
     export const setLaneWidth: (laneIndex: number, width: number) => void;
     export const renderer: (model: Type.Model, view: Type.View, dirty: Set<string>, timeLimit?: number, options?: Type.RenderingOptions) => void;
@@ -1834,6 +1835,8 @@ declare module "script/ruler" {
     export const drawLanePropertyPopup: (_view: Type.View, _popup: Type.LanePropertyPopup) => void;
     export const drawLaneUnitPopup: (_view: Type.View, popup: Type.LaneUnitPopup) => void;
     export const resize: () => void;
+    export const getCursorLaneBezelWidth: () => number;
+    export const getCursorLaneWidth: () => number;
     export const getRulerWidth: () => number;
     export const initialize: () => void;
 }
@@ -2002,6 +2005,7 @@ declare module "script/json-eval-updater" {
                     };
                     laneWidth: number;
                     handleRadius: number;
+                    cursorLaneBezelWidth: number;
                     slideSeparator: {
                         width: number;
                         color: {

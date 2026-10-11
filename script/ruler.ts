@@ -10,6 +10,7 @@ import * as Comparer from "./comparer";
 import config from "@resource/config.json";
 export let scale = 1.0;
 export let LaneWidths: number[] = [];
+export let isFoldedCursorLane = false;
 export const cursorLaneWidth = config.render.ruler.handleRadius *2;
 export const setLaneWidth = (laneIndex: number, width: number): void =>
 {
@@ -41,6 +42,7 @@ export const renderer = (model: Type.Model, view: Type.View, dirty: Set<string>,
             dirty.add("CURSOR_GARBAGE_COLLECTOR");
             // dirty.add("CURSOR_LANE"); Render.RenderItemId.Size 内でセットされる。
             // dirty.add("CURSOR_LINE"); Render.RenderItemId.Size 内でセットされる。
+            // dirty.add("CURSOR_HANDLE"); Render.RenderItemId.Size 内でセットされる。
             // dirty.add("CURSOR_HANDLE"); Render.RenderItemId.Size 内でセットされる。
             dirty.add(Render.RenderItemId.Popup);
         }
@@ -1332,7 +1334,7 @@ export const drawCursorLine = (model: Type.Model, view: Type.View, cursorIndex: 
 {
     const { slide, lane } = Model.getRootSlideAndRootLane();
     // const svg = UI.rulerOverlay;
-    const visibleSvgWidth = UI.rulerSvg.viewBox.baseVal.width;
+    const visibleSvgWidth = UI.rulerSvg.viewBox.baseVal.width -getCursorLaneBezelWidth();
     const color = getCursorColor(cursorIndex);
     const lineOnBackground = SVG.makeSure
     (
@@ -1407,7 +1409,7 @@ export const drawCursorHandle = (model: Type.Model, view: Type.View, cursorIndex
     const visibleSvgWidth = UI.rulerSvg.viewBox.baseVal.width;
     const color = getCursorColor(cursorIndex);
     const handleRadius = config.render.ruler.handleRadius;
-    const handleCenterX = visibleSvgWidth -handleRadius -((Model.data.cursor.length -1 -cursorIndex) *(handleRadius *2));
+    const handleCenterX = visibleSvgWidth -getCursorLaneWidth() +(cursorIndex *cursorLaneWidth) +handleRadius;
     const properties = makeSureCursorProperties(cursorIndex);
     const events: SVG.Events =
     {
@@ -1672,7 +1674,7 @@ export const drawLaneUnitPopup = (_view: Type.View, popup: Type.LaneUnitPopup): 
 export const resize = () =>
 {
     const laneIndex = Model.getAllLaneCount();
-    const left = getLeftOfLane(laneIndex) +(cursorLaneWidth *Model.data.cursor.length);
+    const left = getLeftOfLane(laneIndex) + getCursorLaneWidth();
     UI.rulerNewSlidePanel.style.left = `${left}px`;
     UI.rulerHelpPanel.style.left = `${UI.rulerNewSlidePanel.clientWidth +left}px`;
     const width = Math.min(document.body.clientWidth, getRulerWidth()  -Model.data.offset.x);
@@ -1703,8 +1705,13 @@ export const resize = () =>
         Render.markDirty(`CURSOR_HANDLE:${i}`);
     }
 };
+export const getCursorLaneBezelWidth = (): number =>
+    Model.data.cursor.length <= 1 ? 0: config.render.ruler.cursorLaneBezelWidth;
+export const getCursorLaneWidth = (): number =>
+    cursorLaneWidth *(isFoldedCursorLane ? 1: Model.data.cursor.length)
+    +getCursorLaneBezelWidth();
 export const getRulerWidth = (): number =>
-    LaneWidths.reduce((a, b) => a + b, 0) +(cursorLaneWidth *Model.data.cursor.length);
+    LaneWidths.reduce((a, b) => a + b, 0) +getCursorLaneWidth();
 export const initialize = (): void =>
 {
     Render.markDirty("DEFINES");
