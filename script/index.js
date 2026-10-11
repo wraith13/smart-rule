@@ -780,8 +780,15 @@ define("resource/config", [], {
                 "light": "#FFFFFF",
                 "dark": "#000000"
             },
-            "lineColor": "#BB0000CC",
-            "lineWidth": 1,
+            "cursorColors": [
+                "#BB0000CC",
+                "#880088CC",
+                "#888800CC",
+                "#0000DDCC",
+                "#008888CC",
+                "#00BB00CC"
+            ],
+            "cursorWidth": 2,
             "laneBackgroundColor": {
                 "light": "#F0F0F0",
                 "dark": "#1A1A1A"
@@ -10135,7 +10142,7 @@ define("script/render", ["require", "exports", "script/view", "script/model", "r
 define("script/ruler", ["require", "exports", "script/locale", "script/type", "script/calculation", "script/model", "script/ui", "script/theme", "script/render", "script/svg", "script/comparer", "resource/config"], function (require, exports, Locale, Type, Calculation, Model, UI, Theme, Render, SVG, Comparer, config_json_6) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.getRulerWidth = exports.resize = exports.drawLaneUnitPopup = exports.drawLanePropertyPopup = exports.drawPopup = exports.drawCursorLine = exports.slideCursor = exports.snapHorizontalPosition = exports.snapVerticalPosition = exports.getAreaPositions = exports.nextPosition = exports.snapPosition = exports.regulateReferencePositions = exports.getReferenceLaneIndexFromEvent = exports.garbageCollectCursors = exports.garbageCollectLanes = exports.drawTicks = exports.calculateMinimumFractionDigits = exports.getFractionDigitsFromUnit = exports.makeShortNumberLabel = exports.makeNumberLabel = exports.makeNumberLabelPart = exports.drawAreas = exports.getAreaFill = exports.drawCursorLane = exports.drawCursorLaneTicks = exports.drawCursorLaneArea = exports.drawLane = exports.drawLeveledText = exports.getLeftOfCursorLane = exports.getLeftOfLane = exports.makeSureSlide = exports.makeStops = exports.makeVerticalGradient = exports.makeLinerGradient = exports.drawGradientDefines = exports.getLaneIndexFromPosition = exports.renderer = exports.setLaneWidth = exports.cursorLaneWidth = exports.LaneWidths = exports.scale = void 0;
+    exports.initialize = exports.getRulerWidth = exports.resize = exports.drawLaneUnitPopup = exports.drawLanePropertyPopup = exports.drawPopup = exports.drawCursorHandle = exports.drawCursorLine = exports.getCursorColor = exports.slideCursor = exports.snapHorizontalPosition = exports.snapVerticalPosition = exports.getAreaPositions = exports.nextPosition = exports.snapPosition = exports.regulateReferencePositions = exports.getReferenceLaneIndexFromEvent = exports.garbageCollectCursors = exports.garbageCollectLanes = exports.drawTicks = exports.calculateMinimumFractionDigits = exports.getFractionDigitsFromUnit = exports.makeShortNumberLabel = exports.makeNumberLabel = exports.makeNumberLabelPart = exports.drawAreas = exports.getAreaFill = exports.drawCursorLane = exports.drawCursorLaneTicks = exports.drawCursorLaneArea = exports.drawLane = exports.drawLeveledText = exports.getLeftOfCursorLane = exports.getLeftOfLane = exports.makeSureSlide = exports.makeStops = exports.makeVerticalGradient = exports.makeLinerGradient = exports.drawGradientDefines = exports.getLaneIndexFromPosition = exports.renderer = exports.setLaneWidth = exports.cursorLaneWidth = exports.LaneWidths = exports.scale = void 0;
     Locale = __importStar(Locale);
     Type = __importStar(Type);
     Calculation = __importStar(Calculation);
@@ -10174,6 +10181,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                 dirty.add("CURSOR_GARBAGE_COLLECTOR");
                 // dirty.add("CURSOR_LANE"); Render.RenderItemId.Size 内でセットされる。
                 // dirty.add("CURSOR_LINE"); Render.RenderItemId.Size 内でセットされる。
+                // dirty.add("CURSOR_HANDLE"); Render.RenderItemId.Size 内でセットされる。
                 dirty.add(Render.RenderItemId.Popup);
             }
             if (dirty.has("LANE_GARBAGE_COLLECTOR")) {
@@ -10207,9 +10215,9 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                             fill: Theme.resolve(config_json_6.default.render.ruler.laneBackgroundColor),
                         });
                         break;
-                    case "CURSOR_LINE":
-                        (0, exports.drawCursorLine)(model, view, 0, options);
-                        break;
+                    // case "CURSOR_LINE":
+                    //     drawCursorLine(model, view, 0, options);
+                    //     break;
                     case Render.RenderItemId.Popup:
                         (0, exports.drawPopup)(view);
                         break;
@@ -10232,6 +10240,15 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                             const cursorIndex = Number.parseInt(i.substring("CURSOR_LINE:".length));
                             if (undefined !== cursorIndex && cursorIndex < Model.data.cursor.length) {
                                 (0, exports.drawCursorLine)(model, view, cursorIndex, options);
+                            }
+                            else {
+                                console.warn(`🦋 FIXME: Cursor not found for dirty item: ${i}`);
+                            }
+                        }
+                        else if (i.startsWith("CURSOR_HANDLE:")) {
+                            const cursorIndex = Number.parseInt(i.substring("CURSOR_HANDLE:".length));
+                            if (undefined !== cursorIndex && cursorIndex < Model.data.cursor.length) {
+                                (0, exports.drawCursorHandle)(model, view, cursorIndex, options);
                             }
                             else {
                                 console.warn(`🦋 FIXME: Cursor not found for dirty item: ${i}`);
@@ -11131,17 +11148,20 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         const resultPosition = Math.min(maxPosition, Math.max(minPosition, snappedPosition));
         model.cursor[cursorIndex] = (_d = Calculation.nanToNull(Calculation.getNumberOrNaN((_c = Model.getValueAt(slide, lane, resultPosition, view)) === null || _c === void 0 ? void 0 : _c.value))) !== null && _d !== void 0 ? _d : model.cursor[cursorIndex];
         Render.markDirty(`CURSOR_LINE:${cursorIndex}`);
+        Render.markDirty(`CURSOR_HANDLE:${cursorIndex}`);
         return snappedPosition - position;
     };
     exports.slideCursor = slideCursor;
+    const getCursorColor = (cursorIndex) => {
+        const color = config_json_6.default.render.ruler.cursorColors[cursorIndex % config_json_6.default.render.ruler.cursorColors.length];
+        return Theme.resolve(color);
+    };
+    exports.getCursorColor = getCursorColor;
     const drawCursorLine = (model, view, cursorIndex, options) => {
         const { slide, lane } = Model.getRootSlideAndRootLane();
-        const svg = UI.rulerOverlay;
+        // const svg = UI.rulerOverlay;
         const visibleSvgWidth = UI.rulerSvg.viewBox.baseVal.width;
-        const color = config_json_6.default.render.ruler.lineColor;
-        const handleRadius = config_json_6.default.render.ruler.handleRadius;
-        const handleCenterX = visibleSvgWidth - handleRadius - ((Model.data.cursor.length - 1 - cursorIndex) * (handleRadius * 2));
-        const properties = makeSureCursorProperties(cursorIndex);
+        const color = (0, exports.getCursorColor)(cursorIndex);
         const lineOnBackground = SVG.makeSure(UI.rulerSvg, {
             tag: "line",
             class: "cursor-line",
@@ -11155,6 +11175,54 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         //         class: "cursor-line",
         //     }
         // );
+        const position = Model.getPositionAt(slide, lane, model.cursor[cursorIndex], view);
+        if (0 <= position && position <= UI.rulerSvg.viewBox.baseVal.height && false !== (options === null || options === void 0 ? void 0 : options.showCursor)) {
+            //const color = "red";
+            SVG.setAttributes(lineOnBackground, {
+                visibility: "visible",
+                x1: 0,
+                y1: position,
+                x2: visibleSvgWidth,
+                y2: position,
+                stroke: color,
+                "stroke-width": config_json_6.default.render.ruler.cursorWidth,
+            });
+            // SVG.setAttributes
+            // (
+            //     lineOnOverlay,
+            //     {
+            //         visibility: "visible",
+            //         x1: visibleSvgWidth,
+            //         y1: position,
+            //         x2: visibleSvgWidth -(handleRadius *2),
+            //         y2: position,
+            //         stroke: color,
+            //         "stroke-width": config.render.ruler.lineWidth,
+            //     }
+            // );
+        }
+        else {
+            SVG.setAttributes(lineOnBackground, {
+                visibility: "hidden",
+            });
+            // SVG.setAttributes
+            // (
+            //     lineOnOverlay,
+            //     {
+            //         visibility: "hidden",
+            //     }
+            // );
+        }
+    };
+    exports.drawCursorLine = drawCursorLine;
+    const drawCursorHandle = (model, view, cursorIndex, options) => {
+        const { slide, lane } = Model.getRootSlideAndRootLane();
+        const svg = UI.rulerOverlay;
+        const visibleSvgWidth = UI.rulerSvg.viewBox.baseVal.width;
+        const color = (0, exports.getCursorColor)(cursorIndex);
+        const handleRadius = config_json_6.default.render.ruler.handleRadius;
+        const handleCenterX = visibleSvgWidth - handleRadius - ((Model.data.cursor.length - 1 - cursorIndex) * (handleRadius * 2));
+        const properties = makeSureCursorProperties(cursorIndex);
         const events = {
             pointermove: {
                 listener: event => {
@@ -11227,28 +11295,6 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         const position = Model.getPositionAt(slide, lane, model.cursor[cursorIndex], view);
         if (0 <= position && position <= UI.rulerSvg.viewBox.baseVal.height && false !== (options === null || options === void 0 ? void 0 : options.showCursor)) {
             //const color = "red";
-            SVG.setAttributes(lineOnBackground, {
-                visibility: "visible",
-                x1: 0,
-                y1: position,
-                x2: visibleSvgWidth,
-                y2: position,
-                stroke: color,
-                "stroke-width": config_json_6.default.render.ruler.lineWidth,
-            });
-            // SVG.setAttributes
-            // (
-            //     lineOnOverlay,
-            //     {
-            //         visibility: "visible",
-            //         x1: visibleSvgWidth,
-            //         y1: position,
-            //         x2: visibleSvgWidth -(handleRadius *2),
-            //         y2: position,
-            //         stroke: color,
-            //         "stroke-width": config.render.ruler.lineWidth,
-            //     }
-            // );
             SVG.setAttributes(handle, {
                 // cx: visibleSvgWidth -handleRadius,
                 // cy: position,
@@ -11258,16 +11304,6 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
             });
         }
         else {
-            SVG.setAttributes(lineOnBackground, {
-                visibility: "hidden",
-            });
-            // SVG.setAttributes
-            // (
-            //     lineOnOverlay,
-            //     {
-            //         visibility: "hidden",
-            //     }
-            // );
             if (position < 0) {
                 SVG.setAttributes(handle, {
                     // cx: visibleSvgWidth -handleRadius,
@@ -11288,7 +11324,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
             }
         }
     };
-    exports.drawCursorLine = drawCursorLine;
+    exports.drawCursorHandle = drawCursorHandle;
     const drawPopup = (view, popup = null) => {
         var _a;
         console.warn(`🦋 drawPopup: ${(_a = popup === null || popup === void 0 ? void 0 : popup.popupType) !== null && _a !== void 0 ? _a : "null"}`);
@@ -11406,9 +11442,10 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         });
         Render.markDirty("BACKGROUND");
         Render.markDirty("CURSOR_LANE");
-        Render.markDirty("CURSOR_LINE");
+        // Render.markDirty("CURSOR_LINE");
         for (let i = 0; i < Model.data.cursor.length; ++i) {
             Render.markDirty(`CURSOR_LINE:${i}`);
+            Render.markDirty(`CURSOR_HANDLE:${i}`);
         }
     };
     exports.resize = resize;

@@ -41,6 +41,7 @@ export const renderer = (model: Type.Model, view: Type.View, dirty: Set<string>,
             dirty.add("CURSOR_GARBAGE_COLLECTOR");
             // dirty.add("CURSOR_LANE"); Render.RenderItemId.Size 内でセットされる。
             // dirty.add("CURSOR_LINE"); Render.RenderItemId.Size 内でセットされる。
+            // dirty.add("CURSOR_HANDLE"); Render.RenderItemId.Size 内でセットされる。
             dirty.add(Render.RenderItemId.Popup);
         }
         if (dirty.has("LANE_GARBAGE_COLLECTOR"))
@@ -86,9 +87,9 @@ export const renderer = (model: Type.Model, view: Type.View, dirty: Set<string>,
                     }
                 );
                 break;
-            case "CURSOR_LINE":
-                drawCursorLine(model, view, 0, options);
-                break;
+            // case "CURSOR_LINE":
+            //     drawCursorLine(model, view, 0, options);
+            //     break;
             case Render.RenderItemId.Popup:
                 drawPopup(view);
                 break;
@@ -117,6 +118,19 @@ export const renderer = (model: Type.Model, view: Type.View, dirty: Set<string>,
                     if (undefined !== cursorIndex && cursorIndex < Model.data.cursor.length)
                     {
                         drawCursorLine(model, view, cursorIndex, options);
+                    }
+                    else
+                    {
+                        console.warn(`🦋 FIXME: Cursor not found for dirty item: ${i}`);
+                    }
+                }
+                else
+                if (i.startsWith("CURSOR_HANDLE:"))
+                {
+                    const cursorIndex = Number.parseInt(i.substring("CURSOR_HANDLE:".length));
+                    if (undefined !== cursorIndex && cursorIndex < Model.data.cursor.length)
+                    {
+                        drawCursorHandle(model, view, cursorIndex, options);
                     }
                     else
                     {
@@ -1306,17 +1320,20 @@ export const slideCursor = (model: Type.Model, view: Type.View, cursorIndex: num
     const resultPosition = Math.min(maxPosition, Math.max(minPosition, snappedPosition));
     model.cursor[cursorIndex] = Calculation.nanToNull(Calculation.getNumberOrNaN(Model.getValueAt(slide, lane, resultPosition, view)?.value)) ?? model.cursor[cursorIndex];
     Render.markDirty(`CURSOR_LINE:${cursorIndex}`);
+    Render.markDirty(`CURSOR_HANDLE:${cursorIndex}`);
     return snappedPosition -position;
+};
+export const getCursorColor = (cursorIndex: number): string =>
+{
+    const color = config.render.ruler.cursorColors[cursorIndex % config.render.ruler.cursorColors.length];
+    return Theme.resolve(color);
 };
 export const drawCursorLine = (model: Type.Model, view: Type.View, cursorIndex: number, options?: Type.RenderingOptions): void =>
 {
     const { slide, lane } = Model.getRootSlideAndRootLane();
-    const svg = UI.rulerOverlay;
+    // const svg = UI.rulerOverlay;
     const visibleSvgWidth = UI.rulerSvg.viewBox.baseVal.width;
-    const color = config.render.ruler.lineColor;
-    const handleRadius = config.render.ruler.handleRadius;
-    const handleCenterX = visibleSvgWidth -handleRadius -((Model.data.cursor.length -1 -cursorIndex) *(handleRadius *2));
-    const properties = makeSureCursorProperties(cursorIndex);
+    const color = getCursorColor(cursorIndex);
     const lineOnBackground = SVG.makeSure
     (
         UI.rulerSvg,
@@ -1334,6 +1351,64 @@ export const drawCursorLine = (model: Type.Model, view: Type.View, cursorIndex: 
     //         class: "cursor-line",
     //     }
     // );
+    const position = Model.getPositionAt(slide, lane, model.cursor[cursorIndex], view);
+    if (0 <= position && position <= UI.rulerSvg.viewBox.baseVal.height && false !== options?.showCursor)
+    {
+        //const color = "red";
+        SVG.setAttributes
+        (
+            lineOnBackground,
+            {
+                visibility: "visible",
+                x1: 0,
+                y1: position,
+                x2: visibleSvgWidth,
+                y2: position,
+                stroke: color,
+                "stroke-width": config.render.ruler.cursorWidth,
+            }
+        );
+        // SVG.setAttributes
+        // (
+        //     lineOnOverlay,
+        //     {
+        //         visibility: "visible",
+        //         x1: visibleSvgWidth,
+        //         y1: position,
+        //         x2: visibleSvgWidth -(handleRadius *2),
+        //         y2: position,
+        //         stroke: color,
+        //         "stroke-width": config.render.ruler.lineWidth,
+        //     }
+        // );
+    }
+    else
+    {
+        SVG.setAttributes
+        (
+            lineOnBackground,
+            {
+                visibility: "hidden",
+            }
+        );
+        // SVG.setAttributes
+        // (
+        //     lineOnOverlay,
+        //     {
+        //         visibility: "hidden",
+        //     }
+        // );
+    }
+};
+export const drawCursorHandle = (model: Type.Model, view: Type.View, cursorIndex: number, options?: Type.RenderingOptions): void =>
+{
+    const { slide, lane } = Model.getRootSlideAndRootLane();
+    const svg = UI.rulerOverlay;
+    const visibleSvgWidth = UI.rulerSvg.viewBox.baseVal.width;
+    const color = getCursorColor(cursorIndex);
+    const handleRadius = config.render.ruler.handleRadius;
+    const handleCenterX = visibleSvgWidth -handleRadius -((Model.data.cursor.length -1 -cursorIndex) *(handleRadius *2));
+    const properties = makeSureCursorProperties(cursorIndex);
     const events: SVG.Events =
     {
         pointermove:
@@ -1430,32 +1505,6 @@ export const drawCursorLine = (model: Type.Model, view: Type.View, cursorIndex: 
         //const color = "red";
         SVG.setAttributes
         (
-            lineOnBackground,
-            {
-                visibility: "visible",
-                x1: 0,
-                y1: position,
-                x2: visibleSvgWidth,
-                y2: position,
-                stroke: color,
-                "stroke-width": config.render.ruler.lineWidth,
-            }
-        );
-        // SVG.setAttributes
-        // (
-        //     lineOnOverlay,
-        //     {
-        //         visibility: "visible",
-        //         x1: visibleSvgWidth,
-        //         y1: position,
-        //         x2: visibleSvgWidth -(handleRadius *2),
-        //         y2: position,
-        //         stroke: color,
-        //         "stroke-width": config.render.ruler.lineWidth,
-        //     }
-        // );
-        SVG.setAttributes
-        (
             handle,
             {
                 // cx: visibleSvgWidth -handleRadius,
@@ -1468,20 +1517,6 @@ export const drawCursorLine = (model: Type.Model, view: Type.View, cursorIndex: 
     }
     else
     {
-        SVG.setAttributes
-        (
-            lineOnBackground,
-            {
-                visibility: "hidden",
-            }
-        );
-        // SVG.setAttributes
-        // (
-        //     lineOnOverlay,
-        //     {
-        //         visibility: "hidden",
-        //     }
-        // );
         if (position < 0)
         {
             SVG.setAttributes
@@ -1661,10 +1696,11 @@ export const resize = () =>
     );
     Render.markDirty("BACKGROUND");
     Render.markDirty("CURSOR_LANE");
-    Render.markDirty("CURSOR_LINE");
+    // Render.markDirty("CURSOR_LINE");
     for (let i = 0; i < Model.data.cursor.length; ++i)
     {
         Render.markDirty(`CURSOR_LINE:${i}`);
+        Render.markDirty(`CURSOR_HANDLE:${i}`);
     }
 };
 export const getRulerWidth = (): number =>
