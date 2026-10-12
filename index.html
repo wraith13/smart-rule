@@ -2,7 +2,7 @@
 <!--
     This file is genereted by build.js. このファイルは build.js によって生成されました。
     build options: ../build.json all
-    build at: Mon Oct 12 2026 02:46:13 GMT+0900 (日本標準時)
+    build at: Mon Oct 12 2026 07:55:51 GMT+0900 (日本標準時)
     repository: https://github.com/wraith13/smart-rule/
 -->
 <!-- license:
@@ -172,6 +172,24 @@ body:not(.linear-scale) #linear-scale-icon
 {
     background-color: darkslategray;
 }
+#cursor-lane-bezel
+{
+    position: fixed;
+    top: 0px;
+    bottom: 0px;
+    width: 24px;
+    padding: 0px;
+}
+#cursor-lane-bezel svg
+{
+    position: relative;
+    height: 1.0rem;
+    width: 1.0rem;
+}
+#cursor-lane-bezel:not(.folded) svg
+{
+    transform: rotate(180deg);
+}
 #ruler-new-slide-panel,
 #ruler-help-panel
 {
@@ -184,7 +202,7 @@ body:not(.linear-scale) #linear-scale-icon
     bottom: 0px;
     width: 240px;
     color: white;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: #00000080;
     backdrop-filter: blur(0.5rem);
     display: flex;
     flex-direction: column;
@@ -210,6 +228,19 @@ body:not(.linear-scale) #linear-scale-icon
 {
     display: block;
 }
+.light-theme button svg
+{
+    color: black;
+    fill: black;
+    stroke: black;
+}
+.dark-theme button svg
+{
+    color: white;
+    fill: white;
+    stroke: white;
+}
+.light-theme #cursor-lane-bezel,
 .light-theme #ruler-new-slide-panel button,
 .light-theme #ruler-new-slide-panel input,
 .light-theme #ruler-new-slide-panel select,
@@ -220,6 +251,7 @@ body:not(.linear-scale) #linear-scale-icon
     color: black;
     background-color: rgba(255, 255, 255, 0.5);
 }
+.dark-theme #cursor-lane-bezel,
 .dark-theme #ruler-new-slide-panel button,
 .dark-theme #ruler-new-slide-panel input,
 .dark-theme #ruler-new-slide-panel select,
@@ -286,14 +318,14 @@ button.round-button
     transition: border-color 0.5s ease;
     color: white;
 }
-button svg
+#control-panel button svg
 {
     position: relative;
     height: 2.0rem;
     width: 2.0rem;
 }
-button svg,
-button svg path
+#control-panel button svg,
+#control-panel button svg path
 {
     color: white !important;
     fill: white !important;
@@ -442,7 +474,8 @@ button:focus
         margin-bottom: -46px;
         opacity: 0;
     }
-} DUMMY { color: initial; }
+}
+ DUMMY { color: initial; }
 </style>
 </head>
 <body>
@@ -459,6 +492,14 @@ button:focus
     <div id="ruler-view" class="view">
         RULER VIEW
         <svg id="ruler-svg" class="screen"></svg>
+        <button id="cursor-lane-bezel"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg role="presentation" aria-hidden="true" width="100%" height="100%" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(1,0,0,1,-20.52,-0.152764)">
+        <path d="M277.128,192.306L277.129,192C277.294,169.198 295.857,150.737 318.698,150.737C326.626,150.737 334.038,152.961 340.345,156.819L893.467,476.149L893.46,476.161C906.034,483.312 914.523,496.833 914.523,512.321C914.523,529.423 904.173,544.126 889.4,550.504L340.335,867.492C339.741,867.855 339.138,868.203 338.526,868.537L336.016,869.985L335.929,869.834C330.678,872.232 324.842,873.568 318.697,873.568C295.755,873.568 277.128,854.942 277.128,832L277.128,192.306Z"/>
+    </g>
+</svg>
+</button>
         <div id="ruler-new-slide-panel">
             <h2>Add a Lane:<h2>
             <button id="add-slide-button">add slide ➡️</button>
@@ -663,8 +704,8 @@ button:focus
 <div id="toast-panel"></div>
 <script type="text/javascript">
 const build = {
-    at: "Mon Oct 12 2026 02:46:13 GMT+0900 (日本標準時)",
-    tick: 1791740773389
+    at: "Mon Oct 12 2026 07:55:51 GMT+0900 (日本標準時)",
+    tick: 1791759351432
 };
 const evilCommonjsConfig = {
     "log": {
@@ -1494,7 +1535,7 @@ define("script/svg", ["require", "exports", "script/element"], function (require
 define("script/ui", ["require", "exports", "script/locale", "script/html", "script/svg"], function (require, exports, Locale, HTML, SVG) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.updateLanguage = exports.ToastPanel = exports.ControlPanel = exports.SettingsPanel = exports.SavePanel = exports.rulerHelpPanel = exports.addHistoryLaneButton = exports.addEmwEnergyLaneButton = exports.addEmwFrequencyLaneButton = exports.addEmwWavelengthLaneButton = exports.addSoundFrequencyLaneButton = exports.addCountingLaneButton = exports.addTemperatureLaneButton = exports.addEnergyLaneButton = exports.addSpeedLaneButton = exports.addTimeLaneButton = exports.addMassLaneButton = exports.addVolumeLaneButton = exports.addAreaLaneButton = exports.addSizeLaneButton = exports.addPrimeDecompositionLaneButton = exports.addPrimeNumbersLaneButton = exports.addArccotangentLaneButton = exports.addArccosecantLaneButton = exports.addArcsecantLaneButton = exports.addArctangentLaneButton = exports.addArccosineLaneButton = exports.addArcsineLaneButton = exports.addCotangentLaneButton = exports.addCosecantLaneButton = exports.addSecantLaneButton = exports.addTangentLaneButton = exports.addCosineLaneButton = exports.addSineLaneButton = exports.addLogarithmic10LaneButton = exports.addLogarithmic2LaneButton = exports.addLogarithmicLaneButton = exports.addExponential10LaneButton = exports.addExponential2LaneButton = exports.addExponentialLaneButton = exports.addCubeRootLaneButton = exports.addSquareRootLaneButton = exports.addCubedLaneButton = exports.addSquaredLaneButton = exports.addJaDigitLaneButton = exports.addEnDigitLaneButton = exports.addSiDigitLaneButton = exports.addCursorButton = exports.addInvertedSlideButton = exports.addSlideButton = exports.rulerNewSlidePanel = exports.graphView = exports.gridView = exports.rulerOverlay = exports.rulerSvg = exports.rulerView = exports.viewList = exports.updateRoundBar = exports.setAriaHidden = void 0;
+    exports.initialize = exports.updateLanguage = exports.ToastPanel = exports.ControlPanel = exports.SettingsPanel = exports.SavePanel = exports.rulerHelpPanel = exports.addHistoryLaneButton = exports.addEmwEnergyLaneButton = exports.addEmwFrequencyLaneButton = exports.addEmwWavelengthLaneButton = exports.addSoundFrequencyLaneButton = exports.addCountingLaneButton = exports.addTemperatureLaneButton = exports.addEnergyLaneButton = exports.addSpeedLaneButton = exports.addTimeLaneButton = exports.addMassLaneButton = exports.addVolumeLaneButton = exports.addAreaLaneButton = exports.addSizeLaneButton = exports.addPrimeDecompositionLaneButton = exports.addPrimeNumbersLaneButton = exports.addArccotangentLaneButton = exports.addArccosecantLaneButton = exports.addArcsecantLaneButton = exports.addArctangentLaneButton = exports.addArccosineLaneButton = exports.addArcsineLaneButton = exports.addCotangentLaneButton = exports.addCosecantLaneButton = exports.addSecantLaneButton = exports.addTangentLaneButton = exports.addCosineLaneButton = exports.addSineLaneButton = exports.addLogarithmic10LaneButton = exports.addLogarithmic2LaneButton = exports.addLogarithmicLaneButton = exports.addExponential10LaneButton = exports.addExponential2LaneButton = exports.addExponentialLaneButton = exports.addCubeRootLaneButton = exports.addSquareRootLaneButton = exports.addCubedLaneButton = exports.addSquaredLaneButton = exports.addJaDigitLaneButton = exports.addEnDigitLaneButton = exports.addSiDigitLaneButton = exports.addCursorButton = exports.addInvertedSlideButton = exports.addSlideButton = exports.rulerNewSlidePanel = exports.cursorLaneBezel = exports.graphView = exports.gridView = exports.rulerOverlay = exports.rulerSvg = exports.rulerView = exports.viewList = exports.updateRoundBar = exports.setAriaHidden = void 0;
     Locale = __importStar(Locale);
     HTML = __importStar(HTML);
     SVG = __importStar(SVG);
@@ -1534,6 +1575,7 @@ define("script/ui", ["require", "exports", "script/locale", "script/html", "scri
     exports.rulerOverlay = SVG.getElementById("svg", "ruler-overlay-svg");
     exports.gridView = HTML.getElementById("div", "grid-view");
     exports.graphView = HTML.getElementById("div", "graph-view");
+    exports.cursorLaneBezel = HTML.getElementById("button", "cursor-lane-bezel");
     exports.rulerNewSlidePanel = HTML.getElementById("div", "ruler-new-slide-panel");
     exports.addSlideButton = HTML.getElementById("button", "add-slide-button");
     exports.addInvertedSlideButton = HTML.getElementById("button", "add-inverted-slide-button");
@@ -1822,7 +1864,7 @@ define("resource/config", [], {
             },
             "laneWidth": 210,
             "handleRadius": 24,
-            "cursorLaneBezelWidth": 16,
+            "cursorLaneBezelWidth": 24,
             "slideSeparator": {
                 "width": 1,
                 "color": {
@@ -11170,7 +11212,7 @@ define("script/render", ["require", "exports", "script/view", "script/model", "r
 define("script/ruler", ["require", "exports", "script/locale", "script/type", "script/calculation", "script/model", "script/ui", "script/theme", "script/render", "script/svg", "script/comparer", "resource/config"], function (require, exports, Locale, Type, Calculation, Model, UI, Theme, Render, SVG, Comparer, config_json_6) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.getRulerWidth = exports.getCursorLaneWidth = exports.getCursorLaneBezelWidth = exports.resize = exports.drawLaneUnitPopup = exports.drawLanePropertyPopup = exports.drawPopup = exports.drawCursorHandle = exports.drawCursorLine = exports.getCursorColor = exports.slideCursor = exports.snapHorizontalPosition = exports.snapVerticalPosition = exports.getAreaPositions = exports.nextPosition = exports.snapPosition = exports.regulateReferencePositions = exports.getReferenceLaneIndexFromEvent = exports.garbageCollectCursors = exports.garbageCollectLanes = exports.drawTicks = exports.calculateMinimumFractionDigits = exports.getFractionDigitsFromUnit = exports.makeShortNumberLabel = exports.makeNumberLabel = exports.makeNumberLabelPart = exports.drawAreas = exports.getAreaFill = exports.drawCursorLane = exports.drawCursorLaneTicks = exports.drawCursorLaneArea = exports.drawLane = exports.drawLeveledText = exports.getLeftOfCursorLane = exports.getLeftOfLane = exports.makeSureSlide = exports.makeStops = exports.makeVerticalGradient = exports.makeLinerGradient = exports.drawGradientDefines = exports.getLaneIndexFromPosition = exports.renderer = exports.setLaneWidth = exports.cursorLaneWidth = exports.isFoldedCursorLane = exports.LaneWidths = exports.scale = void 0;
+    exports.initialize = exports.getRulerWidth = exports.getCursorLaneWidth = exports.getCursorLaneBezelWidth = exports.resize = exports.drawLaneUnitPopup = exports.drawLanePropertyPopup = exports.drawPopup = exports.drawCursorHandle = exports.drawCursorLine = exports.getCursorColor = exports.slideCursor = exports.snapHorizontalPosition = exports.snapVerticalPosition = exports.getAreaPositions = exports.nextPosition = exports.snapPosition = exports.regulateReferencePositions = exports.getReferenceLaneIndexFromEvent = exports.garbageCollectCursors = exports.garbageCollectLanes = exports.drawTicks = exports.calculateMinimumFractionDigits = exports.getFractionDigitsFromUnit = exports.makeShortNumberLabel = exports.makeNumberLabel = exports.makeNumberLabelPart = exports.drawAreas = exports.getAreaFill = exports.drawCursorLane = exports.drawCursorLaneTicks = exports.drawCursorLaneArea = exports.drawLane = exports.drawLeveledText = exports.getLeftOfCursorLane = exports.getLeftOfLane = exports.makeSureSlide = exports.makeStops = exports.makeVerticalGradient = exports.makeLinerGradient = exports.drawGradientDefines = exports.getLaneIndexFromPosition = exports.renderer = exports.setLaneWidth = exports.cursorLaneWidth = exports.toggleFoldCursorLane = exports.isFoldedCursorLane = exports.LaneWidths = exports.scale = void 0;
     Locale = __importStar(Locale);
     Type = __importStar(Type);
     Calculation = __importStar(Calculation);
@@ -11184,6 +11226,8 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
     exports.scale = 1.0;
     exports.LaneWidths = [];
     exports.isFoldedCursorLane = false;
+    const toggleFoldCursorLane = () => exports.isFoldedCursorLane = !exports.isFoldedCursorLane;
+    exports.toggleFoldCursorLane = toggleFoldCursorLane;
     exports.cursorLaneWidth = config_json_6.default.render.ruler.handleRadius * 2;
     const setLaneWidth = (laneIndex, width) => {
         if (exports.LaneWidths[laneIndex] !== width) {
@@ -12190,7 +12234,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
     const drawCursorLine = (model, view, cursorIndex, options) => {
         const { slide, lane } = Model.getRootSlideAndRootLane();
         // const svg = UI.rulerOverlay;
-        const visibleSvgWidth = UI.rulerSvg.viewBox.baseVal.width - (0, exports.getCursorLaneBezelWidth)();
+        const visibleSvgWidth = UI.rulerSvg.viewBox.baseVal.width;
         const color = (0, exports.getCursorColor)(cursorIndex);
         const lineOnBackground = SVG.makeSure(UI.rulerSvg, {
             tag: "line",
@@ -12251,7 +12295,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         const visibleSvgWidth = UI.rulerSvg.viewBox.baseVal.width;
         const color = (0, exports.getCursorColor)(cursorIndex);
         const handleRadius = config_json_6.default.render.ruler.handleRadius;
-        const handleCenterX = visibleSvgWidth - (0, exports.getCursorLaneWidth)() + (cursorIndex * exports.cursorLaneWidth) + handleRadius;
+        const handleCenterX = visibleSvgWidth - (0, exports.getCursorLaneWidth)() + ((exports.isFoldedCursorLane ? 0 : cursorIndex) * exports.cursorLaneWidth) + handleRadius;
         const properties = makeSureCursorProperties(cursorIndex);
         const events = {
             pointermove: {
@@ -12456,7 +12500,10 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
     exports.drawLaneUnitPopup = drawLaneUnitPopup;
     const resize = () => {
         const laneIndex = Model.getAllLaneCount();
-        const left = (0, exports.getLeftOfLane)(laneIndex) + (0, exports.getCursorLaneWidth)();
+        UI.cursorLaneBezel.style.display = (0, exports.getCursorLaneBezelWidth)() <= 0 ? "none" : "block";
+        UI.cursorLaneBezel.style.left = `${(0, exports.getLeftOfLane)(laneIndex) + (0, exports.getCursorLaneWidth)()}px`;
+        UI.cursorLaneBezel.classList.toggle("folded", exports.isFoldedCursorLane);
+        const left = (0, exports.getLeftOfLane)(laneIndex) + (0, exports.getCursorLaneWidth)() + (0, exports.getCursorLaneBezelWidth)();
         UI.rulerNewSlidePanel.style.left = `${left}px`;
         UI.rulerHelpPanel.style.left = `${UI.rulerNewSlidePanel.clientWidth + left}px`;
         const width = Math.min(document.body.clientWidth, (0, exports.getRulerWidth)() - Model.data.offset.x);
@@ -12481,8 +12528,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
     exports.resize = resize;
     const getCursorLaneBezelWidth = () => Model.data.cursor.length <= 1 ? 0 : config_json_6.default.render.ruler.cursorLaneBezelWidth;
     exports.getCursorLaneBezelWidth = getCursorLaneBezelWidth;
-    const getCursorLaneWidth = () => exports.cursorLaneWidth * (exports.isFoldedCursorLane ? 1 : Model.data.cursor.length)
-        + (0, exports.getCursorLaneBezelWidth)();
+    const getCursorLaneWidth = () => exports.cursorLaneWidth * (exports.isFoldedCursorLane ? 1 : Model.data.cursor.length);
     exports.getCursorLaneWidth = getCursorLaneWidth;
     const getRulerWidth = () => exports.LaneWidths.reduce((a, b) => a + b, 0) + (0, exports.getCursorLaneWidth)();
     exports.getRulerWidth = getRulerWidth;
@@ -12609,7 +12655,7 @@ define("script/json-eval-updater", ["require", "exports", "script/url", "script/
 define("script/command", ["require", "exports", "script/locale", "script/url", "script/calculation", "script/type", "script/ui", "script/settings", "script/theme", "script/model", "script/view", "script/render", "script/ruler", "resource/config"], function (require, exports, Locale, Url, Calculation, Type, UI, Settings, Theme, Model, View, Render, Ruler, config_json_8) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.updateTheme = exports.updateLanguage = exports.loadFromUrl = exports.updateViewLockRoundBar = exports.updateViewScaleRoundBar = exports.getViewScaleExponentFromRate = exports.getViewScaleRate = exports.updateViewModeRoundBar = exports.copyAsUrl = exports.saveAsPngImage = exports.saveAsSvgImage = exports.addHistoryLane = exports.addEmwEnergyLane = exports.addEmwFrequencyLane = exports.addEmwWavelengthLane = exports.addSoundFrequencyLane = exports.addCountingLane = exports.addTemperatureLane = exports.addEnergyLane = exports.addSpeedLane = exports.addTimeLane = exports.addMassLane = exports.addVolumeLane = exports.addAreaLane = exports.addSizeLane = exports.addConstantLane = exports.addJaDigitLane = exports.addEnDigitLane = exports.addSiDigitLane = exports.addDigitLane = exports.addCursor = exports.addLane = exports.addSlide = void 0;
+    exports.initialize = exports.updateTheme = exports.updateLanguage = exports.loadFromUrl = exports.updateViewLockRoundBar = exports.updateViewScaleRoundBar = exports.getViewScaleExponentFromRate = exports.getViewScaleRate = exports.updateViewModeRoundBar = exports.copyAsUrl = exports.saveAsPngImage = exports.saveAsSvgImage = exports.addHistoryLane = exports.addEmwEnergyLane = exports.addEmwFrequencyLane = exports.addEmwWavelengthLane = exports.addSoundFrequencyLane = exports.addCountingLane = exports.addTemperatureLane = exports.addEnergyLane = exports.addSpeedLane = exports.addTimeLane = exports.addMassLane = exports.addVolumeLane = exports.addAreaLane = exports.addSizeLane = exports.addConstantLane = exports.addJaDigitLane = exports.addEnDigitLane = exports.addSiDigitLane = exports.addDigitLane = exports.toggleFoldCursorLane = exports.addCursor = exports.addLane = exports.addSlide = void 0;
     Locale = __importStar(Locale);
     Url = __importStar(Url);
     Calculation = __importStar(Calculation);
@@ -12642,11 +12688,13 @@ define("script/command", ["require", "exports", "script/locale", "script/url", "
     const addCursor = () => {
         Model.addCursor();
         Render.markDirty(Render.RenderItemId.Size);
-        Render.markDirty("BACKGROUND");
-        Render.markDirty("CURSOR_LANE");
-        Render.markDirty("ANCHOR_LINE");
     };
     exports.addCursor = addCursor;
+    const toggleFoldCursorLane = () => {
+        Ruler.toggleFoldCursorLane();
+        Render.markDirty(Render.RenderItemId.Size);
+    };
+    exports.toggleFoldCursorLane = toggleFoldCursorLane;
     const addDigitLane = (digitTable) => {
         const { slide } = Model.getLastSlideAndLastLane();
         Model.addDigitLane(slide, digitTable);
@@ -13234,6 +13282,7 @@ define("script/event", ["require", "exports", "script/url", "script/type", "scri
             console.log(`View lock toggled: ${locked}`);
         });
         (0, exports.bindCommandToButton)(UI.ControlPanel.fullscreenButton, exports.toggleFullScreen);
+        (0, exports.bindCommandToButton)(UI.cursorLaneBezel, () => Command.toggleFoldCursorLane());
         (0, exports.bindCommandToButton)(UI.addSlideButton, () => Command.addSlide({ type: "primary", name: "x" }));
         (0, exports.bindCommandToButton)(UI.addInvertedSlideButton, () => Command.addSlide({ type: "invert", name: "1/x" }));
         (0, exports.bindCommandToButton)(UI.addCursorButton, () => Command.addCursor());

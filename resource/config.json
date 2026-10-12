@@ -151,7 +151,7 @@
             },
             "laneWidth": 210,
             "handleRadius": 24,
-            "cursorLaneBezelWidth": 16,
+            "cursorLaneBezelWidth": 24,
             "slideSeparator":
             {
                 "width": 1,

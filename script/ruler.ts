@@ -11,6 +11,8 @@ import config from "@resource/config.json";
 export let scale = 1.0;
 export let LaneWidths: number[] = [];
 export let isFoldedCursorLane = false;
+export const toggleFoldCursorLane = () =>
+    isFoldedCursorLane = !isFoldedCursorLane;
 export const cursorLaneWidth = config.render.ruler.handleRadius *2;
 export const setLaneWidth = (laneIndex: number, width: number): void =>
 {
@@ -1334,7 +1336,7 @@ export const drawCursorLine = (model: Type.Model, view: Type.View, cursorIndex: 
 {
     const { slide, lane } = Model.getRootSlideAndRootLane();
     // const svg = UI.rulerOverlay;
-    const visibleSvgWidth = UI.rulerSvg.viewBox.baseVal.width -getCursorLaneBezelWidth();
+    const visibleSvgWidth = UI.rulerSvg.viewBox.baseVal.width;
     const color = getCursorColor(cursorIndex);
     const lineOnBackground = SVG.makeSure
     (
@@ -1409,7 +1411,7 @@ export const drawCursorHandle = (model: Type.Model, view: Type.View, cursorIndex
     const visibleSvgWidth = UI.rulerSvg.viewBox.baseVal.width;
     const color = getCursorColor(cursorIndex);
     const handleRadius = config.render.ruler.handleRadius;
-    const handleCenterX = visibleSvgWidth -getCursorLaneWidth() +(cursorIndex *cursorLaneWidth) +handleRadius;
+    const handleCenterX = visibleSvgWidth -getCursorLaneWidth() +((isFoldedCursorLane ? 0: cursorIndex) *cursorLaneWidth) +handleRadius;
     const properties = makeSureCursorProperties(cursorIndex);
     const events: SVG.Events =
     {
@@ -1674,10 +1676,13 @@ export const drawLaneUnitPopup = (_view: Type.View, popup: Type.LaneUnitPopup): 
 export const resize = () =>
 {
     const laneIndex = Model.getAllLaneCount();
-    const left = getLeftOfLane(laneIndex) + getCursorLaneWidth();
+    UI.cursorLaneBezel.style.display = getCursorLaneBezelWidth() <= 0 ? "none": "block";
+    UI.cursorLaneBezel.style.left = `${getLeftOfLane(laneIndex) +getCursorLaneWidth()}px`;
+    UI.cursorLaneBezel.classList.toggle("folded", isFoldedCursorLane);
+    const left = getLeftOfLane(laneIndex) + getCursorLaneWidth() +getCursorLaneBezelWidth();
     UI.rulerNewSlidePanel.style.left = `${left}px`;
     UI.rulerHelpPanel.style.left = `${UI.rulerNewSlidePanel.clientWidth +left}px`;
-    const width = Math.min(document.body.clientWidth, getRulerWidth()  -Model.data.offset.x);
+    const width = Math.min(document.body.clientWidth, getRulerWidth() -Model.data.offset.x);
     SVG.setAttributes
     (
         UI.rulerSvg,
@@ -1708,8 +1713,7 @@ export const resize = () =>
 export const getCursorLaneBezelWidth = (): number =>
     Model.data.cursor.length <= 1 ? 0: config.render.ruler.cursorLaneBezelWidth;
 export const getCursorLaneWidth = (): number =>
-    cursorLaneWidth *(isFoldedCursorLane ? 1: Model.data.cursor.length)
-    +getCursorLaneBezelWidth();
+    cursorLaneWidth *(isFoldedCursorLane ? 1: Model.data.cursor.length);
 export const getRulerWidth = (): number =>
     LaneWidths.reduce((a, b) => a + b, 0) +getCursorLaneWidth();
 export const initialize = (): void =>

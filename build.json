@@ -108,6 +108,13 @@
                         "match": "<svg ",
                         "text": "<svg role=\"presentation\" aria-hidden=\"true\" "
                     }
+                },
+                "__PLAY_ICON__": {
+                    "path": "./image/play.svg",
+                    "replace": {
+                        "match": "<svg ",
+                        "text": "<svg role=\"presentation\" aria-hidden=\"true\" "
+                    }
                 }
             }
         },

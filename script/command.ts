@@ -30,9 +30,11 @@ export const addCursor = () =>
 {
     Model.addCursor();
     Render.markDirty(Render.RenderItemId.Size);
-    Render.markDirty("BACKGROUND");
-    Render.markDirty("CURSOR_LANE");
-    Render.markDirty("ANCHOR_LINE");
+};
+export const toggleFoldCursorLane = () =>
+{
+    Ruler.toggleFoldCursorLane();
+    Render.markDirty(Render.RenderItemId.Size);
 };
 export const addDigitLane = (digitTable: Model.DigitTableKey) =>
 {

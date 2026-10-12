@@ -509,6 +509,7 @@ export const initialize = () =>
         }
     );
     bindCommandToButton(UI.ControlPanel.fullscreenButton, toggleFullScreen);
+    bindCommandToButton(UI.cursorLaneBezel, () => Command.toggleFoldCursorLane());
     bindCommandToButton(UI.addSlideButton, () => Command.addSlide({ type: "primary", name: "x" }));
     bindCommandToButton(UI.addInvertedSlideButton, () => Command.addSlide({ type: "invert", name: "1/x" }));
     bindCommandToButton(UI.addCursorButton, () => Command.addCursor());

@@ -209,6 +209,7 @@ declare module "script/ui" {
     export const rulerOverlay: SVGSVGElement;
     export const gridView: HTMLDivElement;
     export const graphView: HTMLDivElement;
+    export const cursorLaneBezel: HTMLButtonElement;
     export const rulerNewSlidePanel: HTMLDivElement;
     export const addSlideButton: HTMLButtonElement;
     export const addInvertedSlideButton: HTMLButtonElement;
@@ -1770,6 +1771,7 @@ declare module "script/ruler" {
     export let scale: number;
     export let LaneWidths: number[];
     export let isFoldedCursorLane: boolean;
+    export const toggleFoldCursorLane: () => boolean;
     export const cursorLaneWidth: number;
     export const setLaneWidth: (laneIndex: number, width: number) => void;
     export const renderer: (model: Type.Model, view: Type.View, dirty: Set<string>, timeLimit?: number, options?: Type.RenderingOptions) => void;
@@ -2114,6 +2116,7 @@ declare module "script/command" {
     export const addSlide: (laneSeed: Type.LaneBase) => void;
     export const addLane: (laneSeed: Type.LaneBase) => void;
     export const addCursor: () => void;
+    export const toggleFoldCursorLane: () => void;
     export const addDigitLane: (digitTable: Model.DigitTableKey) => void;
     export const addSiDigitLane: () => void;
     export const addEnDigitLane: () => void;

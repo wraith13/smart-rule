@@ -108,6 +108,24 @@ body:not(.linear-scale) #linear-scale-icon
 {
     background-color: darkslategray;
 }
+#cursor-lane-bezel
+{
+    position: fixed;
+    top: 0px;
+    bottom: 0px;
+    width: 24px;
+    padding: 0px;
+}
+#cursor-lane-bezel svg
+{
+    position: relative;
+    height: 1.0rem;
+    width: 1.0rem;
+}
+#cursor-lane-bezel:not(.folded) svg
+{
+    transform: rotate(180deg);
+}
 #ruler-new-slide-panel,
 #ruler-help-panel
 {
@@ -120,7 +138,7 @@ body:not(.linear-scale) #linear-scale-icon
     bottom: 0px;
     width: 240px;
     color: white;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: #00000080;
     backdrop-filter: blur(0.5rem);
     display: flex;
     flex-direction: column;
@@ -146,6 +164,19 @@ body:not(.linear-scale) #linear-scale-icon
 {
     display: block;
 }
+.light-theme button svg
+{
+    color: black;
+    fill: black;
+    stroke: black;
+}
+.dark-theme button svg
+{
+    color: white;
+    fill: white;
+    stroke: white;
+}
+.light-theme #cursor-lane-bezel,
 .light-theme #ruler-new-slide-panel button,
 .light-theme #ruler-new-slide-panel input,
 .light-theme #ruler-new-slide-panel select,
@@ -156,6 +187,7 @@ body:not(.linear-scale) #linear-scale-icon
     color: black;
     background-color: rgba(255, 255, 255, 0.5);
 }
+.dark-theme #cursor-lane-bezel,
 .dark-theme #ruler-new-slide-panel button,
 .dark-theme #ruler-new-slide-panel input,
 .dark-theme #ruler-new-slide-panel select,
@@ -222,14 +254,14 @@ button.round-button
     transition: border-color 0.5s ease;
     color: white;
 }
-button svg
+#control-panel button svg
 {
     position: relative;
     height: 2.0rem;
     width: 2.0rem;
 }
-button svg,
-button svg path
+#control-panel button svg,
+#control-panel button svg path
 {
     color: white !important;
     fill: white !important;

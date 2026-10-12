@@ -56,6 +56,7 @@ __STYLE__ DUMMY { color: initial; }
     <div id="ruler-view" class="view">
         RULER VIEW
         <svg id="ruler-svg" class="screen"></svg>
+        <button id="cursor-lane-bezel">__PLAY_ICON__</button>
         <div id="ruler-new-slide-panel">
             <h2>Add a Lane:<h2>
             <button id="add-slide-button">add slide ➡️</button>
