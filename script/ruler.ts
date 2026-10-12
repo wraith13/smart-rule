@@ -1412,6 +1412,7 @@ export const drawCursorHandle = (model: Type.Model, view: Type.View, cursorIndex
     const color = getCursorColor(cursorIndex);
     const handleRadius = config.render.ruler.handleRadius;
     const handleCenterX = visibleSvgWidth -getCursorLaneWidth() +((isFoldedCursorLane ? 0: cursorIndex) *cursorLaneWidth) +handleRadius;
+    const handlePeakX = isFoldedCursorLane ? (handleCenterX -handleRadius +(cursorLaneWidth *((cursorIndex +1) /(config.render.ruler.cursorColors.length +1)))): handleCenterX;
     const properties = makeSureCursorProperties(cursorIndex);
     const events: SVG.Events =
     {
@@ -1514,7 +1515,7 @@ export const drawCursorHandle = (model: Type.Model, view: Type.View, cursorIndex
                 // cx: visibleSvgWidth -handleRadius,
                 // cy: position,
                 // r: handleRadius,
-                points: `${handleCenterX -handleRadius},${position} ${handleCenterX},${position -handleRadius} ${handleCenterX +handleRadius},${position} ${handleCenterX},${position +handleRadius}`,
+                points: `${handleCenterX -handleRadius},${position} ${handlePeakX},${position -handleRadius} ${handleCenterX +handleRadius},${position} ${handlePeakX},${position +handleRadius}`,
                 fill: color,
             }
         );
@@ -1530,7 +1531,7 @@ export const drawCursorHandle = (model: Type.Model, view: Type.View, cursorIndex
                     // cx: visibleSvgWidth -handleRadius,
                     // cy: 0,
                     // r: handleRadius,
-                    points: `${handleCenterX -handleRadius},0 ${handleCenterX +handleRadius},0 ${handleCenterX},${handleRadius}`,
+                    points: `${handleCenterX -handleRadius},0 ${handleCenterX +handleRadius},0 ${handlePeakX},${handleRadius}`,
                     fill: color,
                 }
             );
@@ -1544,7 +1545,7 @@ export const drawCursorHandle = (model: Type.Model, view: Type.View, cursorIndex
                     // cx: visibleSvgWidth -handleRadius,
                     // cy: svg.viewBox.baseVal.height,
                     // r: handleRadius,
-                    points: `${handleCenterX -handleRadius},${svg.viewBox.baseVal.height} ${handleCenterX +handleRadius},${svg.viewBox.baseVal.height} ${handleCenterX},${svg.viewBox.baseVal.height -handleRadius}`,
+                    points: `${handleCenterX -handleRadius},${svg.viewBox.baseVal.height} ${handleCenterX +handleRadius},${svg.viewBox.baseVal.height} ${handlePeakX},${svg.viewBox.baseVal.height -handleRadius}`,
                     fill: color,
                 }
             );

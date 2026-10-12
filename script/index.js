@@ -11229,6 +11229,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         const color = (0, exports.getCursorColor)(cursorIndex);
         const handleRadius = config_json_6.default.render.ruler.handleRadius;
         const handleCenterX = visibleSvgWidth - (0, exports.getCursorLaneWidth)() + ((exports.isFoldedCursorLane ? 0 : cursorIndex) * exports.cursorLaneWidth) + handleRadius;
+        const handlePeakX = exports.isFoldedCursorLane ? (handleCenterX - handleRadius + (exports.cursorLaneWidth * ((cursorIndex + 1) / (config_json_6.default.render.ruler.cursorColors.length + 1)))) : handleCenterX;
         const properties = makeSureCursorProperties(cursorIndex);
         const events = {
             pointermove: {
@@ -11306,7 +11307,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                 // cx: visibleSvgWidth -handleRadius,
                 // cy: position,
                 // r: handleRadius,
-                points: `${handleCenterX - handleRadius},${position} ${handleCenterX},${position - handleRadius} ${handleCenterX + handleRadius},${position} ${handleCenterX},${position + handleRadius}`,
+                points: `${handleCenterX - handleRadius},${position} ${handlePeakX},${position - handleRadius} ${handleCenterX + handleRadius},${position} ${handlePeakX},${position + handleRadius}`,
                 fill: color,
             });
         }
@@ -11316,7 +11317,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                     // cx: visibleSvgWidth -handleRadius,
                     // cy: 0,
                     // r: handleRadius,
-                    points: `${handleCenterX - handleRadius},0 ${handleCenterX + handleRadius},0 ${handleCenterX},${handleRadius}`,
+                    points: `${handleCenterX - handleRadius},0 ${handleCenterX + handleRadius},0 ${handlePeakX},${handleRadius}`,
                     fill: color,
                 });
             }
@@ -11325,7 +11326,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                     // cx: visibleSvgWidth -handleRadius,
                     // cy: svg.viewBox.baseVal.height,
                     // r: handleRadius,
-                    points: `${handleCenterX - handleRadius},${svg.viewBox.baseVal.height} ${handleCenterX + handleRadius},${svg.viewBox.baseVal.height} ${handleCenterX},${svg.viewBox.baseVal.height - handleRadius}`,
+                    points: `${handleCenterX - handleRadius},${svg.viewBox.baseVal.height} ${handleCenterX + handleRadius},${svg.viewBox.baseVal.height} ${handlePeakX},${svg.viewBox.baseVal.height - handleRadius}`,
                     fill: color,
                 });
             }
