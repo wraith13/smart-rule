@@ -11229,7 +11229,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         const color = (0, exports.getCursorColor)(cursorIndex);
         const handleRadius = config_json_6.default.render.ruler.handleRadius;
         const handleCenterX = visibleSvgWidth - (0, exports.getCursorLaneWidth)() + ((exports.isFoldedCursorLane ? 0 : cursorIndex) * exports.cursorLaneWidth) + handleRadius;
-        const handlePeakX = exports.isFoldedCursorLane ? (handleCenterX - handleRadius + (exports.cursorLaneWidth * ((cursorIndex + 1) / (config_json_6.default.render.ruler.cursorColors.length + 1)))) : handleCenterX;
+        const handlePeakX = exports.isFoldedCursorLane ? (handleCenterX - handleRadius + (exports.cursorLaneWidth * ((cursorIndex + 1) / (model.cursor.length + 1)))) : handleCenterX;
         const properties = makeSureCursorProperties(cursorIndex);
         const events = {
             pointermove: {

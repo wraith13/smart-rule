@@ -1412,7 +1412,7 @@ export const drawCursorHandle = (model: Type.Model, view: Type.View, cursorIndex
     const color = getCursorColor(cursorIndex);
     const handleRadius = config.render.ruler.handleRadius;
     const handleCenterX = visibleSvgWidth -getCursorLaneWidth() +((isFoldedCursorLane ? 0: cursorIndex) *cursorLaneWidth) +handleRadius;
-    const handlePeakX = isFoldedCursorLane ? (handleCenterX -handleRadius +(cursorLaneWidth *((cursorIndex +1) /(config.render.ruler.cursorColors.length +1)))): handleCenterX;
+    const handlePeakX = isFoldedCursorLane ? (handleCenterX -handleRadius +(cursorLaneWidth *((cursorIndex +1) /(model.cursor.length +1)))): handleCenterX;
     const properties = makeSureCursorProperties(cursorIndex);
     const events: SVG.Events =
     {
