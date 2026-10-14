@@ -1344,9 +1344,17 @@ export const drawCursorLine = (model: Type.Model, view: Type.View, cursorIndex: 
     const svg = UI.rulerOverlay;
     const visibleSvgWidth = UI.rulerSvg.viewBox.baseVal.width;
     const color = getCursorColor(cursorIndex);
-    const lineOnBackground = SVG.makeSure
+    const group = SVG.makeSure
     (
         svg,
+        {
+            tag: "g",
+            class: "cursor-line-group",
+        }
+    );
+    const lineOnBackground = SVG.makeSure
+    (
+        group,
         {
             tag: "line",
             class: "cursor-line",
@@ -1477,9 +1485,17 @@ export const drawCursorHandle = (model: Type.Model, view: Type.View, cursorIndex
             }
         },
     };
-    const handle = SVG.makeSure
+    const group = SVG.makeSure
     (
         svg,
+        {
+            tag: "g",
+            class: "cursor-handle-group",
+        }
+    );
+    const handle = SVG.makeSure
+    (
+        group,
         {
             // tag: "circle",
             tag: "polygon",

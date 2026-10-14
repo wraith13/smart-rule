@@ -2,7 +2,7 @@
 <!--
     This file is genereted by build.js. このファイルは build.js によって生成されました。
     build options: ../build.json all
-    build at: Wed Oct 14 2026 02:37:35 GMT+0900 (日本標準時)
+    build at: Thu Oct 15 2026 06:32:04 GMT+0900 (日本標準時)
     repository: https://github.com/wraith13/smart-rule/
 -->
 <!-- license:
@@ -704,8 +704,8 @@ button:focus
 <div id="toast-panel"></div>
 <script type="text/javascript">
 const build = {
-    at: "Wed Oct 14 2026 02:37:35 GMT+0900 (日本標準時)",
-    tick: 1791913055454
+    at: "Thu Oct 15 2026 06:32:04 GMT+0900 (日本標準時)",
+    tick: 1792013524552
 };
 const evilCommonjsConfig = {
     "log": {
@@ -12238,7 +12238,11 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         const svg = UI.rulerOverlay;
         const visibleSvgWidth = UI.rulerSvg.viewBox.baseVal.width;
         const color = (0, exports.getCursorColor)(cursorIndex);
-        const lineOnBackground = SVG.makeSure(svg, {
+        const group = SVG.makeSure(svg, {
+            tag: "g",
+            class: "cursor-line-group",
+        });
+        const lineOnBackground = SVG.makeSure(group, {
             tag: "line",
             class: "cursor-line",
             "data-cursor-index": cursorIndex,
@@ -12345,7 +12349,11 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                 }
             },
         };
-        const handle = SVG.makeSure(svg, {
+        const group = SVG.makeSure(svg, {
+            tag: "g",
+            class: "cursor-handle-group",
+        });
+        const handle = SVG.makeSure(group, {
             // tag: "circle",
             tag: "polygon",
             class: "cursor-drag-handle",

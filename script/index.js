@@ -11171,7 +11171,11 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         const svg = UI.rulerOverlay;
         const visibleSvgWidth = UI.rulerSvg.viewBox.baseVal.width;
         const color = (0, exports.getCursorColor)(cursorIndex);
-        const lineOnBackground = SVG.makeSure(svg, {
+        const group = SVG.makeSure(svg, {
+            tag: "g",
+            class: "cursor-line-group",
+        });
+        const lineOnBackground = SVG.makeSure(group, {
             tag: "line",
             class: "cursor-line",
             "data-cursor-index": cursorIndex,
@@ -11278,7 +11282,11 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                 }
             },
         };
-        const handle = SVG.makeSure(svg, {
+        const group = SVG.makeSure(svg, {
+            tag: "g",
+            class: "cursor-handle-group",
+        });
+        const handle = SVG.makeSure(group, {
             // tag: "circle",
             tag: "polygon",
             class: "cursor-drag-handle",
