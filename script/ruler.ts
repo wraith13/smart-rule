@@ -610,8 +610,14 @@ export const drawCursorLaneTicks = (view: Type.View, group: SVGGElement, slide: 
 };
 export const drawCursorLane = (view: Type.View, slide: Type.SlideUnit, lane: Type.Lane): void =>
 {
-    const slideIndex = Model.getSlideIndex(slide);
-    const group: SVGGElement = makeSureSlide(slideIndex);
+    const group = SVG.makeSure
+    (
+        UI.rulerOverlay,
+        {
+            tag: "g",
+            class: "cursor-lane",
+        }
+    );
     //const laneIndex = Model.getAllLaneCount();
     const width = cursorLaneWidth;
     const tickGroup = SVG.makeSure
@@ -1335,12 +1341,12 @@ export const getCursorColor = (cursorIndex: number): string =>
 export const drawCursorLine = (model: Type.Model, view: Type.View, cursorIndex: number, options?: Type.RenderingOptions): void =>
 {
     const { slide, lane } = Model.getRootSlideAndRootLane();
-    // const svg = UI.rulerOverlay;
+    const svg = UI.rulerOverlay;
     const visibleSvgWidth = UI.rulerSvg.viewBox.baseVal.width;
     const color = getCursorColor(cursorIndex);
     const lineOnBackground = SVG.makeSure
     (
-        UI.rulerSvg,
+        svg,
         {
             tag: "line",
             class: "cursor-line",

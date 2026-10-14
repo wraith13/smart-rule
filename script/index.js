@@ -10604,8 +10604,10 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
     };
     exports.drawCursorLaneTicks = drawCursorLaneTicks;
     const drawCursorLane = (view, slide, lane) => {
-        const slideIndex = Model.getSlideIndex(slide);
-        const group = (0, exports.makeSureSlide)(slideIndex);
+        const group = SVG.makeSure(UI.rulerOverlay, {
+            tag: "g",
+            class: "cursor-lane",
+        });
         //const laneIndex = Model.getAllLaneCount();
         const width = exports.cursorLaneWidth;
         const tickGroup = SVG.makeSure(group, {
@@ -11166,10 +11168,10 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
     exports.getCursorColor = getCursorColor;
     const drawCursorLine = (model, view, cursorIndex, options) => {
         const { slide, lane } = Model.getRootSlideAndRootLane();
-        // const svg = UI.rulerOverlay;
+        const svg = UI.rulerOverlay;
         const visibleSvgWidth = UI.rulerSvg.viewBox.baseVal.width;
         const color = (0, exports.getCursorColor)(cursorIndex);
-        const lineOnBackground = SVG.makeSure(UI.rulerSvg, {
+        const lineOnBackground = SVG.makeSure(svg, {
             tag: "line",
             class: "cursor-line",
             "data-cursor-index": cursorIndex,
