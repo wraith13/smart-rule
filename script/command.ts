@@ -69,8 +69,8 @@ export const saveAsSvgImage = () =>
 {
     if (!UI.SavePanel.includeCursorCheckbox.checked)
     {
-        Ruler.renderer(Model.data, View.data, new Set(["ANCHOR_LINE"]), undefined, { showCursor: false });
-        Render.markDirty("ANCHOR_LINE"); // 保存が終わったらカーソルを描画させる様にリクエストしておく。 / EN: Request to draw the cursor after saving.
+        Ruler.renderer(Model.data, View.data, new Set(["CURSOR_LANE"]), undefined, { showCursor: false });
+        Render.markDirty("CURSOR_LANE"); // 保存が終わったらカーソルを描画させる様にリクエストしておく。 / EN: Request to draw the cursor after saving.
     }
     const serializer = new XMLSerializer();
     const source = serializer.serializeToString(UI.rulerSvg);
@@ -92,7 +92,7 @@ export const saveAsPngImage = () =>
     {
         if (!UI.SavePanel.includeCursorCheckbox.checked)
         {
-            Ruler.renderer(Model.data, View.data, new Set(["ANCHOR_LINE"]), undefined, { showCursor: false });
+            Ruler.renderer(Model.data, View.data, new Set(["CURSOR_LANE"]), undefined, { showCursor: false });
         }
         const img = new Image();
         const serializer = new XMLSerializer();
@@ -118,7 +118,7 @@ export const saveAsPngImage = () =>
                 },
                 "image/png"
             );
-            Render.markDirty("ANCHOR_LINE");
+            Render.markDirty("CURSOR_LANE");
         };
         img.src = url;
     }

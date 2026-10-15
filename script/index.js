@@ -11687,8 +11687,8 @@ define("script/command", ["require", "exports", "script/locale", "script/url", "
     exports.addHistoryLane = addHistoryLane;
     const saveAsSvgImage = () => {
         if (!UI.SavePanel.includeCursorCheckbox.checked) {
-            Ruler.renderer(Model.data, View.data, new Set(["ANCHOR_LINE"]), undefined, { showCursor: false });
-            Render.markDirty("ANCHOR_LINE"); // 保存が終わったらカーソルを描画させる様にリクエストしておく。 / EN: Request to draw the cursor after saving.
+            Ruler.renderer(Model.data, View.data, new Set(["CURSOR_LANE"]), undefined, { showCursor: false });
+            Render.markDirty("CURSOR_LANE"); // 保存が終わったらカーソルを描画させる様にリクエストしておく。 / EN: Request to draw the cursor after saving.
         }
         const serializer = new XMLSerializer();
         const source = serializer.serializeToString(UI.rulerSvg);
@@ -11708,7 +11708,7 @@ define("script/command", ["require", "exports", "script/locale", "script/url", "
         const ctx = canvas.getContext("2d");
         if (ctx) {
             if (!UI.SavePanel.includeCursorCheckbox.checked) {
-                Ruler.renderer(Model.data, View.data, new Set(["ANCHOR_LINE"]), undefined, { showCursor: false });
+                Ruler.renderer(Model.data, View.data, new Set(["CURSOR_LANE"]), undefined, { showCursor: false });
             }
             const img = new Image();
             const serializer = new XMLSerializer();
@@ -11727,7 +11727,7 @@ define("script/command", ["require", "exports", "script/locale", "script/url", "
                         URL.revokeObjectURL(pngUrl);
                     }
                 }, "image/png");
-                Render.markDirty("ANCHOR_LINE");
+                Render.markDirty("CURSOR_LANE");
             };
             img.src = url;
         }
