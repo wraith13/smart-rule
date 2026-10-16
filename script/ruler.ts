@@ -1394,19 +1394,19 @@ export const drawCursorLine = (model: Type.Model, view: Type.View, cursorIndex: 
                 "stroke-width": config.render.ruler.cursorWidth,
             }
         );
-        // SVG.setAttributes
-        // (
-        //     lineOnOverlay,
-        //     {
-        //         visibility: "visible",
-        //         x1: visibleSvgWidth,
-        //         y1: position,
-        //         x2: visibleSvgWidth -(handleRadius *2),
-        //         y2: position,
-        //         stroke: color,
-        //         "stroke-width": config.render.ruler.lineWidth,
-        //     }
-        // );
+        SVG.setAttributes
+        (
+            lineOnOverlay,
+            {
+                visibility: "visible",
+                x1: 0,
+                y1: position,
+                x2: visibleSvgWidth,
+                y2: position,
+                stroke: color,
+                "stroke-width": config.render.ruler.cursorWidth,
+            }
+        );
     }
     else
     {
@@ -1417,13 +1417,13 @@ export const drawCursorLine = (model: Type.Model, view: Type.View, cursorIndex: 
                 visibility: "hidden",
             }
         );
-        // SVG.setAttributes
-        // (
-        //     lineOnOverlay,
-        //     {
-        //         visibility: "hidden",
-        //     }
-        // );
+        SVG.setAttributes
+        (
+            lineOnOverlay,
+            {
+                visibility: "hidden",
+            }
+        );
     }
 };
 export const drawCursorHandle = (model: Type.Model, view: Type.View, cursorIndex: number, options?: Type.RenderingOptions): void =>
