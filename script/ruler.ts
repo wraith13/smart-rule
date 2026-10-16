@@ -1341,18 +1341,25 @@ export const getCursorColor = (cursorIndex: number): string =>
 export const drawCursorLine = (model: Type.Model, view: Type.View, cursorIndex: number, options?: Type.RenderingOptions): void =>
 {
     const { slide, lane } = Model.getRootSlideAndRootLane();
-    const svg = UI.rulerOverlay;
     const visibleSvgWidth = UI.rulerSvg.viewBox.baseVal.width;
     const color = getCursorColor(cursorIndex);
     const group = SVG.makeSure
     (
-        svg,
+        UI.rulerSvg,
         {
             tag: "g",
             class: "cursor-line-group",
         }
     );
-    const lineOnBackground = SVG.makeSure
+    const groupOnOverlay = SVG.makeSure
+    (
+        UI.rulerOverlay,
+        {
+            tag: "g",
+            class: "cursor-line-group",
+        }
+    );
+    const lineOnCursorLane = SVG.makeSure
     (
         group,
         {
@@ -1361,21 +1368,22 @@ export const drawCursorLine = (model: Type.Model, view: Type.View, cursorIndex: 
             "data-cursor-index": cursorIndex,
         }
     );
-    // const lineOnOverlay = SVG.makeSure
-    // (
-    //     UI.rulerOverlay,
-    //     {
-    //         tag: "line",
-    //         class: "cursor-line",
-    //     }
-    // );
+    const lineOnOverlay = SVG.makeSure
+    (
+        groupOnOverlay,
+        {
+            tag: "line",
+            class: "cursor-line",
+            "data-cursor-index": cursorIndex,
+        }
+    );
     const position = Model.getPositionAt(slide, lane, model.cursor[cursorIndex], view);
     if (0 <= position && position <= UI.rulerSvg.viewBox.baseVal.height && false !== options?.showCursor)
     {
         //const color = "red";
         SVG.setAttributes
         (
-            lineOnBackground,
+            lineOnCursorLane,
             {
                 visibility: "visible",
                 x1: 0,
@@ -1404,7 +1412,7 @@ export const drawCursorLine = (model: Type.Model, view: Type.View, cursorIndex: 
     {
         SVG.setAttributes
         (
-            lineOnBackground,
+            lineOnCursorLane,
             {
                 visibility: "hidden",
             }
