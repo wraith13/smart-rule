@@ -612,7 +612,7 @@ export const drawCursorLane = (view: Type.View, slide: Type.SlideUnit, lane: Typ
 {
     const group = SVG.makeSure
     (
-        UI.rulerOverlay,
+        UI.cursorLaneSvg,
         {
             tag: "g",
             class: "cursor-lane",
@@ -1341,9 +1341,9 @@ export const getCursorColor = (cursorIndex: number): string =>
 export const drawCursorLine = (model: Type.Model, view: Type.View, cursorIndex: number, options?: Type.RenderingOptions): void =>
 {
     const { slide, lane } = Model.getRootSlideAndRootLane();
-    const visibleSvgWidth = UI.rulerSvg.viewBox.baseVal.width;
+    const rulerSvgWidth = UI.rulerSvg.viewBox.baseVal.width;
     const color = getCursorColor(cursorIndex);
-    const group = SVG.makeSure
+    const rulerGroup = SVG.makeSure
     (
         UI.rulerSvg,
         {
@@ -1351,26 +1351,26 @@ export const drawCursorLine = (model: Type.Model, view: Type.View, cursorIndex: 
             class: "cursor-line-group",
         }
     );
-    const groupOnOverlay = SVG.makeSure
+    const cursorLaneGroup = SVG.makeSure
     (
-        UI.rulerOverlay,
+        UI.cursorLaneSvg,
         {
             tag: "g",
             class: "cursor-line-group",
         }
     );
-    const lineOnCursorLane = SVG.makeSure
+    const lineOnRuler = SVG.makeSure
     (
-        group,
+        rulerGroup,
         {
             tag: "line",
             class: "cursor-line",
             "data-cursor-index": cursorIndex,
         }
     );
-    const lineOnOverlay = SVG.makeSure
+    const lineOnCursorLane = SVG.makeSure
     (
-        groupOnOverlay,
+        cursorLaneGroup,
         {
             tag: "line",
             class: "cursor-line",
@@ -1383,12 +1383,12 @@ export const drawCursorLine = (model: Type.Model, view: Type.View, cursorIndex: 
         //const color = "red";
         SVG.setAttributes
         (
-            lineOnCursorLane,
+            lineOnRuler,
             {
                 visibility: "visible",
                 x1: 0,
                 y1: position,
-                x2: visibleSvgWidth,
+                x2: rulerSvgWidth,
                 y2: position,
                 stroke: color,
                 "stroke-width": config.render.ruler.cursorWidth,
@@ -1396,12 +1396,12 @@ export const drawCursorLine = (model: Type.Model, view: Type.View, cursorIndex: 
         );
         SVG.setAttributes
         (
-            lineOnOverlay,
+            lineOnCursorLane,
             {
                 visibility: "visible",
                 x1: 0,
                 y1: position,
-                x2: visibleSvgWidth,
+                x2: rulerSvgWidth,
                 y2: position,
                 stroke: color,
                 "stroke-width": config.render.ruler.cursorWidth,
@@ -1412,14 +1412,14 @@ export const drawCursorLine = (model: Type.Model, view: Type.View, cursorIndex: 
     {
         SVG.setAttributes
         (
-            lineOnCursorLane,
+            lineOnRuler,
             {
                 visibility: "hidden",
             }
         );
         SVG.setAttributes
         (
-            lineOnOverlay,
+            lineOnCursorLane,
             {
                 visibility: "hidden",
             }
@@ -1429,7 +1429,7 @@ export const drawCursorLine = (model: Type.Model, view: Type.View, cursorIndex: 
 export const drawCursorHandle = (model: Type.Model, view: Type.View, cursorIndex: number, options?: Type.RenderingOptions): void =>
 {
     const { slide, lane } = Model.getRootSlideAndRootLane();
-    const svg = UI.rulerOverlay;
+    const svg = UI.cursorLaneSvg;
     const visibleSvgWidth = UI.rulerSvg.viewBox.baseVal.width;
     const color = getCursorColor(cursorIndex);
     const handleRadius = config.render.ruler.handleRadius;
@@ -1464,8 +1464,8 @@ export const drawCursorHandle = (model: Type.Model, view: Type.View, cursorIndex
                     const deltaY = event.clientY - properties.anchorDragStartY;
                     slideCursor(model, view, cursorIndex, event, properties.initialDraggingAnchorPosition + deltaY);
                 }
-                SVG.removeEvents(UI.rulerOverlay, events);
-                SVG.setAttribute(UI.rulerOverlay, "pointer-events", "none");
+                SVG.removeEvents(UI.cursorLaneSvg, events);
+                SVG.setAttribute(UI.cursorLaneSvg, "pointer-events", "none");
             },
             options:
             {
@@ -1484,8 +1484,8 @@ export const drawCursorHandle = (model: Type.Model, view: Type.View, cursorIndex
                     properties.initialDraggingAnchorPosition = undefined;
                     Render.markDirty();
                 }
-                SVG.removeEvents(UI.rulerOverlay, events);
-                SVG.setAttribute(UI.rulerOverlay, "pointer-events", "none");
+                SVG.removeEvents(UI.cursorLaneSvg, events);
+                SVG.setAttribute(UI.cursorLaneSvg, "pointer-events", "none");
             },
             options:
             {
@@ -1522,8 +1522,8 @@ export const drawCursorHandle = (model: Type.Model, view: Type.View, cursorIndex
                             event.preventDefault();
                             event.stopPropagation();
                             properties.anchorDragStartY = event.clientY;
-                            SVG.addEvents(UI.rulerOverlay, events);
-                            SVG.setAttribute(UI.rulerOverlay, "pointer-events", "auto");
+                            SVG.addEvents(UI.cursorLaneSvg, events);
+                            SVG.setAttribute(UI.cursorLaneSvg, "pointer-events", "auto");
                         }
                     },
                     options:
@@ -1587,7 +1587,7 @@ export const drawPopup = (view: Type.View, popup: Type.ViewPopup | null = null):
     console.warn(`🦋 drawPopup: ${popup?.popupType ?? "null"}`);
     if (null === popup)
     {
-        const popups = UI.rulerOverlay.querySelectorAll<SVGElement>(".popup");
+        const popups = UI.cursorLaneSvg.querySelectorAll<SVGElement>(".popup");
         for(const popup of Array.from(popups))
         {
             popup.remove();
@@ -1629,7 +1629,7 @@ export const drawLaneUnitPopup = (_view: Type.View, popup: Type.LaneUnitPopup): 
     // const unitPopupBackground =
     SVG.makeSure
     (
-        UI.rulerOverlay,
+        UI.cursorLaneSvg,
         {
             tag: "rect",
             class: "lane-unit-popup-background popup",
@@ -1651,7 +1651,7 @@ export const drawLaneUnitPopup = (_view: Type.View, popup: Type.LaneUnitPopup): 
     {
         const unitLabel = SVG.makeSure
         (
-            UI.rulerOverlay,
+            UI.cursorLaneSvg,
             {
                 tag: "text",
                 class: "lane-unit-popup-unit-label popup",
@@ -1677,7 +1677,7 @@ export const drawLaneUnitPopup = (_view: Type.View, popup: Type.LaneUnitPopup): 
         drawLeveledText(unitLabel, `${Model.makeConstantStandardTickUnit(unit)}`);
         const unitValueLabel = SVG.makeSure
         (
-            UI.rulerOverlay,
+            UI.cursorLaneSvg,
             {
                 tag: "text",
                 class: "lane-unit-popup-unit-label popup",
@@ -1725,7 +1725,7 @@ export const resize = () =>
     );
     SVG.setAttributes
     (
-        UI.rulerOverlay,
+        UI.cursorLaneSvg,
         {
             width: document.body.clientWidth,
             height: document.body.clientHeight,

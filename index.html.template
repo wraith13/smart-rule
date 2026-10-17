@@ -183,7 +183,7 @@ __STYLE__ DUMMY { color: initial; }
             <ul>
                 <li><a href="__REPOSITORY_URL__" target="_blank" rel="noopener noreferrer"><span data-lang-key="GitHub repository"></span></a></li>
         </div>
-        <svg id="ruler-overlay-svg" class="screen" pointer-events="none"></svg>
+        <svg id="cursor-lane-svg" class="screen" pointer-events="none"></svg>
     </div>
     <div id="grid-view" class="view">GRID VIEW</div>
     <div id="graph-view" class="view">GRAPH VIEW</div>

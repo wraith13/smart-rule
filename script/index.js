@@ -505,7 +505,7 @@ define("script/ui", ["require", "exports", "script/locale", "script/html", "scri
     exports.viewList = HTML.getElementById("div", "view-list");
     exports.rulerView = HTML.getElementById("div", "ruler-view");
     exports.rulerSvg = SVG.getElementById("svg", "ruler-svg");
-    exports.rulerOverlay = SVG.getElementById("svg", "ruler-overlay-svg");
+    exports.rulerOverlay = SVG.getElementById("svg", "cursor-lane-svg");
     exports.gridView = HTML.getElementById("div", "grid-view");
     exports.graphView = HTML.getElementById("div", "graph-view");
     exports.cursorLaneBezel = HTML.getElementById("button", "cursor-lane-bezel");

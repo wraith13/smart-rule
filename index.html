@@ -2,7 +2,7 @@
 <!--
     This file is genereted by build.js. このファイルは build.js によって生成されました。
     build options: ../build.json all
-    build at: Thu Oct 15 2026 20:20:14 GMT+0900 (日本標準時)
+    build at: Thu Oct 15 2026 21:25:31 GMT+0900 (日本標準時)
     repository: https://github.com/wraith13/smart-rule/
 -->
 <!-- license:
@@ -626,7 +626,7 @@ button:focus
             <ul>
                 <li><a href="https://github.com/wraith13/smart-rule/" target="_blank" rel="noopener noreferrer"><span data-lang-key="GitHub repository"></span></a></li>
         </div>
-        <svg id="ruler-overlay-svg" class="screen" pointer-events="none"></svg>
+        <svg id="cursor-lane-svg" class="screen" pointer-events="none"></svg>
     </div>
     <div id="grid-view" class="view">GRID VIEW</div>
     <div id="graph-view" class="view">GRAPH VIEW</div>
@@ -704,8 +704,8 @@ button:focus
 <div id="toast-panel"></div>
 <script type="text/javascript">
 const build = {
-    at: "Thu Oct 15 2026 20:20:14 GMT+0900 (日本標準時)",
-    tick: 1792063214015
+    at: "Thu Oct 15 2026 21:25:31 GMT+0900 (日本標準時)",
+    tick: 1792067131543
 };
 const evilCommonjsConfig = {
     "log": {
@@ -1572,7 +1572,7 @@ define("script/ui", ["require", "exports", "script/locale", "script/html", "scri
     exports.viewList = HTML.getElementById("div", "view-list");
     exports.rulerView = HTML.getElementById("div", "ruler-view");
     exports.rulerSvg = SVG.getElementById("svg", "ruler-svg");
-    exports.rulerOverlay = SVG.getElementById("svg", "ruler-overlay-svg");
+    exports.rulerOverlay = SVG.getElementById("svg", "cursor-lane-svg");
     exports.gridView = HTML.getElementById("div", "grid-view");
     exports.graphView = HTML.getElementById("div", "graph-view");
     exports.cursorLaneBezel = HTML.getElementById("button", "cursor-lane-bezel");
