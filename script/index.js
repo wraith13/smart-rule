@@ -468,7 +468,7 @@ define("script/svg", ["require", "exports", "script/element"], function (require
 define("script/ui", ["require", "exports", "script/locale", "script/html", "script/svg"], function (require, exports, Locale, HTML, SVG) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.updateLanguage = exports.ToastPanel = exports.ControlPanel = exports.SettingsPanel = exports.SavePanel = exports.rulerHelpPanel = exports.addHistoryLaneButton = exports.addEmwEnergyLaneButton = exports.addEmwFrequencyLaneButton = exports.addEmwWavelengthLaneButton = exports.addSoundFrequencyLaneButton = exports.addCountingLaneButton = exports.addTemperatureLaneButton = exports.addEnergyLaneButton = exports.addSpeedLaneButton = exports.addTimeLaneButton = exports.addMassLaneButton = exports.addVolumeLaneButton = exports.addAreaLaneButton = exports.addSizeLaneButton = exports.addPrimeDecompositionLaneButton = exports.addPrimeNumbersLaneButton = exports.addArccotangentLaneButton = exports.addArccosecantLaneButton = exports.addArcsecantLaneButton = exports.addArctangentLaneButton = exports.addArccosineLaneButton = exports.addArcsineLaneButton = exports.addCotangentLaneButton = exports.addCosecantLaneButton = exports.addSecantLaneButton = exports.addTangentLaneButton = exports.addCosineLaneButton = exports.addSineLaneButton = exports.addLogarithmic10LaneButton = exports.addLogarithmic2LaneButton = exports.addLogarithmicLaneButton = exports.addExponential10LaneButton = exports.addExponential2LaneButton = exports.addExponentialLaneButton = exports.addCubeRootLaneButton = exports.addSquareRootLaneButton = exports.addCubedLaneButton = exports.addSquaredLaneButton = exports.addJaDigitLaneButton = exports.addEnDigitLaneButton = exports.addSiDigitLaneButton = exports.addCursorButton = exports.addInvertedSlideButton = exports.addSlideButton = exports.rulerNewSlidePanel = exports.cursorLaneBezel = exports.graphView = exports.gridView = exports.rulerOverlay = exports.rulerSvg = exports.rulerView = exports.viewList = exports.updateRoundBar = exports.setAriaHidden = void 0;
+    exports.initialize = exports.updateLanguage = exports.ToastPanel = exports.ControlPanel = exports.SettingsPanel = exports.SavePanel = exports.rulerHelpPanel = exports.addHistoryLaneButton = exports.addEmwEnergyLaneButton = exports.addEmwFrequencyLaneButton = exports.addEmwWavelengthLaneButton = exports.addSoundFrequencyLaneButton = exports.addCountingLaneButton = exports.addTemperatureLaneButton = exports.addEnergyLaneButton = exports.addSpeedLaneButton = exports.addTimeLaneButton = exports.addMassLaneButton = exports.addVolumeLaneButton = exports.addAreaLaneButton = exports.addSizeLaneButton = exports.addPrimeDecompositionLaneButton = exports.addPrimeNumbersLaneButton = exports.addArccotangentLaneButton = exports.addArccosecantLaneButton = exports.addArcsecantLaneButton = exports.addArctangentLaneButton = exports.addArccosineLaneButton = exports.addArcsineLaneButton = exports.addCotangentLaneButton = exports.addCosecantLaneButton = exports.addSecantLaneButton = exports.addTangentLaneButton = exports.addCosineLaneButton = exports.addSineLaneButton = exports.addLogarithmic10LaneButton = exports.addLogarithmic2LaneButton = exports.addLogarithmicLaneButton = exports.addExponential10LaneButton = exports.addExponential2LaneButton = exports.addExponentialLaneButton = exports.addCubeRootLaneButton = exports.addSquareRootLaneButton = exports.addCubedLaneButton = exports.addSquaredLaneButton = exports.addJaDigitLaneButton = exports.addEnDigitLaneButton = exports.addSiDigitLaneButton = exports.addCursorButton = exports.addInvertedSlideButton = exports.addSlideButton = exports.rulerNewSlidePanel = exports.cursorLaneBezel = exports.graphView = exports.gridView = exports.cursorLaneSvg = exports.rulerSvg = exports.rulerView = exports.viewList = exports.updateRoundBar = exports.setAriaHidden = void 0;
     Locale = __importStar(Locale);
     HTML = __importStar(HTML);
     SVG = __importStar(SVG);
@@ -505,7 +505,7 @@ define("script/ui", ["require", "exports", "script/locale", "script/html", "scri
     exports.viewList = HTML.getElementById("div", "view-list");
     exports.rulerView = HTML.getElementById("div", "ruler-view");
     exports.rulerSvg = SVG.getElementById("svg", "ruler-svg");
-    exports.rulerOverlay = SVG.getElementById("svg", "cursor-lane-svg");
+    exports.cursorLaneSvg = SVG.getElementById("svg", "cursor-lane-svg");
     exports.gridView = HTML.getElementById("div", "grid-view");
     exports.graphView = HTML.getElementById("div", "graph-view");
     exports.cursorLaneBezel = HTML.getElementById("button", "cursor-lane-bezel");
@@ -10350,7 +10350,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
     // };
     const getLeftOfLane = (laneIndex) => exports.LaneWidths.slice(0, laneIndex).reduce((a, b) => a + b, 0) - Model.data.offset.x;
     exports.getLeftOfLane = getLeftOfLane;
-    const getLeftOfCursorLane = (cursorIndex) => exports.LaneWidths.reduce((a, b) => a + b, 0) + (cursorIndex * 2 * config_json_6.default.render.ruler.handleRadius) - Model.data.offset.x;
+    const getLeftOfCursorLane = (cursorIndex) => (cursorIndex * 2 * config_json_6.default.render.ruler.handleRadius) - Model.data.offset.x;
     exports.getLeftOfCursorLane = getLeftOfCursorLane;
     const drawLeveledText = (label, text, option = { dx: 0, }) => {
         let currentDx = option.dx;
@@ -10529,7 +10529,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
     };
     exports.drawLane = drawLane;
     const drawCursorLaneArea = (view, group, slide, lane, areas) => {
-        const left = (0, exports.getLeftOfCursorLane)(0);
+        const left = 0; //getLeftOfCursorLane(0);
         const width = exports.cursorLaneWidth * Model.data.cursor.length;
         const isInvert = Model.isInvertedLane(lane);
         for (const area of areas) {
@@ -10604,7 +10604,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
     };
     exports.drawCursorLaneTicks = drawCursorLaneTicks;
     const drawCursorLane = (view, slide, lane) => {
-        const group = SVG.makeSure(UI.rulerOverlay, {
+        const group = SVG.makeSure(UI.cursorLaneSvg, {
             tag: "g",
             class: "cursor-lane",
         });
@@ -11168,73 +11168,65 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
     exports.getCursorColor = getCursorColor;
     const drawCursorLine = (model, view, cursorIndex, options) => {
         const { slide, lane } = Model.getRootSlideAndRootLane();
-        const svg = UI.rulerOverlay;
-        const visibleSvgWidth = UI.rulerSvg.viewBox.baseVal.width;
+        const rulerSvgWidth = UI.rulerSvg.viewBox.baseVal.width;
+        const cursorLaneWidth = (0, exports.getCursorLaneWidth)();
         const color = (0, exports.getCursorColor)(cursorIndex);
-        const group = SVG.makeSure(svg, {
+        const rulerGroup = SVG.makeSure(UI.rulerSvg, {
             tag: "g",
             class: "cursor-line-group",
         });
-        const lineOnBackground = SVG.makeSure(group, {
+        const cursorLaneGroup = SVG.makeSure(UI.cursorLaneSvg, {
+            tag: "g",
+            class: "cursor-line-group",
+        });
+        const lineOnRuler = SVG.makeSure(rulerGroup, {
             tag: "line",
             class: "cursor-line",
             "data-cursor-index": cursorIndex,
         });
-        // const lineOnOverlay = SVG.makeSure
-        // (
-        //     UI.rulerOverlay,
-        //     {
-        //         tag: "line",
-        //         class: "cursor-line",
-        //     }
-        // );
+        const lineOnCursorLane = SVG.makeSure(cursorLaneGroup, {
+            tag: "line",
+            class: "cursor-line",
+            "data-cursor-index": cursorIndex,
+        });
         const position = Model.getPositionAt(slide, lane, model.cursor[cursorIndex], view);
         if (0 <= position && position <= UI.rulerSvg.viewBox.baseVal.height && false !== (options === null || options === void 0 ? void 0 : options.showCursor)) {
             //const color = "red";
-            SVG.setAttributes(lineOnBackground, {
+            SVG.setAttributes(lineOnRuler, {
                 visibility: "visible",
                 x1: 0,
                 y1: position,
-                x2: visibleSvgWidth,
+                x2: rulerSvgWidth,
                 y2: position,
                 stroke: color,
                 "stroke-width": config_json_6.default.render.ruler.cursorWidth,
             });
-            // SVG.setAttributes
-            // (
-            //     lineOnOverlay,
-            //     {
-            //         visibility: "visible",
-            //         x1: visibleSvgWidth,
-            //         y1: position,
-            //         x2: visibleSvgWidth -(handleRadius *2),
-            //         y2: position,
-            //         stroke: color,
-            //         "stroke-width": config.render.ruler.lineWidth,
-            //     }
-            // );
+            SVG.setAttributes(lineOnCursorLane, {
+                visibility: "visible",
+                x1: 0,
+                y1: position,
+                x2: cursorLaneWidth,
+                y2: position,
+                stroke: color,
+                "stroke-width": config_json_6.default.render.ruler.cursorWidth,
+            });
         }
         else {
-            SVG.setAttributes(lineOnBackground, {
+            SVG.setAttributes(lineOnRuler, {
                 visibility: "hidden",
             });
-            // SVG.setAttributes
-            // (
-            //     lineOnOverlay,
-            //     {
-            //         visibility: "hidden",
-            //     }
-            // );
+            SVG.setAttributes(lineOnCursorLane, {
+                visibility: "hidden",
+            });
         }
     };
     exports.drawCursorLine = drawCursorLine;
     const drawCursorHandle = (model, view, cursorIndex, options) => {
         const { slide, lane } = Model.getRootSlideAndRootLane();
-        const svg = UI.rulerOverlay;
-        const visibleSvgWidth = UI.rulerSvg.viewBox.baseVal.width;
+        const svg = UI.cursorLaneSvg;
         const color = (0, exports.getCursorColor)(cursorIndex);
         const handleRadius = config_json_6.default.render.ruler.handleRadius;
-        const handleCenterX = visibleSvgWidth - (0, exports.getCursorLaneWidth)() + ((exports.isFoldedCursorLane ? 0 : cursorIndex) * exports.cursorLaneWidth) + handleRadius;
+        const handleCenterX = ((exports.isFoldedCursorLane ? 0 : cursorIndex) * exports.cursorLaneWidth) + handleRadius;
         const handlePeakX = exports.isFoldedCursorLane ? (handleCenterX - handleRadius + (exports.cursorLaneWidth * ((cursorIndex + 1) / (model.cursor.length + 1)))) : handleCenterX;
         const properties = makeSureCursorProperties(cursorIndex);
         const events = {
@@ -11257,8 +11249,8 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                         const deltaY = event.clientY - properties.anchorDragStartY;
                         (0, exports.slideCursor)(model, view, cursorIndex, event, properties.initialDraggingAnchorPosition + deltaY);
                     }
-                    SVG.removeEvents(UI.rulerOverlay, events);
-                    SVG.setAttribute(UI.rulerOverlay, "pointer-events", "none");
+                    SVG.removeEvents(UI.cursorLaneSvg, events);
+                    SVG.setAttribute(UI.cursorLaneSvg, "pointer-events", "none");
                 },
                 options: {
                     passive: false,
@@ -11274,8 +11266,8 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                         properties.initialDraggingAnchorPosition = undefined;
                         Render.markDirty();
                     }
-                    SVG.removeEvents(UI.rulerOverlay, events);
-                    SVG.setAttribute(UI.rulerOverlay, "pointer-events", "none");
+                    SVG.removeEvents(UI.cursorLaneSvg, events);
+                    SVG.setAttribute(UI.cursorLaneSvg, "pointer-events", "none");
                 },
                 options: {
                     passive: false,
@@ -11300,8 +11292,8 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                             event.preventDefault();
                             event.stopPropagation();
                             properties.anchorDragStartY = event.clientY;
-                            SVG.addEvents(UI.rulerOverlay, events);
-                            SVG.setAttribute(UI.rulerOverlay, "pointer-events", "auto");
+                            SVG.addEvents(UI.cursorLaneSvg, events);
+                            SVG.setAttribute(UI.cursorLaneSvg, "pointer-events", "auto");
                         }
                     },
                     options: {
@@ -11347,7 +11339,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         var _a;
         console.warn(`🦋 drawPopup: ${(_a = popup === null || popup === void 0 ? void 0 : popup.popupType) !== null && _a !== void 0 ? _a : "null"}`);
         if (null === popup) {
-            const popups = UI.rulerOverlay.querySelectorAll(".popup");
+            const popups = UI.cursorLaneSvg.querySelectorAll(".popup");
             for (const popup of Array.from(popups)) {
                 popup.remove();
             }
@@ -11384,7 +11376,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         const unitlist = Model.getUnitList(lane).sort(Comparer.make(i => i.value));
         console.log(`🦋 drawLaneUnitPopup: laneIndex=${laneIndex}, unitlist=${JSON.stringify(unitlist)}`);
         // const unitPopupBackground =
-        SVG.makeSure(UI.rulerOverlay, {
+        SVG.makeSure(UI.cursorLaneSvg, {
             tag: "rect",
             class: "lane-unit-popup-background popup",
             "data-lane-index": laneIndex,
@@ -11400,7 +11392,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
             }
         });
         for (const [index, unit] of unitlist.entries()) {
-            const unitLabel = SVG.makeSure(UI.rulerOverlay, {
+            const unitLabel = SVG.makeSure(UI.cursorLaneSvg, {
                 tag: "text",
                 class: "lane-unit-popup-unit-label popup",
                 "data-lane-index": laneIndex,
@@ -11419,7 +11411,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                 }
             });
             (0, exports.drawLeveledText)(unitLabel, `${Model.makeConstantStandardTickUnit(unit)}`);
-            const unitValueLabel = SVG.makeSure(UI.rulerOverlay, {
+            const unitValueLabel = SVG.makeSure(UI.cursorLaneSvg, {
                 tag: "text",
                 class: "lane-unit-popup-unit-label popup",
                 "data-lane-index": laneIndex,
@@ -11456,11 +11448,12 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
             height: document.body.clientHeight,
             viewBox: `0 0 ${width} ${document.body.clientHeight}`,
         });
-        SVG.setAttributes(UI.rulerOverlay, {
-            width: document.body.clientWidth,
+        SVG.setAttributes(UI.cursorLaneSvg, {
+            width: (0, exports.getCursorLaneWidth)(),
             height: document.body.clientHeight,
-            viewBox: `0 0 ${document.body.clientWidth} ${document.body.clientHeight}`,
+            viewBox: `0 0 ${(0, exports.getCursorLaneWidth)()} ${document.body.clientHeight}`,
         });
+        UI.cursorLaneSvg.style.left = `${width}px`;
         Render.markDirty("BACKGROUND");
         Render.markDirty("CURSOR_LANE");
         // Render.markDirty("CURSOR_LINE");
@@ -11474,7 +11467,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
     exports.getCursorLaneBezelWidth = getCursorLaneBezelWidth;
     const getCursorLaneWidth = () => exports.cursorLaneWidth * (exports.isFoldedCursorLane ? 1 : Model.data.cursor.length);
     exports.getCursorLaneWidth = getCursorLaneWidth;
-    const getRulerWidth = () => exports.LaneWidths.reduce((a, b) => a + b, 0) + (0, exports.getCursorLaneWidth)();
+    const getRulerWidth = () => exports.LaneWidths.reduce((a, b) => a + b, 0);
     exports.getRulerWidth = getRulerWidth;
     const initialize = () => {
         Render.markDirty("DEFINES");

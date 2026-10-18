@@ -206,7 +206,7 @@ declare module "script/ui" {
     export const viewList: HTMLDivElement;
     export const rulerView: HTMLDivElement;
     export const rulerSvg: SVGSVGElement;
-    export const rulerOverlay: SVGSVGElement;
+    export const cursorLaneSvg: SVGSVGElement;
     export const gridView: HTMLDivElement;
     export const graphView: HTMLDivElement;
     export const cursorLaneBezel: HTMLButtonElement;

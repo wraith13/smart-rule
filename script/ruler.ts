@@ -250,7 +250,7 @@ export const makeSureSlide = (slideIndex: number): SVGGElement => SVG.makeSure
 export const getLeftOfLane = (laneIndex: number): number =>
     LaneWidths.slice(0, laneIndex).reduce((a, b) => a + b, 0) -Model.data.offset.x;
 export const getLeftOfCursorLane = (cursorIndex: number): number =>
-    LaneWidths.reduce((a, b) => a + b, 0) +(cursorIndex *2 *config.render.ruler.handleRadius) -Model.data.offset.x;
+    (cursorIndex *2 *config.render.ruler.handleRadius) -Model.data.offset.x;
 export const drawLeveledText = (label: SVGTextElement, text: string, option: { dx: number; } = { dx: 0, }) =>
 {
     let currentDx = option.dx;
@@ -487,7 +487,7 @@ export const drawLane = (view: Type.View, slide: Type.SlideUnit, lane: Type.Lane
 };
 export const drawCursorLaneArea = (view: Type.View, group: SVGGElement, slide: Type.SlideUnit, lane: Type.Lane, areas: Type.Area[]): void =>
 {
-    const left = getLeftOfCursorLane(0);
+    const left = 0; //getLeftOfCursorLane(0);
     const width = cursorLaneWidth *Model.data.cursor.length;
     const isInvert = Model.isInvertedLane(lane);
     for(const area of areas)
@@ -1342,6 +1342,7 @@ export const drawCursorLine = (model: Type.Model, view: Type.View, cursorIndex: 
 {
     const { slide, lane } = Model.getRootSlideAndRootLane();
     const rulerSvgWidth = UI.rulerSvg.viewBox.baseVal.width;
+    const cursorLaneWidth = getCursorLaneWidth();
     const color = getCursorColor(cursorIndex);
     const rulerGroup = SVG.makeSure
     (
@@ -1401,7 +1402,7 @@ export const drawCursorLine = (model: Type.Model, view: Type.View, cursorIndex: 
                 visibility: "visible",
                 x1: 0,
                 y1: position,
-                x2: rulerSvgWidth,
+                x2: cursorLaneWidth,
                 y2: position,
                 stroke: color,
                 "stroke-width": config.render.ruler.cursorWidth,
@@ -1430,10 +1431,9 @@ export const drawCursorHandle = (model: Type.Model, view: Type.View, cursorIndex
 {
     const { slide, lane } = Model.getRootSlideAndRootLane();
     const svg = UI.cursorLaneSvg;
-    const visibleSvgWidth = UI.rulerSvg.viewBox.baseVal.width;
     const color = getCursorColor(cursorIndex);
     const handleRadius = config.render.ruler.handleRadius;
-    const handleCenterX = visibleSvgWidth -getCursorLaneWidth() +((isFoldedCursorLane ? 0: cursorIndex) *cursorLaneWidth) +handleRadius;
+    const handleCenterX = ((isFoldedCursorLane ? 0: cursorIndex) *cursorLaneWidth) +handleRadius;
     const handlePeakX = isFoldedCursorLane ? (handleCenterX -handleRadius +(cursorLaneWidth *((cursorIndex +1) /(model.cursor.length +1)))): handleCenterX;
     const properties = makeSureCursorProperties(cursorIndex);
     const events: SVG.Events =
@@ -1727,11 +1727,12 @@ export const resize = () =>
     (
         UI.cursorLaneSvg,
         {
-            width: document.body.clientWidth,
+            width: getCursorLaneWidth(),
             height: document.body.clientHeight,
-            viewBox: `0 0 ${document.body.clientWidth} ${document.body.clientHeight}`,
+            viewBox: `0 0 ${getCursorLaneWidth()} ${document.body.clientHeight}`,
         }
     );
+    UI.cursorLaneSvg.style.left = `${width}px`;
     Render.markDirty("BACKGROUND");
     Render.markDirty("CURSOR_LANE");
     // Render.markDirty("CURSOR_LINE");
@@ -1746,7 +1747,7 @@ export const getCursorLaneBezelWidth = (): number =>
 export const getCursorLaneWidth = (): number =>
     cursorLaneWidth *(isFoldedCursorLane ? 1: Model.data.cursor.length);
 export const getRulerWidth = (): number =>
-    LaneWidths.reduce((a, b) => a + b, 0) +getCursorLaneWidth();
+    LaneWidths.reduce((a, b) => a + b, 0);
 export const initialize = (): void =>
 {
     Render.markDirty("DEFINES");
