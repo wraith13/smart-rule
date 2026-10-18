@@ -70,7 +70,7 @@ export const renderer = (model: Type.Model, view: Type.View, dirty: Set<string>,
                 drawGradientDefines(model, view);
                 break;
             case "BACKGROUND":
-                const backgroundRect = SVG.makeSure
+                const rulerBackgroundRect = SVG.makeSure
                 (
                     UI.rulerSvg,
                     {
@@ -80,13 +80,32 @@ export const renderer = (model: Type.Model, view: Type.View, dirty: Set<string>,
                 );
                 SVG.setAttributes
                 (
-                    backgroundRect,
+                    rulerBackgroundRect,
                     {
                         x: 0,
                         y: 0,
                         // width: Model.getAllLaneCount() *config.render.ruler.laneWidth -Model.data.offset.x,
                         width: Math.min(document.body.clientWidth, getRulerWidth()),
                         height: UI.rulerSvg.viewBox.baseVal.height,
+                        fill: Theme.resolve(config.render.ruler.laneBackgroundColor),
+                    }
+                );
+                const cursorLaneBackgroundRect = SVG.makeSure
+                (
+                    UI.cursorLaneSvg,
+                    {
+                        tag: "rect",
+                        class: "cursor-lane-background",
+                    }
+                );
+                SVG.setAttributes
+                (
+                    cursorLaneBackgroundRect,
+                    {
+                        x: 0,
+                        y: 0,
+                        width: getCursorLaneWidth(),
+                        height: UI.cursorLaneSvg.viewBox.baseVal.height,
                         fill: Theme.resolve(config.render.ruler.laneBackgroundColor),
                     }
                 );

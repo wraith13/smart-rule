@@ -10209,16 +10209,27 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                         (0, exports.drawGradientDefines)(model, view);
                         break;
                     case "BACKGROUND":
-                        const backgroundRect = SVG.makeSure(UI.rulerSvg, {
+                        const rulerBackgroundRect = SVG.makeSure(UI.rulerSvg, {
                             tag: "rect",
                             class: "ruler-background",
                         });
-                        SVG.setAttributes(backgroundRect, {
+                        SVG.setAttributes(rulerBackgroundRect, {
                             x: 0,
                             y: 0,
                             // width: Model.getAllLaneCount() *config.render.ruler.laneWidth -Model.data.offset.x,
                             width: Math.min(document.body.clientWidth, (0, exports.getRulerWidth)()),
                             height: UI.rulerSvg.viewBox.baseVal.height,
+                            fill: Theme.resolve(config_json_6.default.render.ruler.laneBackgroundColor),
+                        });
+                        const cursorLaneBackgroundRect = SVG.makeSure(UI.cursorLaneSvg, {
+                            tag: "rect",
+                            class: "cursor-lane-background",
+                        });
+                        SVG.setAttributes(cursorLaneBackgroundRect, {
+                            x: 0,
+                            y: 0,
+                            width: (0, exports.getCursorLaneWidth)(),
+                            height: UI.cursorLaneSvg.viewBox.baseVal.height,
                             fill: Theme.resolve(config_json_6.default.render.ruler.laneBackgroundColor),
                         });
                         break;
