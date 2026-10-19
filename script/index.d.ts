@@ -1775,6 +1775,7 @@ declare module "script/ruler" {
     export const cursorLaneWidth: number;
     export const setLaneWidth: (laneIndex: number, width: number) => void;
     export const renderer: (model: Type.Model, view: Type.View, dirty: Set<string>, timeLimit?: number, options?: Type.RenderingOptions) => void;
+    export const makeSureCursorLayer: () => SVGGElement;
     export const getLaneIndexFromPosition: (position: number) => number | null;
     export const drawGradientDefines: (_model: Type.Model, _view: Type.View) => void;
     export const makeLinerGradient: (defs: SVGDefsElement, id: string, line: {

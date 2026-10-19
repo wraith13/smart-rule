@@ -113,6 +113,9 @@ export const renderer = (model: Type.Model, view: Type.View, dirty: Set<string>,
             // case "CURSOR_LINE":
             //     drawCursorLine(model, view, 0, options);
             //     break;
+            case "LAYERS":
+                makeSureCursorLayer();
+                break;
             case Render.RenderItemId.Popup:
                 drawPopup(view);
                 break;
@@ -174,6 +177,14 @@ export const renderer = (model: Type.Model, view: Type.View, dirty: Set<string>,
         }
     }
 };
+export const makeSureCursorLayer = () =>SVG.makeSure
+(
+    UI.rulerSvg,
+    {
+        tag: "g",
+        class: "cursor-line-group",
+    }
+);
 export const getLaneIndexFromPosition = (position: number): number | null =>
 {
     let accumulatedWidth = 0;
@@ -1363,14 +1374,7 @@ export const drawCursorLine = (model: Type.Model, view: Type.View, cursorIndex: 
     const rulerSvgWidth = UI.rulerSvg.viewBox.baseVal.width;
     const cursorLaneWidth = getCursorLaneWidth();
     const color = getCursorColor(cursorIndex);
-    const rulerGroup = SVG.makeSure
-    (
-        UI.rulerSvg,
-        {
-            tag: "g",
-            class: "cursor-line-group",
-        }
-    );
+    const rulerGroup = makeSureCursorLayer();
     const cursorLaneGroup = SVG.makeSure
     (
         UI.cursorLaneSvg,
@@ -1771,6 +1775,7 @@ export const initialize = (): void =>
 {
     Render.markDirty("DEFINES");
     Render.markDirty("BACKGROUND");
+    Render.markDirty("LAYERS");
     Render.markDirty(Render.RenderItemId.Size);
     // resize();
 };

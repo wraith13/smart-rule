@@ -10145,7 +10145,7 @@ define("script/render", ["require", "exports", "script/view", "script/model", "r
 define("script/ruler", ["require", "exports", "script/locale", "script/type", "script/calculation", "script/model", "script/ui", "script/theme", "script/render", "script/svg", "script/comparer", "resource/config"], function (require, exports, Locale, Type, Calculation, Model, UI, Theme, Render, SVG, Comparer, config_json_6) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.getRulerWidth = exports.getCursorLaneWidth = exports.getCursorLaneBezelWidth = exports.resize = exports.drawLaneUnitPopup = exports.drawLanePropertyPopup = exports.drawPopup = exports.drawCursorHandle = exports.drawCursorLine = exports.getCursorColor = exports.slideCursor = exports.snapHorizontalPosition = exports.snapVerticalPosition = exports.getAreaPositions = exports.nextPosition = exports.snapPosition = exports.regulateReferencePositions = exports.getReferenceLaneIndexFromEvent = exports.garbageCollectCursors = exports.garbageCollectLanes = exports.drawTicks = exports.calculateMinimumFractionDigits = exports.getFractionDigitsFromUnit = exports.makeShortNumberLabel = exports.makeNumberLabel = exports.makeNumberLabelPart = exports.drawAreas = exports.getAreaFill = exports.drawCursorLane = exports.drawCursorLaneTicks = exports.drawCursorLaneArea = exports.drawLane = exports.drawLeveledText = exports.getLeftOfCursorLane = exports.getLeftOfLane = exports.makeSureSlide = exports.makeStops = exports.makeVerticalGradient = exports.makeLinerGradient = exports.drawGradientDefines = exports.getLaneIndexFromPosition = exports.renderer = exports.setLaneWidth = exports.cursorLaneWidth = exports.toggleFoldCursorLane = exports.isFoldedCursorLane = exports.LaneWidths = exports.scale = void 0;
+    exports.initialize = exports.getRulerWidth = exports.getCursorLaneWidth = exports.getCursorLaneBezelWidth = exports.resize = exports.drawLaneUnitPopup = exports.drawLanePropertyPopup = exports.drawPopup = exports.drawCursorHandle = exports.drawCursorLine = exports.getCursorColor = exports.slideCursor = exports.snapHorizontalPosition = exports.snapVerticalPosition = exports.getAreaPositions = exports.nextPosition = exports.snapPosition = exports.regulateReferencePositions = exports.getReferenceLaneIndexFromEvent = exports.garbageCollectCursors = exports.garbageCollectLanes = exports.drawTicks = exports.calculateMinimumFractionDigits = exports.getFractionDigitsFromUnit = exports.makeShortNumberLabel = exports.makeNumberLabel = exports.makeNumberLabelPart = exports.drawAreas = exports.getAreaFill = exports.drawCursorLane = exports.drawCursorLaneTicks = exports.drawCursorLaneArea = exports.drawLane = exports.drawLeveledText = exports.getLeftOfCursorLane = exports.getLeftOfLane = exports.makeSureSlide = exports.makeStops = exports.makeVerticalGradient = exports.makeLinerGradient = exports.drawGradientDefines = exports.getLaneIndexFromPosition = exports.makeSureCursorLayer = exports.renderer = exports.setLaneWidth = exports.cursorLaneWidth = exports.toggleFoldCursorLane = exports.isFoldedCursorLane = exports.LaneWidths = exports.scale = void 0;
     Locale = __importStar(Locale);
     Type = __importStar(Type);
     Calculation = __importStar(Calculation);
@@ -10236,6 +10236,9 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                     // case "CURSOR_LINE":
                     //     drawCursorLine(model, view, 0, options);
                     //     break;
+                    case "LAYERS":
+                        (0, exports.makeSureCursorLayer)();
+                        break;
                     case Render.RenderItemId.Popup:
                         (0, exports.drawPopup)(view);
                         break;
@@ -10285,6 +10288,11 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         }
     };
     exports.renderer = renderer;
+    const makeSureCursorLayer = () => SVG.makeSure(UI.rulerSvg, {
+        tag: "g",
+        class: "cursor-line-group",
+    });
+    exports.makeSureCursorLayer = makeSureCursorLayer;
     const getLaneIndexFromPosition = (position) => {
         let accumulatedWidth = 0;
         for (let i = 0; i < exports.LaneWidths.length; ++i) {
@@ -11182,10 +11190,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         const rulerSvgWidth = UI.rulerSvg.viewBox.baseVal.width;
         const cursorLaneWidth = (0, exports.getCursorLaneWidth)();
         const color = (0, exports.getCursorColor)(cursorIndex);
-        const rulerGroup = SVG.makeSure(UI.rulerSvg, {
-            tag: "g",
-            class: "cursor-line-group",
-        });
+        const rulerGroup = (0, exports.makeSureCursorLayer)();
         const cursorLaneGroup = SVG.makeSure(UI.cursorLaneSvg, {
             tag: "g",
             class: "cursor-line-group",
@@ -11483,6 +11488,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
     const initialize = () => {
         Render.markDirty("DEFINES");
         Render.markDirty("BACKGROUND");
+        Render.markDirty("LAYERS");
         Render.markDirty(Render.RenderItemId.Size);
         // resize();
     };
