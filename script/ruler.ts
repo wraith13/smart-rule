@@ -117,6 +117,7 @@ export const renderer = (model: Type.Model, view: Type.View, dirty: Set<string>,
                 makeSureAreaLayer();
                 makeSureCursorLayer();
                 makeSureTickLayer();
+                makeSureLabelLayer();
                 break;
             case Render.RenderItemId.Popup:
                 drawPopup(view);
@@ -201,6 +202,14 @@ export const makeSureTickLayer = () =>SVG.makeSure
     {
         tag: "g",
         class: "tick-layer",
+    }
+);
+export const makeSureLabelLayer = () =>SVG.makeSure
+(
+    UI.rulerSvg,
+    {
+        tag: "g",
+        class: "label-layer",
     }
 );
 export const getLaneIndexFromPosition = (position: number): number | null =>
