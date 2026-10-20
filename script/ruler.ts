@@ -114,7 +114,9 @@ export const renderer = (model: Type.Model, view: Type.View, dirty: Set<string>,
             //     drawCursorLine(model, view, 0, options);
             //     break;
             case "LAYERS":
+                makeSureAreaLayer();
                 makeSureCursorLayer();
+                makeSureTickLayer();
                 break;
             case Render.RenderItemId.Popup:
                 drawPopup(view);
@@ -177,12 +179,28 @@ export const renderer = (model: Type.Model, view: Type.View, dirty: Set<string>,
         }
     }
 };
+export const makeSureAreaLayer = () =>SVG.makeSure
+(
+    UI.rulerSvg,
+    {
+        tag: "g",
+        class: "area-layer",
+    }
+);
 export const makeSureCursorLayer = () =>SVG.makeSure
 (
     UI.rulerSvg,
     {
         tag: "g",
-        class: "cursor-line-group",
+        class: "cursor-line-layer",
+    }
+);
+export const makeSureTickLayer = () =>SVG.makeSure
+(
+    UI.rulerSvg,
+    {
+        tag: "g",
+        class: "tick-layer",
     }
 );
 export const getLaneIndexFromPosition = (position: number): number | null =>
@@ -1380,7 +1398,7 @@ export const drawCursorLine = (model: Type.Model, view: Type.View, cursorIndex: 
         UI.cursorLaneSvg,
         {
             tag: "g",
-            class: "cursor-line-group",
+            class: "cursor-line-layer",
         }
     );
     const lineOnRuler = SVG.makeSure
