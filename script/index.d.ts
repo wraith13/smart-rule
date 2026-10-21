@@ -1775,7 +1775,10 @@ declare module "script/ruler" {
     export const cursorLaneWidth: number;
     export const setLaneWidth: (laneIndex: number, width: number) => void;
     export const renderer: (model: Type.Model, view: Type.View, dirty: Set<string>, timeLimit?: number, options?: Type.RenderingOptions) => void;
+    export const makeSureAreaLayer: () => SVGGElement;
     export const makeSureCursorLayer: () => SVGGElement;
+    export const makeSureTickLayer: () => SVGGElement;
+    export const makeSureLabelLayer: () => SVGGElement;
     export const getLaneIndexFromPosition: (position: number) => number | null;
     export const drawGradientDefines: (_model: Type.Model, _view: Type.View) => void;
     export const makeLinerGradient: (defs: SVGDefsElement, id: string, line: {
@@ -1813,7 +1816,7 @@ declare module "script/ruler" {
     export const drawCursorLaneTicks: (view: Type.View, group: SVGGElement, slide: Type.SlideUnit, lane: Type.Lane, content: Type.LaneContent) => void;
     export const drawCursorLane: (view: Type.View, slide: Type.SlideUnit, lane: Type.Lane) => void;
     export const getAreaFill: (isInverted: boolean, area: Type.Area) => string;
-    export const drawAreas: (view: Type.View, group: SVGGElement, slide: Type.SlideUnit, lane: Type.Lane, areas: Type.Area[], indent?: number) => void;
+    export const drawAreas: (view: Type.View, areaGroup: SVGGElement, tickGroup: SVGGElement, slide: Type.SlideUnit, lane: Type.Lane, areas: Type.Area[], indent?: number) => void;
     export const makeNumberLabelPart: (tick: Type.Tick, rawValue: number) => string;
     export const makeNumberLabel: (tick: Type.Tick) => string;
     export const makeShortNumberLabel: (value: number) => string;

@@ -10145,7 +10145,7 @@ define("script/render", ["require", "exports", "script/view", "script/model", "r
 define("script/ruler", ["require", "exports", "script/locale", "script/type", "script/calculation", "script/model", "script/ui", "script/theme", "script/render", "script/svg", "script/comparer", "resource/config"], function (require, exports, Locale, Type, Calculation, Model, UI, Theme, Render, SVG, Comparer, config_json_6) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.getRulerWidth = exports.getCursorLaneWidth = exports.getCursorLaneBezelWidth = exports.resize = exports.drawLaneUnitPopup = exports.drawLanePropertyPopup = exports.drawPopup = exports.drawCursorHandle = exports.drawCursorLine = exports.getCursorColor = exports.slideCursor = exports.snapHorizontalPosition = exports.snapVerticalPosition = exports.getAreaPositions = exports.nextPosition = exports.snapPosition = exports.regulateReferencePositions = exports.getReferenceLaneIndexFromEvent = exports.garbageCollectCursors = exports.garbageCollectLanes = exports.drawTicks = exports.calculateMinimumFractionDigits = exports.getFractionDigitsFromUnit = exports.makeShortNumberLabel = exports.makeNumberLabel = exports.makeNumberLabelPart = exports.drawAreas = exports.getAreaFill = exports.drawCursorLane = exports.drawCursorLaneTicks = exports.drawCursorLaneArea = exports.drawLane = exports.drawLeveledText = exports.getLeftOfCursorLane = exports.getLeftOfLane = exports.makeSureSlide = exports.makeStops = exports.makeVerticalGradient = exports.makeLinerGradient = exports.drawGradientDefines = exports.getLaneIndexFromPosition = exports.makeSureCursorLayer = exports.renderer = exports.setLaneWidth = exports.cursorLaneWidth = exports.toggleFoldCursorLane = exports.isFoldedCursorLane = exports.LaneWidths = exports.scale = void 0;
+    exports.initialize = exports.getRulerWidth = exports.getCursorLaneWidth = exports.getCursorLaneBezelWidth = exports.resize = exports.drawLaneUnitPopup = exports.drawLanePropertyPopup = exports.drawPopup = exports.drawCursorHandle = exports.drawCursorLine = exports.getCursorColor = exports.slideCursor = exports.snapHorizontalPosition = exports.snapVerticalPosition = exports.getAreaPositions = exports.nextPosition = exports.snapPosition = exports.regulateReferencePositions = exports.getReferenceLaneIndexFromEvent = exports.garbageCollectCursors = exports.garbageCollectLanes = exports.drawTicks = exports.calculateMinimumFractionDigits = exports.getFractionDigitsFromUnit = exports.makeShortNumberLabel = exports.makeNumberLabel = exports.makeNumberLabelPart = exports.drawAreas = exports.getAreaFill = exports.drawCursorLane = exports.drawCursorLaneTicks = exports.drawCursorLaneArea = exports.drawLane = exports.drawLeveledText = exports.getLeftOfCursorLane = exports.getLeftOfLane = exports.makeSureSlide = exports.makeStops = exports.makeVerticalGradient = exports.makeLinerGradient = exports.drawGradientDefines = exports.getLaneIndexFromPosition = exports.makeSureLabelLayer = exports.makeSureTickLayer = exports.makeSureCursorLayer = exports.makeSureAreaLayer = exports.renderer = exports.setLaneWidth = exports.cursorLaneWidth = exports.toggleFoldCursorLane = exports.isFoldedCursorLane = exports.LaneWidths = exports.scale = void 0;
     Locale = __importStar(Locale);
     Type = __importStar(Type);
     Calculation = __importStar(Calculation);
@@ -10237,7 +10237,10 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                     //     drawCursorLine(model, view, 0, options);
                     //     break;
                     case "LAYERS":
+                        (0, exports.makeSureAreaLayer)();
                         (0, exports.makeSureCursorLayer)();
+                        (0, exports.makeSureTickLayer)();
+                        (0, exports.makeSureLabelLayer)();
                         break;
                     case Render.RenderItemId.Popup:
                         (0, exports.drawPopup)(view);
@@ -10288,11 +10291,26 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         }
     };
     exports.renderer = renderer;
+    const makeSureAreaLayer = () => SVG.makeSure(UI.rulerSvg, {
+        tag: "g",
+        class: "area-layer",
+    });
+    exports.makeSureAreaLayer = makeSureAreaLayer;
     const makeSureCursorLayer = () => SVG.makeSure(UI.rulerSvg, {
         tag: "g",
-        class: "cursor-line-group",
+        class: "cursor-line-layer",
     });
     exports.makeSureCursorLayer = makeSureCursorLayer;
+    const makeSureTickLayer = () => SVG.makeSure(UI.rulerSvg, {
+        tag: "g",
+        class: "tick-layer",
+    });
+    exports.makeSureTickLayer = makeSureTickLayer;
+    const makeSureLabelLayer = () => SVG.makeSure(UI.rulerSvg, {
+        tag: "g",
+        class: "label-layer",
+    });
+    exports.makeSureLabelLayer = makeSureLabelLayer;
     const getLaneIndexFromPosition = (position) => {
         let accumulatedWidth = 0;
         for (let i = 0; i < exports.LaneWidths.length; ++i) {
@@ -10403,8 +10421,8 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
     exports.drawLeveledText = drawLeveledText;
     const drawLane = (view, slide, lane) => {
         var _a;
-        const slideIndex = Model.getSlideIndex(slide);
-        const group = (0, exports.makeSureSlide)(slideIndex);
+        // const slideIndex = Model.getSlideIndex(slide);
+        // const group: SVGGElement = makeSureSlide(slideIndex);
         const isLastLane = lane === slide.lanes[slide.lanes.length - 1];
         const laneIndex = Model.getLaneIndex(lane);
         const left = (0, exports.getLeftOfLane)(laneIndex);
@@ -10426,12 +10444,17 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         //         fill: Theme.resolve(config.render.ruler.laneBackgroundColor),
         //     }
         // );
-        const tickGroup = SVG.makeSure(group, {
+        const areaGroup = SVG.makeSure((0, exports.makeSureAreaLayer)(), {
+            tag: "g",
+            class: "area-group",
+            "data-lane-index": laneIndex,
+        });
+        const tickGroup = SVG.makeSure((0, exports.makeSureTickLayer)(), {
             tag: "g",
             class: "tick-group",
             "data-lane-index": laneIndex,
         });
-        const labelGroup = SVG.makeSure(group, {
+        const labelGroup = SVG.makeSure((0, exports.makeSureLabelLayer)(), {
             tag: "g",
             class: "label-group",
             "data-lane-index": laneIndex,
@@ -10463,7 +10486,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
             "font-size": config_json_6.default.render.font.size.large,
             textContent: (_a = Locale.resolve(lane.name)) !== null && _a !== void 0 ? _a : `Lane ${laneIndex}`,
         });
-        const unitLabelGroup = SVG.makeSure(group, {
+        const unitLabelGroup = SVG.makeSure((0, exports.makeSureLabelLayer)(), {
             tag: "g",
             class: "unit-label-group",
             "data-lane-index": laneIndex,
@@ -10529,7 +10552,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         const separator = isLastLane ?
             config_json_6.default.render.ruler.slideSeparator :
             config_json_6.default.render.ruler.laneSeparator;
-        SVG.makeSure(group, {
+        SVG.makeSure((0, exports.makeSureTickLayer)(), {
             tag: "line",
             class: "lane-separator",
             "data-lane-index": laneIndex,
@@ -10537,13 +10560,14 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
             x1: left + width,
             y1: 0,
             x2: left + width,
-            y2: group.ownerSVGElement.viewBox.baseVal.height,
+            y2: (0, exports.makeSureTickLayer)().ownerSVGElement.viewBox.baseVal.height,
             stroke: Theme.resolve(separator.color),
             "stroke-width": separator.width,
         });
+        areaGroup.innerHTML = "";
         tickGroup.innerHTML = "";
         const content = Model.designTicks(slide, view, lane, Model.makePositionTickWindowFromWindow());
-        (0, exports.drawAreas)(view, tickGroup, slide, lane, content.areas);
+        (0, exports.drawAreas)(view, areaGroup, tickGroup, slide, lane, content.areas);
         (0, exports.drawTicks)(view, tickGroup, slide, lane, { ticks: (0, exports.calculateMinimumFractionDigits)(content.ticks), areas: content.areas, });
     };
     exports.drawLane = drawLane;
@@ -10681,7 +10705,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         }
     };
     exports.getAreaFill = getAreaFill;
-    const drawAreas = (view, group, slide, lane, areas, indent = 0) => {
+    const drawAreas = (view, areaGroup, tickGroup, slide, lane, areas, indent = 0) => {
         var _a, _b, _c, _d, _e, _f, _g;
         const indentUnit = 20;
         const laneIndex = Model.getLaneIndex(lane);
@@ -10690,18 +10714,18 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         const isInvert = Model.isInvertedLane(lane);
         for (const area of areas) {
             const lowerPosition = undefined === area.lowerBound ?
-                ((!isInvert) ? 0 : group.ownerSVGElement.viewBox.baseVal.height) :
+                ((!isInvert) ? 0 : areaGroup.ownerSVGElement.viewBox.baseVal.height) :
                 Model.getPositionAt(slide, lane, area.lowerBound, view);
             const upperPosition = undefined === area.upperBound ?
-                ((!isInvert) ? group.ownerSVGElement.viewBox.baseVal.height : 0) :
+                ((!isInvert) ? areaGroup.ownerSVGElement.viewBox.baseVal.height : 0) :
                 Model.getPositionAt(slide, lane, area.upperBound, view);
             const y = Math.max(0, (!isInvert) ? lowerPosition : upperPosition);
-            const height = Math.min(group.ownerSVGElement.viewBox.baseVal.height - y, (!isInvert) ? upperPosition - y : lowerPosition - y);
+            const height = Math.min(areaGroup.ownerSVGElement.viewBox.baseVal.height - y, (!isInvert) ? upperPosition - y : lowerPosition - y);
             if (0 < height) {
                 const hasDetails = 0 < ((_a = area.details) !== null && _a !== void 0 ? _a : []).length;
                 if (hasDetails) {
                     const width = indentUnit;
-                    group.appendChild(SVG.make({
+                    areaGroup.appendChild(SVG.make({
                         tag: "rect",
                         class: "area",
                         x: left,
@@ -10711,7 +10735,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                         fill: (0, exports.getAreaFill)(isInvert, area),
                     }));
                     if ("none" !== ((_b = area.overlay) !== null && _b !== void 0 ? _b : "none")) {
-                        group.appendChild(SVG.make({
+                        areaGroup.appendChild(SVG.make({
                             tag: "rect",
                             class: "area",
                             x: left,
@@ -10747,11 +10771,11 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                                     // }
                                 ]
                             });
-                            group.appendChild(label);
+                            tickGroup.appendChild(label);
                             (0, exports.drawLeveledText)(label, "( " + Locale.resolve(area.subLabel) + " )", { dx: 8, });
                         }
                         else {
-                            group.appendChild(SVG.make({
+                            tickGroup.appendChild(SVG.make({
                                 tag: "text",
                                 class: "area-label",
                                 x: left + 16,
@@ -10763,10 +10787,10 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                             }));
                         }
                     }
-                    (0, exports.drawAreas)(view, group, slide, lane, area.details, indent + indentUnit);
+                    (0, exports.drawAreas)(view, areaGroup, tickGroup, slide, lane, area.details, indent + indentUnit);
                 }
                 else {
-                    group.appendChild(SVG.make({
+                    areaGroup.appendChild(SVG.make({
                         tag: "rect",
                         class: "area",
                         x: left,
@@ -10776,7 +10800,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                         fill: (0, exports.getAreaFill)(isInvert, area),
                     }));
                     if ("none" !== ((_e = area.overlay) !== null && _e !== void 0 ? _e : "none")) {
-                        group.appendChild(SVG.make({
+                        areaGroup.appendChild(SVG.make({
                             tag: "rect",
                             class: "area",
                             x: left,
@@ -10788,7 +10812,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                     }
                     if (undefined !== area.label) {
                         if (undefined !== area.subLabel) {
-                            group.appendChild(SVG.make({
+                            tickGroup.appendChild(SVG.make({
                                 tag: "text",
                                 class: "area-label",
                                 x: left + 8,
@@ -10805,11 +10829,11 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                                 fill: Theme.resolve(config_json_6.default.render.ruler.paleForegroundColor),
                                 "font-size": config_json_6.default.render.font.size.regular,
                             });
-                            group.appendChild(subLabel);
+                            tickGroup.appendChild(subLabel);
                             (0, exports.drawLeveledText)(subLabel, "( " + Locale.resolve(area.subLabel) + " )");
                         }
                         else {
-                            group.appendChild(SVG.make({
+                            tickGroup.appendChild(SVG.make({
                                 tag: "text",
                                 class: "area-label",
                                 x: left + 8,
@@ -11193,7 +11217,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         const rulerGroup = (0, exports.makeSureCursorLayer)();
         const cursorLaneGroup = SVG.makeSure(UI.cursorLaneSvg, {
             tag: "g",
-            class: "cursor-line-group",
+            class: "cursor-line-layer",
         });
         const lineOnRuler = SVG.makeSure(rulerGroup, {
             tag: "line",

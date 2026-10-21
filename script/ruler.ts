@@ -344,8 +344,8 @@ export const drawLeveledText = (label: SVGTextElement, text: string, option: { d
 }
 export const drawLane = (view: Type.View, slide: Type.SlideUnit, lane: Type.Lane): void =>
 {
-    const slideIndex = Model.getSlideIndex(slide);
-    const group: SVGGElement = makeSureSlide(slideIndex);
+    // const slideIndex = Model.getSlideIndex(slide);
+    // const group: SVGGElement = makeSureSlide(slideIndex);
     const isLastLane = lane === slide.lanes[slide.lanes.length -1];
     const laneIndex = Model.getLaneIndex(lane);
     const left = getLeftOfLane(laneIndex);
@@ -367,9 +367,18 @@ export const drawLane = (view: Type.View, slide: Type.SlideUnit, lane: Type.Lane
     //         fill: Theme.resolve(config.render.ruler.laneBackgroundColor),
     //     }
     // );
+    const areaGroup = SVG.makeSure
+    (
+        makeSureAreaLayer(),
+        {
+            tag: "g",
+            class: "area-group",
+            "data-lane-index": laneIndex,
+        }
+    );
     const tickGroup = SVG.makeSure
     (
-        group,
+        makeSureTickLayer(),
         {
             tag: "g",
             class: "tick-group",
@@ -378,7 +387,7 @@ export const drawLane = (view: Type.View, slide: Type.SlideUnit, lane: Type.Lane
     );
     const labelGroup = SVG.makeSure
     (
-        group,
+        makeSureLabelLayer(),
         {
             tag: "g",
             class: "label-group",
@@ -425,7 +434,7 @@ export const drawLane = (view: Type.View, slide: Type.SlideUnit, lane: Type.Lane
     );
     const unitLabelGroup = SVG.makeSure
     (
-        group,
+        makeSureLabelLayer(),
         {
             tag: "g",
             class: "unit-label-group",
@@ -522,7 +531,7 @@ export const drawLane = (view: Type.View, slide: Type.SlideUnit, lane: Type.Lane
         config.render.ruler.laneSeparator;
     SVG.makeSure
     (
-        group,
+        makeSureTickLayer(),
         {
             tag: "line",
             class: "lane-separator",
@@ -532,14 +541,15 @@ export const drawLane = (view: Type.View, slide: Type.SlideUnit, lane: Type.Lane
             x1: left + width,
             y1: 0,
             x2: left + width,
-            y2: group.ownerSVGElement!.viewBox.baseVal.height,
+            y2: makeSureTickLayer().ownerSVGElement!.viewBox.baseVal.height,
             stroke: Theme.resolve(separator.color),
             "stroke-width": separator.width,
         }
     );
+    areaGroup.innerHTML = "";
     tickGroup.innerHTML = "";
     const content = Model.designTicks(slide, view, lane, Model.makePositionTickWindowFromWindow());
-    drawAreas(view, tickGroup, slide, lane, content.areas);
+    drawAreas(view, areaGroup, tickGroup, slide, lane, content.areas);
     drawTicks(view, tickGroup, slide, lane, { ticks: calculateMinimumFractionDigits(content.ticks), areas: content.areas, });
 };
 export const drawCursorLaneArea = (view: Type.View, group: SVGGElement, slide: Type.SlideUnit, lane: Type.Lane, areas: Type.Area[]): void =>
@@ -739,7 +749,7 @@ export const getAreaFill = (isInverted: boolean, area: Type.Area): string =>
         return area.fill;
     }
 };
-export const drawAreas = (view: Type.View, group: SVGGElement, slide: Type.SlideUnit, lane: Type.Lane, areas: Type.Area[], indent: number = 0): void =>
+export const drawAreas = (view: Type.View, areaGroup: SVGGElement, tickGroup: SVGGElement, slide: Type.SlideUnit, lane: Type.Lane, areas: Type.Area[], indent: number = 0): void =>
 {
     const indentUnit = 20;
     const laneIndex = Model.getLaneIndex(lane);
@@ -749,15 +759,15 @@ export const drawAreas = (view: Type.View, group: SVGGElement, slide: Type.Slide
     for(const area of areas)
     {
         const lowerPosition = undefined === area.lowerBound ?
-            (( ! isInvert) ? 0: group.ownerSVGElement!.viewBox.baseVal.height):
+            (( ! isInvert) ? 0: areaGroup.ownerSVGElement!.viewBox.baseVal.height):
             Model.getPositionAt(slide, lane, area.lowerBound, view);
         const upperPosition = undefined === area.upperBound ?
-            (( ! isInvert) ? group.ownerSVGElement!.viewBox.baseVal.height: 0):
+            (( ! isInvert) ? areaGroup.ownerSVGElement!.viewBox.baseVal.height: 0):
             Model.getPositionAt(slide, lane, area.upperBound, view);
         const y = Math.max(0, ( ! isInvert) ? lowerPosition: upperPosition);
         const height = Math.min
         (
-            group.ownerSVGElement!.viewBox.baseVal.height -y,
+            areaGroup.ownerSVGElement!.viewBox.baseVal.height -y,
             ( ! isInvert) ? upperPosition -y: lowerPosition -y
         );
         if (0 < height)
@@ -766,7 +776,7 @@ export const drawAreas = (view: Type.View, group: SVGGElement, slide: Type.Slide
             if (hasDetails)
             {
                 const width = indentUnit;
-                group.appendChild
+                areaGroup.appendChild
                 (
                     SVG.make
                     ({
@@ -781,7 +791,7 @@ export const drawAreas = (view: Type.View, group: SVGGElement, slide: Type.Slide
                 );
                 if ("none" !== (area.overlay ?? "none"))
                 {
-                    group.appendChild
+                    areaGroup.appendChild
                     (
                         SVG.make
                         ({
@@ -824,12 +834,12 @@ export const drawAreas = (view: Type.View, group: SVGGElement, slide: Type.Slide
                                 // }
                             ]
                         });
-                        group.appendChild(label);
+                        tickGroup.appendChild(label);
                         drawLeveledText(label, "( " +Locale.resolve(area.subLabel) +" )", { dx: 8, });
                     }
                     else
                     {
-                        group.appendChild
+                        tickGroup.appendChild
                         (
                             SVG.make
                             ({
@@ -845,11 +855,11 @@ export const drawAreas = (view: Type.View, group: SVGGElement, slide: Type.Slide
                         );
                     }
                 }
-                drawAreas(view, group, slide, lane, area.details!, indent +indentUnit);
+                drawAreas(view, areaGroup, tickGroup, slide, lane, area.details!, indent +indentUnit);
             }
             else
             {
-                group.appendChild
+                areaGroup.appendChild
                 (
                     SVG.make
                     ({
@@ -864,7 +874,7 @@ export const drawAreas = (view: Type.View, group: SVGGElement, slide: Type.Slide
                 );
                 if ("none" !== (area.overlay ?? "none"))
                 {
-                    group.appendChild
+                    areaGroup.appendChild
                     (
                         SVG.make
                         ({
@@ -882,7 +892,7 @@ export const drawAreas = (view: Type.View, group: SVGGElement, slide: Type.Slide
                 {
                     if (undefined !== area.subLabel)
                     {
-                        group.appendChild
+                        tickGroup.appendChild
                         (
                             SVG.make
                             ({
@@ -904,12 +914,12 @@ export const drawAreas = (view: Type.View, group: SVGGElement, slide: Type.Slide
                             fill: Theme.resolve(config.render.ruler.paleForegroundColor),
                             "font-size": config.render.font.size.regular,
                         });
-                        group.appendChild(subLabel);
+                        tickGroup.appendChild(subLabel);
                         drawLeveledText(subLabel, "( " +Locale.resolve(area.subLabel) +" )");
                     }
                     else
                     {
-                        group.appendChild
+                        tickGroup.appendChild
                         (
                             SVG.make
                             ({
