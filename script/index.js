@@ -10142,7 +10142,7 @@ define("script/render", ["require", "exports", "script/view", "script/model", "r
     };
     exports.nextPopup = nextPopup;
 });
-define("script/ruler", ["require", "exports", "script/locale", "script/type", "script/calculation", "script/model", "script/ui", "script/theme", "script/render", "script/svg", "script/comparer", "resource/config"], function (require, exports, Locale, Type, Calculation, Model, UI, Theme, Render, SVG, Comparer, config_json_6) {
+define("script/ruler", ["require", "exports", "script/locale", "script/type", "script/calculation", "script/model", "script/ui", "script/theme", "script/render", "script/html", "script/svg", "script/comparer", "resource/config"], function (require, exports, Locale, Type, Calculation, Model, UI, Theme, Render, HTML, SVG, Comparer, config_json_6) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.initialize = exports.getRulerWidth = exports.getCursorLaneWidth = exports.getCursorLaneBezelWidth = exports.resize = exports.drawLaneUnitPopup = exports.drawLanePropertyPopup = exports.drawPopup = exports.drawCursorHandle = exports.drawCursorLine = exports.getCursorColor = exports.slideCursor = exports.snapHorizontalPosition = exports.snapVerticalPosition = exports.getAreaPositions = exports.nextPosition = exports.snapPosition = exports.regulateReferencePositions = exports.getReferenceLaneIndexFromEvent = exports.garbageCollectCursors = exports.garbageCollectLanes = exports.drawTicks = exports.calculateMinimumFractionDigits = exports.getFractionDigitsFromUnit = exports.makeShortNumberLabel = exports.makeNumberLabel = exports.makeNumberLabelPart = exports.drawAreas = exports.getAreaFill = exports.drawCursorLane = exports.drawCursorLaneTicks = exports.drawCursorLaneArea = exports.drawLane = exports.drawLeveledText = exports.getLeftOfCursorLane = exports.getLeftOfLane = exports.makeSureSlide = exports.makeStops = exports.makeVerticalGradient = exports.makeLinerGradient = exports.drawGradientDefines = exports.getLaneIndexFromPosition = exports.makeSureLabelLayer = exports.makeSureTickLayer = exports.makeSureCursorLayer = exports.makeSureAreaLayer = exports.renderer = exports.setLaneWidth = exports.cursorLaneWidth = exports.toggleFoldCursorLane = exports.isFoldedCursorLane = exports.LaneWidths = exports.scale = void 0;
@@ -10153,6 +10153,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
     UI = __importStar(UI);
     Theme = __importStar(Theme);
     Render = __importStar(Render);
+    HTML = __importStar(HTML);
     SVG = __importStar(SVG);
     Comparer = __importStar(Comparer);
     config_json_6 = __importDefault(config_json_6);
@@ -11289,7 +11290,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                         const deltaY = event.clientY - properties.anchorDragStartY;
                         (0, exports.slideCursor)(model, view, cursorIndex, event, properties.initialDraggingAnchorPosition + deltaY);
                     }
-                    SVG.removeEvents(UI.cursorLaneSvg, events);
+                    HTML.removeEvents(document.body, events);
                     SVG.setAttribute(UI.cursorLaneSvg, "pointer-events", "none");
                 },
                 options: {
@@ -11306,7 +11307,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                         properties.initialDraggingAnchorPosition = undefined;
                         Render.markDirty();
                     }
-                    SVG.removeEvents(UI.cursorLaneSvg, events);
+                    HTML.removeEvents(document.body, events);
                     SVG.setAttribute(UI.cursorLaneSvg, "pointer-events", "none");
                 },
                 options: {
@@ -11332,7 +11333,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                             event.preventDefault();
                             event.stopPropagation();
                             properties.anchorDragStartY = event.clientY;
-                            SVG.addEvents(UI.cursorLaneSvg, events);
+                            HTML.addEvents(document.body, events);
                             SVG.setAttribute(UI.cursorLaneSvg, "pointer-events", "auto");
                         }
                     },

@@ -5,6 +5,7 @@ import * as Model from "./model";
 import * as UI from "./ui";
 import * as Theme from "./theme";
 import * as Render from "./render";
+import * as HTML from "./html";
 import * as SVG from "./svg";
 import * as Comparer from "./comparer";
 import config from "@resource/config.json";
@@ -1524,7 +1525,7 @@ export const drawCursorHandle = (model: Type.Model, view: Type.View, cursorIndex
                     const deltaY = event.clientY - properties.anchorDragStartY;
                     slideCursor(model, view, cursorIndex, event, properties.initialDraggingAnchorPosition + deltaY);
                 }
-                SVG.removeEvents(UI.cursorLaneSvg, events);
+                HTML.removeEvents(document.body, events);
                 SVG.setAttribute(UI.cursorLaneSvg, "pointer-events", "none");
             },
             options:
@@ -1544,7 +1545,7 @@ export const drawCursorHandle = (model: Type.Model, view: Type.View, cursorIndex
                     properties.initialDraggingAnchorPosition = undefined;
                     Render.markDirty();
                 }
-                SVG.removeEvents(UI.cursorLaneSvg, events);
+                HTML.removeEvents(document.body, events);
                 SVG.setAttribute(UI.cursorLaneSvg, "pointer-events", "none");
             },
             options:
@@ -1582,7 +1583,7 @@ export const drawCursorHandle = (model: Type.Model, view: Type.View, cursorIndex
                             event.preventDefault();
                             event.stopPropagation();
                             properties.anchorDragStartY = event.clientY;
-                            SVG.addEvents(UI.cursorLaneSvg, events);
+                            HTML.addEvents(document.body, events);
                             SVG.setAttribute(UI.cursorLaneSvg, "pointer-events", "auto");
                         }
                     },
