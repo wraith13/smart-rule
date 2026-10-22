@@ -8,7 +8,7 @@ export type Style = { [key: string]: string | undefined; };
 export type Attributes = Exclude<{ [key: string]: string | number | undefined; }, "tag" | "events" | "style" | "children"> | { events?: Events; style?: string | Style };
 export type Source<T extends Tag> = { tag: T; children?: (Node | Source<Tag>)[]; } & Attributes;
 export type Child = Required<Source<Tag>>["children"][number];
-export const addEvents = <T extends Element>(element: T, events: Events): T =>
+export const addEvents = <T extends Element | Document>(element: T, events: Events): T =>
 {
     for(const [event, listener] of Object.entries(events) as [keyof Events, EventListener<any>][])
     {
@@ -23,7 +23,7 @@ export const addEvents = <T extends Element>(element: T, events: Events): T =>
     }
     return element;
 };
-export const removeEvents = <T extends Element>(element: T, events: Events): T =>
+export const removeEvents = <T extends Element | Document>(element: T, events: Events): T =>
 {
     for(const [event, listener] of Object.entries(events) as [keyof Events, EventListener<any>][])
     {
@@ -47,7 +47,7 @@ export const setTextContent = (element: Node, text: string) =>
     }
     return false;
 };
-export const setAttribute = (element:Element, name: string, value: string | undefined) =>
+export const setAttribute = (element: Element, name: string, value: string | undefined) =>
 {
     if ((element.getAttribute(name) ?? "") !== (value ?? ""))
     {

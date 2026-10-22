@@ -133,8 +133,8 @@ declare module "script/element" {
         children?: (Node | Source<Tag>)[];
     } & Attributes;
     export type Child = Required<Source<Tag>>["children"][number];
-    export const addEvents: <T extends Element>(element: T, events: Events) => T;
-    export const removeEvents: <T extends Element>(element: T, events: Events) => T;
+    export const addEvents: <T extends Element | Document>(element: T, events: Events) => T;
+    export const removeEvents: <T extends Element | Document>(element: T, events: Events) => T;
     export const setTextContent: (element: Node, text: string) => boolean;
     export const setAttribute: (element: Element, name: string, value: string | undefined) => boolean;
     export const setStyle: (element: HTMLElement | SVGElement, name: string, value: string | undefined) => boolean;
@@ -156,8 +156,8 @@ declare module "script/html" {
         children?: (Node | Source<Tag>)[];
     } & Attributes;
     export type Child = Required<Source<Tag>>["children"][number];
-    export const addEvents: <T extends Element>(element: T, events: ELEMENT.Events) => T;
-    export const removeEvents: <T extends Element>(element: T, events: ELEMENT.Events) => T;
+    export const addEvents: <T extends Element | Document>(element: T, events: ELEMENT.Events) => T;
+    export const removeEvents: <T extends Element | Document>(element: T, events: ELEMENT.Events) => T;
     export const setTextContent: (element: Node, text: string) => boolean;
     export const setAttribute: (element: Element, name: string, value: string | undefined) => boolean;
     export const setStyle: (element: HTMLElement | SVGElement, name: string, value: string | undefined) => boolean;
@@ -182,8 +182,8 @@ declare module "script/svg" {
         children?: (Node | Source<Tag>)[];
     } & Attributes;
     export type Child = Required<Source<Tag>>["children"][number];
-    export const addEvents: <T extends Element>(element: T, events: ELEMENT.Events) => T;
-    export const removeEvents: <T extends Element>(element: T, events: ELEMENT.Events) => T;
+    export const addEvents: <T extends Element | Document>(element: T, events: ELEMENT.Events) => T;
+    export const removeEvents: <T extends Element | Document>(element: T, events: ELEMENT.Events) => T;
     export const setTextContent: (element: Node, text: string) => boolean;
     export const setAttribute: (element: Element, name: string, value: string | undefined) => boolean;
     export const setStyle: (element: HTMLElement | SVGElement, name: string, value: string | undefined) => boolean;
@@ -1764,6 +1764,13 @@ declare module "script/render" {
     export const newPopup: <T extends Type.ViewPopup>(popup: T) => void;
     export const backPopup: () => void;
     export const nextPopup: (popup: Type.ViewPopup) => void;
+}
+declare module "script/document" {
+    import * as ELEMENT from "script/element";
+    export type EventListener<key extends keyof GlobalEventHandlersEventMap> = ELEMENT.EventListener<key>;
+    export type Events = ELEMENT.Events;
+    export const addEvents: (events: Events) => Document;
+    export const removeEvents: (events: Events) => Document;
 }
 declare module "script/ruler" {
     import * as Type from "script/type";
