@@ -10197,9 +10197,8 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                 dirty.add(Render.RenderItemId.Size);
                 dirty.add("CURSOR_GARBAGE_COLLECTOR");
                 // dirty.add("CURSOR_LANE"); Render.RenderItemId.Size 内でセットされる。
-                // dirty.add("CURSOR_LINE"); Render.RenderItemId.Size 内でセットされる。
-                // dirty.add("CURSOR_HANDLE"); Render.RenderItemId.Size 内でセットされる。
-                // dirty.add("CURSOR_HANDLE"); Render.RenderItemId.Size 内でセットされる。
+                // dirty.add("CURSOR_LINE"); "CURSOR_LANE" 内でセットされる。
+                // dirty.add("CURSOR_HANDLE"); "CURSOR_LANE" 内でセットされる。
                 dirty.add(Render.RenderItemId.Popup);
             }
             if (dirty.has("LANE_GARBAGE_COLLECTOR")) {
@@ -10259,6 +10258,10 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                     case "CURSOR_LANE":
                         const { slide, lane } = Model.getSlideAndLane(0);
                         (0, exports.drawCursorLane)(view, slide, lane);
+                        for (let i = 0; i < Model.data.cursor.length; ++i) {
+                            Render.markDirty(`CURSOR_LINE:${i}`);
+                            Render.markDirty(`CURSOR_HANDLE:${i}`);
+                        }
                         break;
                     default:
                         if (i.startsWith("LANE:")) {
@@ -11052,6 +11055,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
     };
     exports.garbageCollectLanes = garbageCollectLanes;
     const garbageCollectCursors = (_view) => {
+        (0, exports.makeSureCursorLayer)().innerHTML = "";
     };
     exports.garbageCollectCursors = garbageCollectCursors;
     const cursorProperties = [];
@@ -11507,11 +11511,6 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         UI.cursorLaneSvg.style.left = `${width}px`;
         Render.markDirty("BACKGROUND");
         Render.markDirty("CURSOR_LANE");
-        // Render.markDirty("CURSOR_LINE");
-        for (let i = 0; i < Model.data.cursor.length; ++i) {
-            Render.markDirty(`CURSOR_LINE:${i}`);
-            Render.markDirty(`CURSOR_HANDLE:${i}`);
-        }
     };
     exports.resize = resize;
     const getCursorLaneBezelWidth = () => Model.data.cursor.length <= 1 ? 0 : config_json_6.default.render.ruler.cursorLaneBezelWidth;

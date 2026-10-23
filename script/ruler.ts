@@ -44,9 +44,8 @@ export const renderer = (model: Type.Model, view: Type.View, dirty: Set<string>,
             dirty.add(Render.RenderItemId.Size);
             dirty.add("CURSOR_GARBAGE_COLLECTOR");
             // dirty.add("CURSOR_LANE"); Render.RenderItemId.Size 内でセットされる。
-            // dirty.add("CURSOR_LINE"); Render.RenderItemId.Size 内でセットされる。
-            // dirty.add("CURSOR_HANDLE"); Render.RenderItemId.Size 内でセットされる。
-            // dirty.add("CURSOR_HANDLE"); Render.RenderItemId.Size 内でセットされる。
+            // dirty.add("CURSOR_LINE"); "CURSOR_LANE" 内でセットされる。
+            // dirty.add("CURSOR_HANDLE"); "CURSOR_LANE" 内でセットされる。
             dirty.add(Render.RenderItemId.Popup);
         }
         if (dirty.has("LANE_GARBAGE_COLLECTOR"))
@@ -126,6 +125,11 @@ export const renderer = (model: Type.Model, view: Type.View, dirty: Set<string>,
             case "CURSOR_LANE":
                 const { slide, lane } = Model.getSlideAndLane(0);
                 drawCursorLane(view, slide, lane);
+                for (let i = 0; i < Model.data.cursor.length; ++i)
+                {
+                    Render.markDirty(`CURSOR_LINE:${i}`);
+                    Render.markDirty(`CURSOR_HANDLE:${i}`);
+                }
                 break;
             default:
                 if (i.startsWith("LANE:"))
@@ -1797,12 +1801,6 @@ export const resize = () =>
     UI.cursorLaneSvg.style.left = `${width}px`;
     Render.markDirty("BACKGROUND");
     Render.markDirty("CURSOR_LANE");
-    // Render.markDirty("CURSOR_LINE");
-    for (let i = 0; i < Model.data.cursor.length; ++i)
-    {
-        Render.markDirty(`CURSOR_LINE:${i}`);
-        Render.markDirty(`CURSOR_HANDLE:${i}`);
-    }
 };
 export const getCursorLaneBezelWidth = (): number =>
     Model.data.cursor.length <= 1 ? 0: config.render.ruler.cursorLaneBezelWidth;
