@@ -1216,6 +1216,7 @@ export const garbageCollectLanes = (_view: Type.View): void =>
 };
 export const garbageCollectCursors = (_view: Type.View): void =>
 {
+    makeSureCursorLayer().innerHTML = "";
 };
 const cursorProperties: { anchorDragStartY: number, initialDraggingAnchorPosition: number | undefined,}[] = [];
 // let anchorDragStartY = 0;
