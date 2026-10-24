@@ -12,6 +12,7 @@ import config from "@resource/config.json";
 export let scale = 1.0;
 export let LaneWidths: number[] = [];
 export let isFoldedCursorLane = false;
+export let isDefinedLayers = false;
 export const toggleFoldCursorLane = () =>
     isFoldedCursorLane = !isFoldedCursorLane;
 export const cursorLaneWidth = config.render.ruler.handleRadius *2;
@@ -41,8 +42,8 @@ export const renderer = (model: Type.Model, view: Type.View, dirty: Set<string>,
             {
                 dirty.add(`LANE:${i}`);
             }
-            dirty.add(Render.RenderItemId.Size);
             dirty.add("CURSOR_GARBAGE_COLLECTOR");
+            dirty.add(Render.RenderItemId.Size);
             // dirty.add("CURSOR_LANE"); Render.RenderItemId.Size 内でセットされる。
             // dirty.add("CURSOR_LINE"); "CURSOR_LANE" 内でセットされる。
             // dirty.add("CURSOR_HANDLE"); "CURSOR_LANE" 内でセットされる。
@@ -56,7 +57,10 @@ export const renderer = (model: Type.Model, view: Type.View, dirty: Set<string>,
         }
         if (dirty.has("CURSOR_GARBAGE_COLLECTOR"))
         {
-            garbageCollectCursors(view);
+            if (isDefinedLayers)
+            {
+                garbageCollectCursors(view);
+            }
             dirty.delete("CURSOR_GARBAGE_COLLECTOR");
         }
         for(const i of dirty)
@@ -114,10 +118,18 @@ export const renderer = (model: Type.Model, view: Type.View, dirty: Set<string>,
             //     drawCursorLine(model, view, 0, options);
             //     break;
             case "LAYERS":
-                makeSureAreaLayer();
-                makeSureCursorLayer();
-                makeSureTickLayer();
-                makeSureLabelLayer();
+                if ( ! isDefinedLayers)
+                {
+                    makeSureAreaLayer();
+                    makeSureCursorLayer();
+                    makeSureTickLayer();
+                    makeSureLabelLayer();
+                    isDefinedLayers = true;
+                }
+                else
+                {
+                    console.warn(`🦋 FIXME: Layers already defined`);
+                }
                 break;
             case Render.RenderItemId.Popup:
                 drawPopup(view);

@@ -10155,7 +10155,7 @@ define("script/document", ["require", "exports", "script/element"], function (re
 define("script/ruler", ["require", "exports", "script/locale", "script/type", "script/calculation", "script/model", "script/ui", "script/theme", "script/render", "script/document", "script/svg", "script/comparer", "resource/config"], function (require, exports, Locale, Type, Calculation, Model, UI, Theme, Render, DOCUMENT, SVG, Comparer, config_json_6) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.getRulerWidth = exports.getCursorLaneWidth = exports.getCursorLaneBezelWidth = exports.resize = exports.drawLaneUnitPopup = exports.drawLanePropertyPopup = exports.drawPopup = exports.drawCursorHandle = exports.drawCursorLine = exports.getCursorColor = exports.slideCursor = exports.snapHorizontalPosition = exports.snapVerticalPosition = exports.getAreaPositions = exports.nextPosition = exports.snapPosition = exports.regulateReferencePositions = exports.getReferenceLaneIndexFromEvent = exports.garbageCollectCursors = exports.garbageCollectLanes = exports.drawTicks = exports.calculateMinimumFractionDigits = exports.getFractionDigitsFromUnit = exports.makeShortNumberLabel = exports.makeNumberLabel = exports.makeNumberLabelPart = exports.drawAreas = exports.getAreaFill = exports.drawCursorLane = exports.drawCursorLaneTicks = exports.drawCursorLaneArea = exports.drawLane = exports.drawLeveledText = exports.getLeftOfCursorLane = exports.getLeftOfLane = exports.makeSureSlide = exports.makeStops = exports.makeVerticalGradient = exports.makeLinerGradient = exports.drawGradientDefines = exports.getLaneIndexFromPosition = exports.makeSureLabelLayer = exports.makeSureTickLayer = exports.makeSureCursorLayer = exports.makeSureAreaLayer = exports.renderer = exports.setLaneWidth = exports.cursorLaneWidth = exports.toggleFoldCursorLane = exports.isFoldedCursorLane = exports.LaneWidths = exports.scale = void 0;
+    exports.initialize = exports.getRulerWidth = exports.getCursorLaneWidth = exports.getCursorLaneBezelWidth = exports.resize = exports.drawLaneUnitPopup = exports.drawLanePropertyPopup = exports.drawPopup = exports.drawCursorHandle = exports.drawCursorLine = exports.getCursorColor = exports.slideCursor = exports.snapHorizontalPosition = exports.snapVerticalPosition = exports.getAreaPositions = exports.nextPosition = exports.snapPosition = exports.regulateReferencePositions = exports.getReferenceLaneIndexFromEvent = exports.garbageCollectCursors = exports.garbageCollectLanes = exports.drawTicks = exports.calculateMinimumFractionDigits = exports.getFractionDigitsFromUnit = exports.makeShortNumberLabel = exports.makeNumberLabel = exports.makeNumberLabelPart = exports.drawAreas = exports.getAreaFill = exports.drawCursorLane = exports.drawCursorLaneTicks = exports.drawCursorLaneArea = exports.drawLane = exports.drawLeveledText = exports.getLeftOfCursorLane = exports.getLeftOfLane = exports.makeSureSlide = exports.makeStops = exports.makeVerticalGradient = exports.makeLinerGradient = exports.drawGradientDefines = exports.getLaneIndexFromPosition = exports.makeSureLabelLayer = exports.makeSureTickLayer = exports.makeSureCursorLayer = exports.makeSureAreaLayer = exports.renderer = exports.setLaneWidth = exports.cursorLaneWidth = exports.toggleFoldCursorLane = exports.isDefinedLayers = exports.isFoldedCursorLane = exports.LaneWidths = exports.scale = void 0;
     Locale = __importStar(Locale);
     Type = __importStar(Type);
     Calculation = __importStar(Calculation);
@@ -10170,6 +10170,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
     exports.scale = 1.0;
     exports.LaneWidths = [];
     exports.isFoldedCursorLane = false;
+    exports.isDefinedLayers = false;
     const toggleFoldCursorLane = () => exports.isFoldedCursorLane = !exports.isFoldedCursorLane;
     exports.toggleFoldCursorLane = toggleFoldCursorLane;
     exports.cursorLaneWidth = config_json_6.default.render.ruler.handleRadius * 2;
@@ -10194,8 +10195,8 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                 for (let i = 0; i < Model.getAllLaneCount(); ++i) {
                     dirty.add(`LANE:${i}`);
                 }
-                dirty.add(Render.RenderItemId.Size);
                 dirty.add("CURSOR_GARBAGE_COLLECTOR");
+                dirty.add(Render.RenderItemId.Size);
                 // dirty.add("CURSOR_LANE"); Render.RenderItemId.Size 内でセットされる。
                 // dirty.add("CURSOR_LINE"); "CURSOR_LANE" 内でセットされる。
                 // dirty.add("CURSOR_HANDLE"); "CURSOR_LANE" 内でセットされる。
@@ -10207,7 +10208,9 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                 dirty.delete("LANE_GARBAGE_COLLECTOR");
             }
             if (dirty.has("CURSOR_GARBAGE_COLLECTOR")) {
-                (0, exports.garbageCollectCursors)(view);
+                if (exports.isDefinedLayers) {
+                    (0, exports.garbageCollectCursors)(view);
+                }
                 dirty.delete("CURSOR_GARBAGE_COLLECTOR");
             }
             for (const i of dirty) {
@@ -10247,10 +10250,16 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                     //     drawCursorLine(model, view, 0, options);
                     //     break;
                     case "LAYERS":
-                        (0, exports.makeSureAreaLayer)();
-                        (0, exports.makeSureCursorLayer)();
-                        (0, exports.makeSureTickLayer)();
-                        (0, exports.makeSureLabelLayer)();
+                        if (!exports.isDefinedLayers) {
+                            (0, exports.makeSureAreaLayer)();
+                            (0, exports.makeSureCursorLayer)();
+                            (0, exports.makeSureTickLayer)();
+                            (0, exports.makeSureLabelLayer)();
+                            exports.isDefinedLayers = true;
+                        }
+                        else {
+                            console.warn(`🦋 FIXME: Layers already defined`);
+                        }
                         break;
                     case Render.RenderItemId.Popup:
                         (0, exports.drawPopup)(view);

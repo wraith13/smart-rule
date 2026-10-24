@@ -1778,6 +1778,7 @@ declare module "script/ruler" {
     export let scale: number;
     export let LaneWidths: number[];
     export let isFoldedCursorLane: boolean;
+    export let isDefinedLayers: boolean;
     export const toggleFoldCursorLane: () => boolean;
     export const cursorLaneWidth: number;
     export const setLaneWidth: (laneIndex: number, width: number) => void;
