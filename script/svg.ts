@@ -59,3 +59,4 @@ export const makeSure = <T extends Tag>(parent: Element, source: Source<T>, attr
     }
     return result;
 };
+export const get = ELEMENT.get;

@@ -230,7 +230,7 @@ define("script/url", ["require", "exports"], function (require, exports) {
 define("script/element", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.makeSelector = exports.setAttributes = exports.setStyles = exports.setStyle = exports.setAttribute = exports.setTextContent = exports.removeEvents = exports.addEvents = void 0;
+    exports.get = exports.makeSelector = exports.setAttributes = exports.setStyles = exports.setStyle = exports.setAttribute = exports.setTextContent = exports.removeEvents = exports.addEvents = void 0;
     const addEvents = (element, events) => {
         for (const [event, listener] of Object.entries(events)) {
             if ("listener" in listener) {
@@ -362,11 +362,13 @@ define("script/element", ["require", "exports"], function (require, exports) {
         return selector;
     };
     exports.makeSelector = makeSelector;
+    const get = (parent, source) => parent.querySelector((0, exports.makeSelector)(source));
+    exports.get = get;
 });
 define("script/html", ["require", "exports", "script/element"], function (require, exports, ELEMENT) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.makeSure = exports.make = exports.makeElement = exports.getElementById = exports.makeSelector = exports.setAttributes = exports.setStyle = exports.setAttribute = exports.setTextContent = exports.removeEvents = exports.addEvents = void 0;
+    exports.get = exports.makeSure = exports.make = exports.makeElement = exports.getElementById = exports.makeSelector = exports.setAttributes = exports.setStyle = exports.setAttribute = exports.setTextContent = exports.removeEvents = exports.addEvents = void 0;
     ELEMENT = __importStar(ELEMENT);
     exports.addEvents = ELEMENT.addEvents;
     exports.removeEvents = ELEMENT.removeEvents;
@@ -413,11 +415,12 @@ define("script/html", ["require", "exports", "script/element"], function (requir
         return result;
     };
     exports.makeSure = makeSure;
+    exports.get = ELEMENT.get;
 });
 define("script/svg", ["require", "exports", "script/element"], function (require, exports, ELEMENT) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.makeSure = exports.make = exports.makeElement = exports.getElementById = exports.makeSelector = exports.setAttributes = exports.setStyle = exports.setAttribute = exports.setTextContent = exports.removeEvents = exports.addEvents = void 0;
+    exports.get = exports.makeSure = exports.make = exports.makeElement = exports.getElementById = exports.makeSelector = exports.setAttributes = exports.setStyle = exports.setAttribute = exports.setTextContent = exports.removeEvents = exports.addEvents = void 0;
     ELEMENT = __importStar(ELEMENT);
     exports.addEvents = ELEMENT.addEvents;
     exports.removeEvents = ELEMENT.removeEvents;
@@ -464,6 +467,7 @@ define("script/svg", ["require", "exports", "script/element"], function (require
         return result;
     };
     exports.makeSure = makeSure;
+    exports.get = ELEMENT.get;
 });
 define("script/ui", ["require", "exports", "script/locale", "script/html", "script/svg"], function (require, exports, Locale, HTML, SVG) {
     "use strict";
@@ -10155,7 +10159,7 @@ define("script/document", ["require", "exports", "script/element"], function (re
 define("script/ruler", ["require", "exports", "script/locale", "script/type", "script/calculation", "script/model", "script/ui", "script/theme", "script/render", "script/document", "script/svg", "script/comparer", "resource/config"], function (require, exports, Locale, Type, Calculation, Model, UI, Theme, Render, DOCUMENT, SVG, Comparer, config_json_6) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.getRulerWidth = exports.getCursorLaneWidth = exports.getCursorLaneBezelWidth = exports.resize = exports.drawLaneUnitPopup = exports.drawLanePropertyPopup = exports.drawPopup = exports.drawCursorHandle = exports.drawCursorLine = exports.getCursorColor = exports.slideCursor = exports.snapHorizontalPosition = exports.snapVerticalPosition = exports.getAreaPositions = exports.nextPosition = exports.snapPosition = exports.regulateReferencePositions = exports.getReferenceLaneIndexFromEvent = exports.garbageCollectCursors = exports.garbageCollectLanes = exports.drawTicks = exports.calculateMinimumFractionDigits = exports.getFractionDigitsFromUnit = exports.makeShortNumberLabel = exports.makeNumberLabel = exports.makeNumberLabelPart = exports.drawAreas = exports.getAreaFill = exports.drawCursorLane = exports.drawCursorLaneTicks = exports.drawCursorLaneArea = exports.drawLane = exports.drawLeveledText = exports.getLeftOfCursorLane = exports.getLeftOfLane = exports.makeSureSlide = exports.makeStops = exports.makeVerticalGradient = exports.makeLinerGradient = exports.drawGradientDefines = exports.getLaneIndexFromPosition = exports.makeSureLabelLayer = exports.makeSureTickLayer = exports.makeSureCursorLayer = exports.makeSureAreaLayer = exports.renderer = exports.setLaneWidth = exports.cursorLaneWidth = exports.toggleFoldCursorLane = exports.isDefinedLayers = exports.isFoldedCursorLane = exports.LaneWidths = exports.scale = void 0;
+    exports.initialize = exports.getRulerWidth = exports.getCursorLaneWidth = exports.getCursorLaneBezelWidth = exports.resize = exports.drawLaneUnitPopup = exports.drawLanePropertyPopup = exports.drawPopup = exports.drawCursorHandle = exports.drawCursorLine = exports.getCursorColor = exports.slideCursor = exports.snapHorizontalPosition = exports.snapVerticalPosition = exports.getAreaPositions = exports.nextPosition = exports.snapPosition = exports.regulateReferencePositions = exports.getReferenceLaneIndexFromEvent = exports.garbageCollectCursors = exports.garbageCollectLanes = exports.drawTicks = exports.calculateMinimumFractionDigits = exports.getFractionDigitsFromUnit = exports.makeShortNumberLabel = exports.makeNumberLabel = exports.makeNumberLabelPart = exports.drawAreas = exports.getAreaFill = exports.drawCursorLane = exports.drawCursorLaneTicks = exports.drawCursorLaneArea = exports.drawLane = exports.drawLeveledText = exports.getLeftOfCursorLane = exports.getLeftOfLane = exports.makeSureSlide = exports.makeStops = exports.makeVerticalGradient = exports.makeLinerGradient = exports.drawGradientDefines = exports.getLaneIndexFromPosition = exports.makeSureLabelLayer = exports.makeSureTickLayer = exports.makeSureCursorLayer = exports.getCursorLayer = exports.cursorLayerSource = exports.makeSureAreaLayer = exports.renderer = exports.setLaneWidth = exports.cursorLaneWidth = exports.toggleFoldCursorLane = exports.isFoldedCursorLane = exports.LaneWidths = exports.scale = void 0;
     Locale = __importStar(Locale);
     Type = __importStar(Type);
     Calculation = __importStar(Calculation);
@@ -10170,7 +10174,6 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
     exports.scale = 1.0;
     exports.LaneWidths = [];
     exports.isFoldedCursorLane = false;
-    exports.isDefinedLayers = false;
     const toggleFoldCursorLane = () => exports.isFoldedCursorLane = !exports.isFoldedCursorLane;
     exports.toggleFoldCursorLane = toggleFoldCursorLane;
     exports.cursorLaneWidth = config_json_6.default.render.ruler.handleRadius * 2;
@@ -10208,7 +10211,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                 dirty.delete("LANE_GARBAGE_COLLECTOR");
             }
             if (dirty.has("CURSOR_GARBAGE_COLLECTOR")) {
-                if (exports.isDefinedLayers) {
+                if ((0, exports.getCursorLayer)()) {
                     (0, exports.garbageCollectCursors)(view);
                 }
                 dirty.delete("CURSOR_GARBAGE_COLLECTOR");
@@ -10250,16 +10253,10 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                     //     drawCursorLine(model, view, 0, options);
                     //     break;
                     case "LAYERS":
-                        if (!exports.isDefinedLayers) {
-                            (0, exports.makeSureAreaLayer)();
-                            (0, exports.makeSureCursorLayer)();
-                            (0, exports.makeSureTickLayer)();
-                            (0, exports.makeSureLabelLayer)();
-                            exports.isDefinedLayers = true;
-                        }
-                        else {
-                            console.warn(`🦋 FIXME: Layers already defined`);
-                        }
+                        (0, exports.makeSureAreaLayer)();
+                        (0, exports.makeSureCursorLayer)();
+                        (0, exports.makeSureTickLayer)();
+                        (0, exports.makeSureLabelLayer)();
                         break;
                     case Render.RenderItemId.Popup:
                         (0, exports.drawPopup)(view);
@@ -10319,10 +10316,10 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         class: "area-layer",
     });
     exports.makeSureAreaLayer = makeSureAreaLayer;
-    const makeSureCursorLayer = () => SVG.makeSure(UI.rulerSvg, {
-        tag: "g",
-        class: "cursor-line-layer",
-    });
+    exports.cursorLayerSource = { tag: "g", class: "cursor-line-layer", };
+    const getCursorLayer = () => SVG.get(UI.rulerSvg, exports.cursorLayerSource);
+    exports.getCursorLayer = getCursorLayer;
+    const makeSureCursorLayer = () => SVG.makeSure(UI.rulerSvg, exports.cursorLayerSource);
     exports.makeSureCursorLayer = makeSureCursorLayer;
     const makeSureTickLayer = () => SVG.makeSure(UI.rulerSvg, {
         tag: "g",

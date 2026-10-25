@@ -160,3 +160,5 @@ export const makeSelector = (source: { tag?: Tag } & Attributes): string =>
     }
     return selector;
 };
+export const get = <T extends Tag>(parent: Element, source: Source<T>) =>
+    parent.querySelector<(HTMLElementTagNameMap & SVGElementTagNameMap)[T]>(makeSelector(source));

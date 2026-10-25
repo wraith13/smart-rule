@@ -143,6 +143,7 @@ declare module "script/element" {
     export const makeSelector: (source: {
         tag?: Tag;
     } & Attributes) => string;
+    export const get: <T extends Tag>(parent: Element, source: Source<T>) => (HTMLElementTagNameMap & SVGElementTagNameMap)[T] | null;
 }
 declare module "script/html" {
     import * as ELEMENT from "script/element";
@@ -169,6 +170,7 @@ declare module "script/html" {
     export const makeElement: <T extends Tag>(tag: T) => ElementTagNameMap[T];
     export const make: <T extends Tag>(source: Source<T>) => ElementTagNameMap[T];
     export const makeSure: <T extends Tag>(parent: Element, source: Source<T>, attributes?: Attributes) => ElementTagNameMap[T];
+    export const get: <T extends ELEMENT.Tag>(parent: Element, source: ELEMENT.Source<T>) => (HTMLElementTagNameMap & SVGElementTagNameMap)[T] | null;
 }
 declare module "script/svg" {
     import * as ELEMENT from "script/element";
@@ -195,6 +197,7 @@ declare module "script/svg" {
     export const makeElement: <T extends Tag>(tag: T) => ElementTagNameMap[T];
     export const make: <T extends Tag>(source: Source<T>) => ElementTagNameMap[T];
     export const makeSure: <T extends Tag>(parent: Element, source: Source<T>, attributes?: Attributes) => ElementTagNameMap[T];
+    export const get: <T extends ELEMENT.Tag>(parent: Element, source: ELEMENT.Source<T>) => (HTMLElementTagNameMap & SVGElementTagNameMap)[T] | null;
 }
 declare module "script/ui" {
     export const setAriaHidden: (element: HTMLElement | SVGElement, hidden: boolean) => void;
@@ -1778,12 +1781,16 @@ declare module "script/ruler" {
     export let scale: number;
     export let LaneWidths: number[];
     export let isFoldedCursorLane: boolean;
-    export let isDefinedLayers: boolean;
     export const toggleFoldCursorLane: () => boolean;
     export const cursorLaneWidth: number;
     export const setLaneWidth: (laneIndex: number, width: number) => void;
     export const renderer: (model: Type.Model, view: Type.View, dirty: Set<string>, timeLimit?: number, options?: Type.RenderingOptions) => void;
     export const makeSureAreaLayer: () => SVGGElement;
+    export const cursorLayerSource: {
+        readonly tag: "g";
+        readonly class: "cursor-line-layer";
+    };
+    export const getCursorLayer: () => SVGGElement | null;
     export const makeSureCursorLayer: () => SVGGElement;
     export const makeSureTickLayer: () => SVGGElement;
     export const makeSureLabelLayer: () => SVGGElement;

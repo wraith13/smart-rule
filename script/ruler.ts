@@ -12,7 +12,6 @@ import config from "@resource/config.json";
 export let scale = 1.0;
 export let LaneWidths: number[] = [];
 export let isFoldedCursorLane = false;
-export let isDefinedLayers = false;
 export const toggleFoldCursorLane = () =>
     isFoldedCursorLane = !isFoldedCursorLane;
 export const cursorLaneWidth = config.render.ruler.handleRadius *2;
@@ -57,7 +56,7 @@ export const renderer = (model: Type.Model, view: Type.View, dirty: Set<string>,
         }
         if (dirty.has("CURSOR_GARBAGE_COLLECTOR"))
         {
-            if (isDefinedLayers)
+            if (getCursorLayer())
             {
                 garbageCollectCursors(view);
             }
@@ -118,18 +117,10 @@ export const renderer = (model: Type.Model, view: Type.View, dirty: Set<string>,
             //     drawCursorLine(model, view, 0, options);
             //     break;
             case "LAYERS":
-                if ( ! isDefinedLayers)
-                {
-                    makeSureAreaLayer();
-                    makeSureCursorLayer();
-                    makeSureTickLayer();
-                    makeSureLabelLayer();
-                    isDefinedLayers = true;
-                }
-                else
-                {
-                    console.warn(`🦋 FIXME: Layers already defined`);
-                }
+                makeSureAreaLayer();
+                makeSureCursorLayer();
+                makeSureTickLayer();
+                makeSureLabelLayer();
                 break;
             case Render.RenderItemId.Popup:
                 drawPopup(view);
@@ -197,7 +188,7 @@ export const renderer = (model: Type.Model, view: Type.View, dirty: Set<string>,
         }
     }
 };
-export const makeSureAreaLayer = () =>SVG.makeSure
+export const makeSureAreaLayer = () => SVG.makeSure
 (
     UI.rulerSvg,
     {
@@ -205,15 +196,10 @@ export const makeSureAreaLayer = () =>SVG.makeSure
         class: "area-layer",
     }
 );
-export const makeSureCursorLayer = () =>SVG.makeSure
-(
-    UI.rulerSvg,
-    {
-        tag: "g",
-        class: "cursor-line-layer",
-    }
-);
-export const makeSureTickLayer = () =>SVG.makeSure
+export const cursorLayerSource = { tag: "g", class: "cursor-line-layer", } as const;
+export const getCursorLayer = () => SVG.get(UI.rulerSvg, cursorLayerSource);
+export const makeSureCursorLayer = () => SVG.makeSure(UI.rulerSvg, cursorLayerSource);
+export const makeSureTickLayer = () => SVG.makeSure
 (
     UI.rulerSvg,
     {
@@ -221,7 +207,7 @@ export const makeSureTickLayer = () =>SVG.makeSure
         class: "tick-layer",
     }
 );
-export const makeSureLabelLayer = () =>SVG.makeSure
+export const makeSureLabelLayer = () => SVG.makeSure
 (
     UI.rulerSvg,
     {
