@@ -169,8 +169,8 @@ declare module "script/html" {
     export const getElementById: <T extends keyof ElementTagNameMap>(tag: T, id: string) => ElementTagNameMap[T];
     export const makeElement: <T extends Tag>(tag: T) => ElementTagNameMap[T];
     export const make: <T extends Tag>(source: Source<T>) => ElementTagNameMap[T];
-    export const makeSure: <T extends Tag>(parent: Element, source: Source<T>, attributes?: Attributes) => ElementTagNameMap[T];
     export const get: <T extends ELEMENT.Tag>(parent: Element, source: ELEMENT.Source<T>) => (HTMLElementTagNameMap & SVGElementTagNameMap)[T] | null;
+    export const makeSure: <T extends Tag>(parent: Element, source: Source<T>, attributes?: Attributes) => ElementTagNameMap[T];
 }
 declare module "script/svg" {
     import * as ELEMENT from "script/element";
@@ -196,8 +196,8 @@ declare module "script/svg" {
     export const getElementById: <T extends keyof ElementTagNameMap>(tag: T, id: string) => ElementTagNameMap[T];
     export const makeElement: <T extends Tag>(tag: T) => ElementTagNameMap[T];
     export const make: <T extends Tag>(source: Source<T>) => ElementTagNameMap[T];
-    export const makeSure: <T extends Tag>(parent: Element, source: Source<T>, attributes?: Attributes) => ElementTagNameMap[T];
     export const get: <T extends ELEMENT.Tag>(parent: Element, source: ELEMENT.Source<T>) => (HTMLElementTagNameMap & SVGElementTagNameMap)[T] | null;
+    export const makeSure: <T extends Tag>(parent: Element, source: Source<T>, attributes?: Attributes) => ElementTagNameMap[T];
 }
 declare module "script/ui" {
     export const setAriaHidden: (element: HTMLElement | SVGElement, hidden: boolean) => void;

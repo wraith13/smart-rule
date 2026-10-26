@@ -368,7 +368,7 @@ define("script/element", ["require", "exports"], function (require, exports) {
 define("script/html", ["require", "exports", "script/element"], function (require, exports, ELEMENT) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.get = exports.makeSure = exports.make = exports.makeElement = exports.getElementById = exports.makeSelector = exports.setAttributes = exports.setStyle = exports.setAttribute = exports.setTextContent = exports.removeEvents = exports.addEvents = void 0;
+    exports.makeSure = exports.get = exports.make = exports.makeElement = exports.getElementById = exports.makeSelector = exports.setAttributes = exports.setStyle = exports.setAttribute = exports.setTextContent = exports.removeEvents = exports.addEvents = void 0;
     ELEMENT = __importStar(ELEMENT);
     exports.addEvents = ELEMENT.addEvents;
     exports.removeEvents = ELEMENT.removeEvents;
@@ -406,21 +406,21 @@ define("script/html", ["require", "exports", "script/element"], function (requir
         return result;
     };
     exports.make = make;
+    exports.get = ELEMENT.get;
     const makeSure = (parent, source, attributes) => {
         var _a;
-        const result = (_a = parent.querySelector((0, exports.makeSelector)(source))) !== null && _a !== void 0 ? _a : parent.appendChild((0, exports.make)(source));
+        const result = (_a = (0, exports.get)(parent, source)) !== null && _a !== void 0 ? _a : parent.appendChild((0, exports.make)(source));
         if (undefined !== attributes) {
             (0, exports.setAttributes)(result, attributes);
         }
         return result;
     };
     exports.makeSure = makeSure;
-    exports.get = ELEMENT.get;
 });
 define("script/svg", ["require", "exports", "script/element"], function (require, exports, ELEMENT) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.get = exports.makeSure = exports.make = exports.makeElement = exports.getElementById = exports.makeSelector = exports.setAttributes = exports.setStyle = exports.setAttribute = exports.setTextContent = exports.removeEvents = exports.addEvents = void 0;
+    exports.makeSure = exports.get = exports.make = exports.makeElement = exports.getElementById = exports.makeSelector = exports.setAttributes = exports.setStyle = exports.setAttribute = exports.setTextContent = exports.removeEvents = exports.addEvents = void 0;
     ELEMENT = __importStar(ELEMENT);
     exports.addEvents = ELEMENT.addEvents;
     exports.removeEvents = ELEMENT.removeEvents;
@@ -458,16 +458,16 @@ define("script/svg", ["require", "exports", "script/element"], function (require
         return result;
     };
     exports.make = make;
+    exports.get = ELEMENT.get;
     const makeSure = (parent, source, attributes) => {
         var _a;
-        const result = (_a = parent.querySelector((0, exports.makeSelector)(source))) !== null && _a !== void 0 ? _a : parent.appendChild((0, exports.make)(source));
+        const result = (_a = (0, exports.get)(parent, source)) !== null && _a !== void 0 ? _a : parent.appendChild((0, exports.make)(source));
         if (undefined !== attributes) {
             (0, exports.setAttributes)(result, attributes);
         }
         return result;
     };
     exports.makeSure = makeSure;
-    exports.get = ELEMENT.get;
 });
 define("script/ui", ["require", "exports", "script/locale", "script/html", "script/svg"], function (require, exports, Locale, HTML, SVG) {
     "use strict";
