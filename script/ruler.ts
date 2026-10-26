@@ -1090,6 +1090,14 @@ export const drawTicks = (view: Type.View, group: SVGGElement, slide: Type.Slide
             const hasDataArea = Model.hasDataArea(content.areas);
             const drawLeftTick = ! isRootSlide && ("left-end" === laneContext || "center" === laneContext || "single" === laneContext) && ! hasDataArea;
             const drawRightTick = isRootSlide || "right-end" === laneContext || "single" === laneContext || hasDataArea;
+if (1 === Model.getSlideIndex(slide))
+{
+    console.log(`drawTicks: isRootSlide=${isRootSlide}, laneContext=${laneContext}, hasDataArea=${hasDataArea}, drawLeftTick=${drawLeftTick}, drawRightTick=${drawRightTick}`);
+    if (hasDataArea)
+    {
+        console.log(`drawTicks: hasDataArea: areas=${JSON.stringify(content.areas)}`);
+    }
+}
             if (drawLeftTick)
             {
                 group.appendChild

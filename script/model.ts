@@ -3349,7 +3349,7 @@ export const getRootSlide = (): Type.SlideUnit =>
 export const getRootSlideAndRootLane = () =>
     ({ slide: getRootSlide(), lane: getRootLane() });
 export const isRootSlide = (indexOrSlide: number | Type.SlideUnit): boolean =>
-    (0 === (typeof indexOrSlide === "number" ? indexOrSlide : getSlideIndex(indexOrSlide)));
+    (0 === (typeof indexOrSlide === "number" ? indexOrSlide: getSlideIndex(indexOrSlide)));
 export const getSlideIndex = (slide: Type.SlideUnit): number =>
 {
     const index = data.slides.indexOf(slide);
@@ -3543,7 +3543,8 @@ export const getLaneContext = (lane: Type.Lane): Type.LaneContext =>
     }
 };
 export const hasDataArea = (areas: Type.Area[]): boolean =>
-    areas.some(area => undefined !== area.label || (undefined !== area.details && hasDataArea(area.details)));
+    areas.some(area => (undefined !== area.label && undefined !== area.lowerBound && undefined !== area.upperBound) || (undefined !== area.details && hasDataArea(area.details)));
+    // 末端のエリアはここで言う DataArea とは見做さない。 / EN: The area at the end is not considered a DataArea here.
 export const initialize = () =>
 {
     data.cursor = [ config.model.defaultCursor, ];

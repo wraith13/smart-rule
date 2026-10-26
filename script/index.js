@@ -9902,8 +9902,9 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
         }
     };
     exports.getLaneContext = getLaneContext;
-    const hasDataArea = (areas) => areas.some(area => undefined !== area.label || (undefined !== area.details && (0, exports.hasDataArea)(area.details)));
+    const hasDataArea = (areas) => areas.some(area => (undefined !== area.label && undefined !== area.lowerBound && undefined !== area.upperBound) || (undefined !== area.details && (0, exports.hasDataArea)(area.details)));
     exports.hasDataArea = hasDataArea;
+    // 末端のエリアはここで言う DataArea とは見做さない。 / EN: The area at the end is not considered a DataArea here.
     const initialize = () => {
         exports.data.cursor = [config_json_3.default.model.defaultCursor,];
         const cursorParam = Url.get("cursor");
@@ -10992,6 +10993,12 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                 const hasDataArea = Model.hasDataArea(content.areas);
                 const drawLeftTick = !isRootSlide && ("left-end" === laneContext || "center" === laneContext || "single" === laneContext) && !hasDataArea;
                 const drawRightTick = isRootSlide || "right-end" === laneContext || "single" === laneContext || hasDataArea;
+                if (1 === Model.getSlideIndex(slide)) {
+                    console.log(`drawTicks: isRootSlide=${isRootSlide}, laneContext=${laneContext}, hasDataArea=${hasDataArea}, drawLeftTick=${drawLeftTick}, drawRightTick=${drawRightTick}`);
+                    if (hasDataArea) {
+                        console.log(`drawTicks: hasDataArea: areas=${JSON.stringify(content.areas)}`);
+                    }
+                }
                 if (drawLeftTick) {
                     group.appendChild(SVG.make(Object.assign(Object.assign({ tag: "line", class: `tick tick-${tick.type}`, x1: left, y1: position, x2: left + tickTrait.length, y2: position, 
                         // stroke: tickTrait.color,
