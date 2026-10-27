@@ -816,6 +816,13 @@ define("resource/config", [], {
                     "dark": "#44444488"
                 }
             },
+            "cursorLaneSeparator": {
+                "width": 1,
+                "color": {
+                    "light": "#666666FF",
+                    "dark": "#AAAAAAFF"
+                }
+            },
             "laneSeparatorWidth": 1,
             "denseAreaColor": "rgba(0, 160, 0, 0.6)",
             "minusAreaColor": "rgba(40, 40, 255, 0.6)",
@@ -10684,7 +10691,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
             // const separator = isLastLane ?
             //     config.render.ruler.slideSeparator:
             //     config.render.ruler.laneSeparator;
-            const separator = config_json_6.default.render.ruler.slideSeparator;
+            const separator = config_json_6.default.render.ruler.cursorLaneSeparator;
             const left = (0, exports.getLeftOfCursorLane)(cursorIndex);
             SVG.makeSure(group, {
                 tag: "line",

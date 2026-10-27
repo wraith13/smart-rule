@@ -705,7 +705,7 @@ export const drawCursorLane = (view: Type.View, slide: Type.SlideUnit, lane: Typ
         // const separator = isLastLane ?
         //     config.render.ruler.slideSeparator:
         //     config.render.ruler.laneSeparator;
-        const separator = config.render.ruler.slideSeparator;
+        const separator = config.render.ruler.cursorLaneSeparator;
         const left = getLeftOfCursorLane(cursorIndex);
         SVG.makeSure
         (

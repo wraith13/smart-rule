@@ -167,6 +167,13 @@
                     "dark": "#44444488"
                 }
             },
+            "cursorLaneSeparator": {
+                "width": 1,
+                "color": {
+                    "light": "#666666FF",
+                    "dark": "#AAAAAAFF"
+                }
+            },
             "laneSeparatorWidth": 1,
             "denseAreaColor": "rgba(0, 160, 0, 0.6)",
             "minusAreaColor": "rgba(40, 40, 255, 0.6)",

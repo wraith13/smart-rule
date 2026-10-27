@@ -2041,6 +2041,13 @@ declare module "script/json-eval-updater" {
                             dark: string;
                         };
                     };
+                    cursorLaneSeparator: {
+                        width: number;
+                        color: {
+                            light: string;
+                            dark: string;
+                        };
+                    };
                     laneSeparatorWidth: number;
                     denseAreaColor: string;
                     minusAreaColor: string;
