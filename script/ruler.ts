@@ -41,7 +41,7 @@ export const renderer = (model: Type.Model, view: Type.View, dirty: Set<string>,
             {
                 dirty.add(`LANE:${i}`);
             }
-            dirty.add("CURSOR_GARBAGE_COLLECTOR");
+            // dirty.add("CURSOR_GARBAGE_COLLECTOR");
             dirty.add(Render.RenderItemId.Size);
             // dirty.add("CURSOR_LANE"); Render.RenderItemId.Size 内でセットされる。
             // dirty.add("CURSOR_LINE"); "CURSOR_LANE" 内でセットされる。

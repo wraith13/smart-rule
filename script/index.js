@@ -10206,7 +10206,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                 for (let i = 0; i < Model.getAllLaneCount(); ++i) {
                     dirty.add(`LANE:${i}`);
                 }
-                dirty.add("CURSOR_GARBAGE_COLLECTOR");
+                // dirty.add("CURSOR_GARBAGE_COLLECTOR");
                 dirty.add(Render.RenderItemId.Size);
                 // dirty.add("CURSOR_LANE"); Render.RenderItemId.Size 内でセットされる。
                 // dirty.add("CURSOR_LINE"); "CURSOR_LANE" 内でセットされる。
