@@ -10272,6 +10272,9 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                     case "CURSOR_LANE":
                         const { slide, lane } = Model.getSlideAndLane(0);
                         (0, exports.drawCursorLane)(view, slide, lane);
+                        if (Model.data.cursor.length < (0, exports.makeSureCursorLayer)().children.length) {
+                            dirty.add("CURSOR_GARBAGE_COLLECTOR");
+                        }
                         for (let i = 0; i < Model.data.cursor.length; ++i) {
                             Render.markDirty(`CURSOR_LINE:${i}`);
                             Render.markDirty(`CURSOR_HANDLE:${i}`);

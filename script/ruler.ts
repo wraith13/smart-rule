@@ -128,6 +128,10 @@ export const renderer = (model: Type.Model, view: Type.View, dirty: Set<string>,
             case "CURSOR_LANE":
                 const { slide, lane } = Model.getSlideAndLane(0);
                 drawCursorLane(view, slide, lane);
+                if (Model.data.cursor.length < makeSureCursorLayer().children.length)
+                {
+                    dirty.add("CURSOR_GARBAGE_COLLECTOR");
+                }
                 for (let i = 0; i < Model.data.cursor.length; ++i)
                 {
                     Render.markDirty(`CURSOR_LINE:${i}`);
