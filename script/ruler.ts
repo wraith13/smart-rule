@@ -1067,6 +1067,8 @@ export const calculateMinimumFractionDigits = (ticks: Type.Tick[]): Type.Tick[] 
     }
     return ticks;
 };
+export const isPrimary1Tick = (slide: Type.SlideUnit, lane: Type.Lane, tick: Type.Tick): boolean =>
+    1 === Type.getTickValue(tick) && 1 === Model.getLinearPositionAt(slide, lane, tick.value);
 export const drawTicks = (view: Type.View, group: SVGGElement, slide: Type.SlideUnit, lane: Type.Lane, content: Type.LaneContent): void =>
 {
     const isConstantTable = "constant" === lane.type;
@@ -1094,14 +1096,6 @@ export const drawTicks = (view: Type.View, group: SVGGElement, slide: Type.Slide
             const hasDataArea = Model.hasDataArea(content.areas);
             const drawLeftTick = ! isRootSlide && ("left-end" === laneContext || "center" === laneContext || "single" === laneContext) && ! hasDataArea;
             const drawRightTick = isRootSlide || "right-end" === laneContext || "single" === laneContext || hasDataArea;
-if (1 === Model.getSlideIndex(slide))
-{
-    console.log(`drawTicks: isRootSlide=${isRootSlide}, laneContext=${laneContext}, hasDataArea=${hasDataArea}, drawLeftTick=${drawLeftTick}, drawRightTick=${drawRightTick}`);
-    if (hasDataArea)
-    {
-        console.log(`drawTicks: hasDataArea: areas=${JSON.stringify(content.areas)}`);
-    }
-}
             if (drawLeftTick)
             {
                 group.appendChild
