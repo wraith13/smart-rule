@@ -1067,8 +1067,6 @@ export const calculateMinimumFractionDigits = (ticks: Type.Tick[]): Type.Tick[] 
     }
     return ticks;
 };
-export const isPrimary1Tick = (slide: Type.SlideUnit, lane: Type.Lane, tick: Type.Tick): boolean =>
-    1 === Type.getTickValue(tick) && 1 === Model.getLinearPositionAt(slide, lane, tick.value);
 export const drawTicks = (view: Type.View, group: SVGGElement, slide: Type.SlideUnit, lane: Type.Lane, content: Type.LaneContent): void =>
 {
     const isConstantTable = "constant" === lane.type;

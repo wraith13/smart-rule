@@ -8659,12 +8659,16 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                             }
                         }
                         else {
-                            if (0 === absoluteLog10) {
-                                ticks.push({
-                                    value,
-                                    type: "long",
-                                });
-                            }
+                            // arcsine の場合、x = 1 の場合は π/2 であり、1 だからといって問答無用で表示させると π/2 の表示と被ってしまうが、ここでは π/2 の方が優先するべき表示となる。
+                            // こちらを消すだけでなく、この上のブロックにも改修が必要。
+                            // if (0 === absoluteLog10)
+                            // {
+                            //     ticks.push
+                            //     ({
+                            //         value,
+                            //         type: "long",
+                            //     });
+                            // }
                         }
                         break;
                 }
@@ -11003,12 +11007,6 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                 const hasDataArea = Model.hasDataArea(content.areas);
                 const drawLeftTick = !isRootSlide && ("left-end" === laneContext || "center" === laneContext || "single" === laneContext) && !hasDataArea;
                 const drawRightTick = isRootSlide || "right-end" === laneContext || "single" === laneContext || hasDataArea;
-                if (1 === Model.getSlideIndex(slide)) {
-                    console.log(`drawTicks: isRootSlide=${isRootSlide}, laneContext=${laneContext}, hasDataArea=${hasDataArea}, drawLeftTick=${drawLeftTick}, drawRightTick=${drawRightTick}`);
-                    if (hasDataArea) {
-                        console.log(`drawTicks: hasDataArea: areas=${JSON.stringify(content.areas)}`);
-                    }
-                }
                 if (drawLeftTick) {
                     group.appendChild(SVG.make(Object.assign(Object.assign({ tag: "line", class: `tick tick-${tick.type}`, x1: left, y1: position, x2: left + tickTrait.length, y2: position, 
                         // stroke: tickTrait.color,

@@ -2067,14 +2067,17 @@ export const designCurvedTicks = (slide: Type.SlideUnit, view: Type.View, lane: 
                 }
                 else
                 {
-                    if (0 === absoluteLog10)
-                    {
-                        ticks.push
-                        ({
-                            value,
-                            type: "long",
-                        });
-                    }
+                    // arcsine の場合、x = 1 の場合は π/2 であり、1 だからといって問答無用で表示させると π/2 の表示と被ってしまうが、ここでは π/2 の方が優先するべき表示となる。
+                    // こちらを消すだけでなく、この上のブロックにも改修が必要。
+                    
+                    // if (0 === absoluteLog10)
+                    // {
+                    //     ticks.push
+                    //     ({
+                    //         value,
+                    //         type: "long",
+                    //     });
+                    // }
                 }
                 break;
             }
