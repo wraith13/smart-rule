@@ -8649,7 +8649,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                         const absoluteLog10 = Math.abs(Math.log10(numberValue));
                         const majorRate = Calculation.isNearlyEqual(absoluteLog10, Calculation.roundE(absoluteLog10)) ? 3.5 : 1;
                         const digitIndex = (0, exports.getDigitIndexFromWidth)(width * majorRate);
-                        if (0 < digitIndex) {
+                        if (0 < digitIndex && 0.01 <= width) {
                             if (digitIndex <= 1 || 0 === absoluteLog10 % digitIndex) {
                                 ticks.push({
                                     value,
@@ -8657,18 +8657,6 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                                     color: (0, exports.getDigitIndexFromWidth)(width * majorRate * 0.5) <= digitIndex || 0 === absoluteLog10 % (digitIndex * 9) ? undefined : "gray",
                                 });
                             }
-                        }
-                        else {
-                            // arcsine の場合、x = 1 の場合は π/2 であり、1 だからといって問答無用で表示させると π/2 の表示と被ってしまうが、ここでは π/2 の方が優先するべき表示となる。
-                            // こちらを消すだけでなく、この上のブロックにも改修が必要。
-                            // if (0 === absoluteLog10)
-                            // {
-                            //     ticks.push
-                            //     ({
-                            //         value,
-                            //         type: "long",
-                            //     });
-                            // }
                         }
                         break;
                 }
