@@ -3015,7 +3015,17 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
 {
     const isInverted = isInvertedLane(lane);
     const valueTickWindow = PositionTickWindowToValueTickWindow(slide, lane, view, tickWindow);
-    const positionTickWindow = ValueTickWindowToPositionTickWindow(slide, lane, view, valueTickWindow);
+    // const positionTickWindow = ValueTickWindowToPositionTickWindow(slide, lane, view, valueTickWindow);
+    const positionTickWindow = ValueTickWindowToPositionTickWindow
+    (
+        slide,
+        lane,
+        view,
+        {
+            topValue: ( ! isInverted) ? getMinValue(lane) : getMaxValue(lane),
+            bottomValue: ( ! isInverted) ? getMaxValue(lane) : getMinValue(lane),
+        }
+    );
     const hasMinus = getMinValue(lane) < 0;
     const isExponential = "exponential" === lane.type;
     const minColor = hasMinus ? "$MINUS":
@@ -3254,7 +3264,7 @@ export const complementMinMaxArea = (slide: Type.SlideUnit, view: Type.View, lan
             {
                 content.areas.push
                 ({
-                    lowerBound: ( ! isInverted) ? undefined:  Type.getExValueNumber(valueTickWindow.topValue),
+                    lowerBound: ( ! isInverted) ? undefined: Type.getExValueNumber(valueTickWindow.topValue),
                     upperBound: ( ! isInverted) ? (isExponential ? getMinValue(lane): Type.getExValueNumber(valueTickWindow.topValue)): undefined,
                     fill: ( ! isInverted) ? minColor: "$MAX",
                     label: makeApproximateLabel(! isInverted ? (isExponential ? "1": (hasMinus ? "-∞": "1/∞")): "∞"),

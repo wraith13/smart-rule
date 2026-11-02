@@ -9456,7 +9456,11 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
     const complementMinMaxArea = (slide, view, lane, tickWindow, content) => {
         const isInverted = (0, exports.isInvertedLane)(lane);
         const valueTickWindow = (0, exports.PositionTickWindowToValueTickWindow)(slide, lane, view, tickWindow);
-        const positionTickWindow = (0, exports.ValueTickWindowToPositionTickWindow)(slide, lane, view, valueTickWindow);
+        // const positionTickWindow = ValueTickWindowToPositionTickWindow(slide, lane, view, valueTickWindow);
+        const positionTickWindow = (0, exports.ValueTickWindowToPositionTickWindow)(slide, lane, view, {
+            topValue: (!isInverted) ? (0, exports.getMinValue)(lane) : (0, exports.getMaxValue)(lane),
+            bottomValue: (!isInverted) ? (0, exports.getMaxValue)(lane) : (0, exports.getMinValue)(lane),
+        });
         const hasMinus = (0, exports.getMinValue)(lane) < 0;
         const isExponential = "exponential" === lane.type;
         const minColor = hasMinus ? "$MINUS" :
