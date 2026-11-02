@@ -92,7 +92,6 @@ export const addHistoryLaneButton = HTML.getElementById("button", "add-history-l
 export const rulerHelpPanel = HTML.getElementById("div", "ruler-help-panel");
 export namespace SavePanel
 {
-    export const includeCursorCheckbox = HTML.getElementById("input", "include-cursor-checkbox");
     export const saveAsSvgImageButton = HTML.getElementById("button", "save-svg-image-button");
     export const saveAsPngImageButton = HTML.getElementById("button", "save-png-image-button");
     export const copyAsUrlButton = HTML.getElementById("button", "copy-as-url-button");
@@ -108,6 +107,7 @@ export namespace SettingsPanel
     export const approximateSymbolSelect = HTML.getElementById("select", "approximate-symbol-select");
     export const rangeSymbolSelect = HTML.getElementById("select", "range-symbol-select");
     export const orSymbolSelect = HTML.getElementById("select", "or-symbol-select");
+    export const showCursorCheckbox = HTML.getElementById("input", "show-cursor-checkbox");
 }
 export namespace ControlPanel
 {

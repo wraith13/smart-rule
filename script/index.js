@@ -40,7 +40,6 @@ define("resource/lang/en", [], {
     "lang-colon-suffix": ":",
     "Auto": "Auto",
     "Save": "Save",
-    "Include cursor": "Include cursor",
     "Save as SVG image": "Save as SVG image",
     "Save as PNG image": "Save as PNG image",
     "Copy as URL": "Copy as URL",
@@ -58,6 +57,7 @@ define("resource/lang/en", [], {
     "Approximate symbol": "Approximate symbol",
     "Range symbol": "Range symbol",
     "Or symbol": "Or symbol",
+    "Show cursor": "Show cursor",
     "Complex Number": "Complex Number",
     "Unit": "Unit",
     "Help": "Help",
@@ -79,7 +79,6 @@ define("resource/lang/ja", [], {
     "lang-colon-suffix": ":",
     "Auto": "自動",
     "Save": "保存",
-    "Include cursor": "カーソルを含める",
     "Save as SVG image": "SVG画像として保存",
     "Save as PNG image": "PNG画像として保存",
     "Copy as URL": "URLとしてコピー",
@@ -97,6 +96,7 @@ define("resource/lang/ja", [], {
     "Approximate symbol": "近似記号",
     "Range symbol": "範囲記号",
     "Or symbol": "OR記号",
+    "Show cursor": "カーソルを表示",
     "Complex Number": "複素数",
     "Unit": "単位",
     "Help": "ヘルプ",
@@ -562,7 +562,6 @@ define("script/ui", ["require", "exports", "script/locale", "script/html", "scri
     exports.rulerHelpPanel = HTML.getElementById("div", "ruler-help-panel");
     var SavePanel;
     (function (SavePanel) {
-        SavePanel.includeCursorCheckbox = HTML.getElementById("input", "include-cursor-checkbox");
         SavePanel.saveAsSvgImageButton = HTML.getElementById("button", "save-svg-image-button");
         SavePanel.saveAsPngImageButton = HTML.getElementById("button", "save-png-image-button");
         SavePanel.copyAsUrlButton = HTML.getElementById("button", "copy-as-url-button");
@@ -578,6 +577,7 @@ define("script/ui", ["require", "exports", "script/locale", "script/html", "scri
         SettingsPanel.approximateSymbolSelect = HTML.getElementById("select", "approximate-symbol-select");
         SettingsPanel.rangeSymbolSelect = HTML.getElementById("select", "range-symbol-select");
         SettingsPanel.orSymbolSelect = HTML.getElementById("select", "or-symbol-select");
+        SettingsPanel.showCursorCheckbox = HTML.getElementById("input", "show-cursor-checkbox");
     })(SettingsPanel || (exports.SettingsPanel = SettingsPanel = {}));
     var ControlPanel;
     (function (ControlPanel) {
@@ -901,10 +901,10 @@ define("resource/config", [], {
 define("script/settings", ["require", "exports", "script/ui"], function (require, exports, UI) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.applySettings = exports.getAllSettings = exports.getOrSymbol = exports.getRangeSymbol = exports.getApproximateSymbol = exports.getApproximateInfinitySmallAsZero = exports.getExponentMultipleOfThree = exports.getExponentFormat = exports.getThreeDigitSeparator = exports.getTheme = exports.isIncludeCursor = void 0;
+    exports.applySettings = exports.getAllSettings = exports.getOrSymbol = exports.getRangeSymbol = exports.getApproximateSymbol = exports.getApproximateInfinitySmallAsZero = exports.getExponentMultipleOfThree = exports.getExponentFormat = exports.getThreeDigitSeparator = exports.getTheme = exports.isShowCursor = void 0;
     UI = __importStar(UI);
-    const isIncludeCursor = () => UI.SavePanel.includeCursorCheckbox.checked;
-    exports.isIncludeCursor = isIncludeCursor;
+    const isShowCursor = () => UI.SettingsPanel.showCursorCheckbox.checked;
+    exports.isShowCursor = isShowCursor;
     // export const getLanguage = (): string => UI.SettingsPanel.languageSelect.value;
     const getTheme = () => UI.SettingsPanel.themeSelect.value;
     exports.getTheme = getTheme;
@@ -924,7 +924,6 @@ define("script/settings", ["require", "exports", "script/ui"], function (require
     exports.getOrSymbol = getOrSymbol;
     const getAllSettings = () => // URL パラメーターで使うので短く！ / EN: Short for URL parameters!
      ({
-        i: (0, exports.isIncludeCursor)(),
         l: UI.SettingsPanel.languageSelect.value,
         t: (0, exports.getTheme)(),
         s: (0, exports.getThreeDigitSeparator)(),
@@ -934,11 +933,11 @@ define("script/settings", ["require", "exports", "script/ui"], function (require
         a: (0, exports.getApproximateSymbol)(),
         r: (0, exports.getRangeSymbol)(),
         o: (0, exports.getOrSymbol)(),
+        c: (0, exports.isShowCursor)(),
     });
     exports.getAllSettings = getAllSettings;
     const applySettings = (settings) => {
         var _a, _b, _c, _d, _e, _f, _g;
-        UI.SavePanel.includeCursorCheckbox.checked = settings.i;
         UI.SettingsPanel.languageSelect.value = settings.l;
         UI.SettingsPanel.themeSelect.value = (_a = settings.t) !== null && _a !== void 0 ? _a : "auto";
         UI.SettingsPanel.threeDigitSeparatorSelect.value = (_b = settings.s) !== null && _b !== void 0 ? _b : "thin-space";
@@ -948,6 +947,7 @@ define("script/settings", ["require", "exports", "script/ui"], function (require
         UI.SettingsPanel.approximateSymbolSelect.value = (_e = settings.a) !== null && _e !== void 0 ? _e : "tilde";
         UI.SettingsPanel.rangeSymbolSelect.value = (_f = settings.r) !== null && _f !== void 0 ? _f : "ellipsis";
         UI.SettingsPanel.orSymbolSelect.value = (_g = settings.o) !== null && _g !== void 0 ? _g : "union";
+        UI.SettingsPanel.showCursorCheckbox.checked = settings.c;
     };
     exports.applySettings = applySettings;
 });
@@ -11743,7 +11743,7 @@ define("script/command", ["require", "exports", "script/locale", "script/url", "
     const addHistoryLane = () => (0, exports.addConstantLane)("history");
     exports.addHistoryLane = addHistoryLane;
     const saveAsSvgImage = () => {
-        if (!UI.SavePanel.includeCursorCheckbox.checked) {
+        if (!UI.SettingsPanel.showCursorCheckbox.checked) {
             Ruler.renderer(Model.data, View.data, new Set(["CURSOR_LANE"]), undefined, { showCursor: false });
             Render.markDirty("CURSOR_LANE"); // 保存が終わったらカーソルを描画させる様にリクエストしておく。 / EN: Request to draw the cursor after saving.
         }
@@ -11764,7 +11764,7 @@ define("script/command", ["require", "exports", "script/locale", "script/url", "
         canvas.height = UI.rulerSvg.viewBox.baseVal.height;
         const ctx = canvas.getContext("2d");
         if (ctx) {
-            if (!UI.SavePanel.includeCursorCheckbox.checked) {
+            if (!UI.SettingsPanel.showCursorCheckbox.checked) {
                 Ruler.renderer(Model.data, View.data, new Set(["CURSOR_LANE"]), undefined, { showCursor: false });
             }
             const img = new Image();

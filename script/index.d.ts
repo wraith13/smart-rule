@@ -6,7 +6,6 @@ declare module "script/locale" {
             "lang-colon-suffix": string;
             Auto: string;
             Save: string;
-            "Include cursor": string;
             "Save as SVG image": string;
             "Save as PNG image": string;
             "Copy as URL": string;
@@ -24,6 +23,7 @@ declare module "script/locale" {
             "Approximate symbol": string;
             "Range symbol": string;
             "Or symbol": string;
+            "Show cursor": string;
             "Complex Number": string;
             Unit: string;
             Help: string;
@@ -45,7 +45,6 @@ declare module "script/locale" {
             "lang-colon-suffix": string;
             Auto: string;
             Save: string;
-            "Include cursor": string;
             "Save as SVG image": string;
             "Save as PNG image": string;
             "Copy as URL": string;
@@ -63,6 +62,7 @@ declare module "script/locale" {
             "Approximate symbol": string;
             "Range symbol": string;
             "Or symbol": string;
+            "Show cursor": string;
             "Complex Number": string;
             Unit: string;
             Help: string;
@@ -260,7 +260,6 @@ declare module "script/ui" {
     export const addHistoryLaneButton: HTMLButtonElement;
     export const rulerHelpPanel: HTMLDivElement;
     export namespace SavePanel {
-        const includeCursorCheckbox: HTMLInputElement;
         const saveAsSvgImageButton: HTMLButtonElement;
         const saveAsPngImageButton: HTMLButtonElement;
         const copyAsUrlButton: HTMLButtonElement;
@@ -275,6 +274,7 @@ declare module "script/ui" {
         const approximateSymbolSelect: HTMLSelectElement;
         const rangeSymbolSelect: HTMLSelectElement;
         const orSymbolSelect: HTMLSelectElement;
+        const showCursorCheckbox: HTMLInputElement;
     }
     export namespace ControlPanel {
         const element: HTMLDivElement;
@@ -301,7 +301,7 @@ declare module "script/ui" {
 }
 declare module "script/settings" {
     import config from "resource/config";
-    export const isIncludeCursor: () => boolean;
+    export const isShowCursor: () => boolean;
     export const getTheme: () => string;
     export const getThreeDigitSeparator: () => "none" | "custom" | "thin-space";
     export const getExponentFormat: () => "e" | "x10";
@@ -311,7 +311,6 @@ declare module "script/settings" {
     export const getRangeSymbol: () => keyof typeof config.symbols.rangeSymbols;
     export const getOrSymbol: () => keyof typeof config.symbols.orSymbols;
     export const getAllSettings: () => {
-        i: boolean;
         l: string;
         t: string;
         s: "none" | "custom" | "thin-space";
@@ -321,6 +320,7 @@ declare module "script/settings" {
         a: "approximately-equal" | "tilde" | "nearly-equal";
         r: "ellipsis" | "en-dash" | "wave-dash" | "word";
         o: "word" | "union" | "ascii";
+        c: boolean;
     };
     export const applySettings: (settings: ReturnType<typeof getAllSettings>) => void;
 }
