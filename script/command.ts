@@ -67,11 +67,11 @@ export const addEmwEnergyLane = () => addConstantLane("emw-energy");
 export const addHistoryLane = () => addConstantLane("history");
 export const saveAsSvgImage = () =>
 {
-    if (!UI.SettingsPanel.showCursorCheckbox.checked)
-    {
-        Ruler.renderer(Model.data, View.data, new Set(["CURSOR_LANE"]), undefined, { showCursor: false });
-        Render.markDirty("CURSOR_LANE"); // 保存が終わったらカーソルを描画させる様にリクエストしておく。 / EN: Request to draw the cursor after saving.
-    }
+    // if (!UI.SettingsPanel.showCursorCheckbox.checked)
+    // {
+    //     Ruler.renderer(Model.data, View.data, new Set(["CURSOR_LANE"]), undefined, { showCursor: false });
+    //     Render.markDirty("CURSOR_LANE"); // 保存が終わったらカーソルを描画させる様にリクエストしておく。 / EN: Request to draw the cursor after saving.
+    // }
     const serializer = new XMLSerializer();
     const source = serializer.serializeToString(UI.rulerSvg);
     const blob = new Blob([source], { type: "image/svg+xml" });
@@ -90,10 +90,10 @@ export const saveAsPngImage = () =>
     const ctx = canvas.getContext("2d");
     if (ctx)
     {
-        if (!UI.SettingsPanel.showCursorCheckbox.checked)
-        {
-            Ruler.renderer(Model.data, View.data, new Set(["CURSOR_LANE"]), undefined, { showCursor: false });
-        }
+        // if (!UI.SettingsPanel.showCursorCheckbox.checked)
+        // {
+        //     Ruler.renderer(Model.data, View.data, new Set(["CURSOR_LANE"]), undefined, { showCursor: false });
+        // }
         const img = new Image();
         const serializer = new XMLSerializer();
         const source = serializer.serializeToString(UI.rulerSvg);
@@ -118,7 +118,7 @@ export const saveAsPngImage = () =>
                 },
                 "image/png"
             );
-            Render.markDirty("CURSOR_LANE");
+            // Render.markDirty("CURSOR_LANE");
         };
         img.src = url;
     }
