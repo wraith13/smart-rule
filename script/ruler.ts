@@ -126,16 +126,19 @@ export const renderer = (model: Type.Model, view: Type.View, dirty: Set<string>,
                 drawPopup(view);
                 break;
             case "CURSOR_LANE":
-                const { slide, lane } = Model.getSlideAndLane(0);
-                drawCursorLane(view, slide, lane);
-                if (Model.data.cursor.length < makeSureCursorLayer().children.length)
+                if (UI.SettingsPanel.showCursorCheckbox.checked)
                 {
-                    dirty.add("CURSOR_GARBAGE_COLLECTOR");
-                }
-                for (let i = 0; i < Model.data.cursor.length; ++i)
-                {
-                    Render.markDirty(`CURSOR_LINE:${i}`);
-                    Render.markDirty(`CURSOR_HANDLE:${i}`);
+                    const { slide, lane } = Model.getSlideAndLane(0);
+                    drawCursorLane(view, slide, lane);
+                    if (Model.data.cursor.length < makeSureCursorLayer().children.length)
+                    {
+                        dirty.add("CURSOR_GARBAGE_COLLECTOR");
+                    }
+                    for (let i = 0; i < Model.data.cursor.length; ++i)
+                    {
+                        Render.markDirty(`CURSOR_LINE:${i}`);
+                        Render.markDirty(`CURSOR_HANDLE:${i}`);
+                    }
                 }
                 break;
             default:
@@ -155,27 +158,33 @@ export const renderer = (model: Type.Model, view: Type.View, dirty: Set<string>,
                 else
                 if (i.startsWith("CURSOR_LINE:"))
                 {
-                    const cursorIndex = Number.parseInt(i.substring("CURSOR_LINE:".length));
-                    if (undefined !== cursorIndex && cursorIndex < Model.data.cursor.length)
+                    if (UI.SettingsPanel.showCursorCheckbox.checked)
                     {
-                        drawCursorLine(model, view, cursorIndex, options);
-                    }
-                    else
-                    {
-                        console.warn(`🦋 FIXME: Cursor not found for dirty item: ${i}`);
+                        const cursorIndex = Number.parseInt(i.substring("CURSOR_LINE:".length));
+                        if (undefined !== cursorIndex && cursorIndex < Model.data.cursor.length)
+                        {
+                            drawCursorLine(model, view, cursorIndex, options);
+                        }
+                        else
+                        {
+                            console.warn(`🦋 FIXME: Cursor not found for dirty item: ${i}`);
+                        }
                     }
                 }
                 else
                 if (i.startsWith("CURSOR_HANDLE:"))
                 {
-                    const cursorIndex = Number.parseInt(i.substring("CURSOR_HANDLE:".length));
-                    if (undefined !== cursorIndex && cursorIndex < Model.data.cursor.length)
+                    if (UI.SettingsPanel.showCursorCheckbox.checked)
                     {
-                        drawCursorHandle(model, view, cursorIndex, options);
-                    }
-                    else
-                    {
-                        console.warn(`🦋 FIXME: Cursor not found for dirty item: ${i}`);
+                        const cursorIndex = Number.parseInt(i.substring("CURSOR_HANDLE:".length));
+                        if (undefined !== cursorIndex && cursorIndex < Model.data.cursor.length)
+                        {
+                            drawCursorHandle(model, view, cursorIndex, options);
+                        }
+                        else
+                        {
+                            console.warn(`🦋 FIXME: Cursor not found for dirty item: ${i}`);
+                        }
                     }
                 }
                 else
