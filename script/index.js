@@ -10163,7 +10163,7 @@ define("script/document", ["require", "exports", "script/element"], function (re
 define("script/ruler", ["require", "exports", "script/locale", "script/type", "script/calculation", "script/model", "script/ui", "script/theme", "script/render", "script/document", "script/svg", "script/comparer", "resource/config"], function (require, exports, Locale, Type, Calculation, Model, UI, Theme, Render, DOCUMENT, SVG, Comparer, config_json_6) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.getRulerWidth = exports.getCursorLaneWidth = exports.getCursorLaneBezelWidth = exports.resize = exports.drawLaneUnitPopup = exports.drawLanePropertyPopup = exports.drawPopup = exports.drawCursorHandle = exports.drawCursorLine = exports.getCursorColor = exports.slideCursor = exports.snapHorizontalPosition = exports.snapVerticalPosition = exports.getAreaPositions = exports.nextPosition = exports.snapPosition = exports.regulateReferencePositions = exports.getReferenceLaneIndexFromEvent = exports.garbageCollectCursors = exports.garbageCollectLanes = exports.drawTicks = exports.calculateMinimumFractionDigits = exports.getFractionDigitsFromUnit = exports.makeShortNumberLabel = exports.makeNumberLabel = exports.makeNumberLabelPart = exports.drawAreas = exports.getAreaFill = exports.drawCursorLane = exports.drawCursorLaneTicks = exports.drawCursorLaneArea = exports.drawLane = exports.drawLeveledText = exports.getLeftOfCursorLane = exports.getLeftOfLane = exports.makeSureSlide = exports.makeStops = exports.makeVerticalGradient = exports.makeLinerGradient = exports.drawGradientDefines = exports.getLaneIndexFromPosition = exports.makeSureLabelLayer = exports.makeSureTickLayer = exports.makeSureCursorLayer = exports.getCursorLayer = exports.cursorLayerSource = exports.makeSureAreaLayer = exports.renderer = exports.setLaneWidth = exports.cursorLaneWidth = exports.toggleFoldCursorLane = exports.isFoldedCursorLane = exports.LaneWidths = exports.scale = void 0;
+    exports.initialize = exports.getRulerWidth = exports.getCursorLaneWidth = exports.getCursorLaneBezelWidth = exports.resize = exports.drawLaneUnitPopup = exports.drawLanePropertyPopup = exports.drawPopup = exports.drawCursorHandle = exports.drawCursorLine = exports.getCursorColor = exports.slideCursor = exports.snapHorizontalPosition = exports.snapVerticalPosition = exports.getAreaPositions = exports.nextPosition = exports.snapPosition = exports.regulateReferencePositions = exports.getReferenceLaneIndexFromEvent = exports.garbageCollectCursors = exports.garbageCollectLanes = exports.drawTicks = exports.calculateMinimumFractionDigits = exports.getFractionDigitsFromUnit = exports.makeShortNumberLabel = exports.makeNumberLabel = exports.makeNumberLabelPart = exports.drawAreas = exports.getAreaFill = exports.drawCursorLane = exports.drawCursorLaneTicks = exports.drawCursorLaneArea = exports.drawLane = exports.drawLeveledText = exports.getLeftOfCursorLane = exports.getLeftOfLane = exports.makeSureSlide = exports.makeStops = exports.makeVerticalGradient = exports.makeLinerGradient = exports.drawGradientDefines = exports.getLaneIndexFromPosition = exports.makeSureLabelLayer = exports.makeSureTickLayer = exports.makeSureCursorLayer = exports.getCursorLayer = exports.cursorLayerSource = exports.makeSureAreaLayer = exports.renderer = exports.isShowCursor = exports.setLaneWidth = exports.cursorLaneWidth = exports.toggleFoldCursorLane = exports.isFoldedCursorLane = exports.LaneWidths = exports.scale = void 0;
     Locale = __importStar(Locale);
     Type = __importStar(Type);
     Calculation = __importStar(Calculation);
@@ -10188,6 +10188,8 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         }
     };
     exports.setLaneWidth = setLaneWidth;
+    const isShowCursor = () => UI.SettingsPanel.showCursorCheckbox.checked;
+    exports.isShowCursor = isShowCursor;
     const renderer = (model, view, dirty, timeLimit, options) => {
         if (0 < dirty.size) {
             if (dirty.has(Render.RenderItemId.AllItems)) {
@@ -10266,14 +10268,16 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                         (0, exports.drawPopup)(view);
                         break;
                     case "CURSOR_LANE":
-                        const { slide, lane } = Model.getSlideAndLane(0);
-                        (0, exports.drawCursorLane)(view, slide, lane);
-                        if (Model.data.cursor.length < (0, exports.makeSureCursorLayer)().children.length) {
-                            dirty.add("CURSOR_GARBAGE_COLLECTOR");
-                        }
-                        for (let i = 0; i < Model.data.cursor.length; ++i) {
-                            Render.markDirty(`CURSOR_LINE:${i}`);
-                            Render.markDirty(`CURSOR_HANDLE:${i}`);
+                        if ((0, exports.isShowCursor)()) {
+                            const { slide, lane } = Model.getSlideAndLane(0);
+                            (0, exports.drawCursorLane)(view, slide, lane);
+                            if (Model.data.cursor.length < (0, exports.makeSureCursorLayer)().children.length) {
+                                dirty.add("CURSOR_GARBAGE_COLLECTOR");
+                            }
+                            for (let i = 0; i < Model.data.cursor.length; ++i) {
+                                Render.markDirty(`CURSOR_LINE:${i}`);
+                                Render.markDirty(`CURSOR_HANDLE:${i}`);
+                            }
                         }
                         break;
                     default:
@@ -10288,21 +10292,25 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                             }
                         }
                         else if (i.startsWith("CURSOR_LINE:")) {
-                            const cursorIndex = Number.parseInt(i.substring("CURSOR_LINE:".length));
-                            if (undefined !== cursorIndex && cursorIndex < Model.data.cursor.length) {
-                                (0, exports.drawCursorLine)(model, view, cursorIndex, options);
-                            }
-                            else {
-                                console.warn(`🦋 FIXME: Cursor not found for dirty item: ${i}`);
+                            if ((0, exports.isShowCursor)()) {
+                                const cursorIndex = Number.parseInt(i.substring("CURSOR_LINE:".length));
+                                if (undefined !== cursorIndex && cursorIndex < Model.data.cursor.length) {
+                                    (0, exports.drawCursorLine)(model, view, cursorIndex, options);
+                                }
+                                else {
+                                    console.warn(`🦋 FIXME: Cursor not found for dirty item: ${i}`);
+                                }
                             }
                         }
                         else if (i.startsWith("CURSOR_HANDLE:")) {
-                            const cursorIndex = Number.parseInt(i.substring("CURSOR_HANDLE:".length));
-                            if (undefined !== cursorIndex && cursorIndex < Model.data.cursor.length) {
-                                (0, exports.drawCursorHandle)(model, view, cursorIndex, options);
-                            }
-                            else {
-                                console.warn(`🦋 FIXME: Cursor not found for dirty item: ${i}`);
+                            if ((0, exports.isShowCursor)()) {
+                                const cursorIndex = Number.parseInt(i.substring("CURSOR_HANDLE:".length));
+                                if (undefined !== cursorIndex && cursorIndex < Model.data.cursor.length) {
+                                    (0, exports.drawCursorHandle)(model, view, cursorIndex, options);
+                                }
+                                else {
+                                    console.warn(`🦋 FIXME: Cursor not found for dirty item: ${i}`);
+                                }
                             }
                         }
                         else {
@@ -11743,10 +11751,11 @@ define("script/command", ["require", "exports", "script/locale", "script/url", "
     const addHistoryLane = () => (0, exports.addConstantLane)("history");
     exports.addHistoryLane = addHistoryLane;
     const saveAsSvgImage = () => {
-        if (!UI.SettingsPanel.showCursorCheckbox.checked) {
-            Ruler.renderer(Model.data, View.data, new Set(["CURSOR_LANE"]), undefined, { showCursor: false });
-            Render.markDirty("CURSOR_LANE"); // 保存が終わったらカーソルを描画させる様にリクエストしておく。 / EN: Request to draw the cursor after saving.
-        }
+        // if (!UI.SettingsPanel.showCursorCheckbox.checked)
+        // {
+        //     Ruler.renderer(Model.data, View.data, new Set(["CURSOR_LANE"]), undefined, { showCursor: false });
+        //     Render.markDirty("CURSOR_LANE"); // 保存が終わったらカーソルを描画させる様にリクエストしておく。 / EN: Request to draw the cursor after saving.
+        // }
         const serializer = new XMLSerializer();
         const source = serializer.serializeToString(UI.rulerSvg);
         const blob = new Blob([source], { type: "image/svg+xml" });
@@ -11764,9 +11773,10 @@ define("script/command", ["require", "exports", "script/locale", "script/url", "
         canvas.height = UI.rulerSvg.viewBox.baseVal.height;
         const ctx = canvas.getContext("2d");
         if (ctx) {
-            if (!UI.SettingsPanel.showCursorCheckbox.checked) {
-                Ruler.renderer(Model.data, View.data, new Set(["CURSOR_LANE"]), undefined, { showCursor: false });
-            }
+            // if (!UI.SettingsPanel.showCursorCheckbox.checked)
+            // {
+            //     Ruler.renderer(Model.data, View.data, new Set(["CURSOR_LANE"]), undefined, { showCursor: false });
+            // }
             const img = new Image();
             const serializer = new XMLSerializer();
             const source = serializer.serializeToString(UI.rulerSvg);
@@ -11784,7 +11794,7 @@ define("script/command", ["require", "exports", "script/locale", "script/url", "
                         URL.revokeObjectURL(pngUrl);
                     }
                 }, "image/png");
-                Render.markDirty("CURSOR_LANE");
+                // Render.markDirty("CURSOR_LANE");
             };
             img.src = url;
         }
@@ -12340,6 +12350,7 @@ define("script/event", ["require", "exports", "script/url", "script/type", "scri
         UI.SettingsPanel.approximateSymbolSelect.addEventListener("change", () => Render.markDirty());
         UI.SettingsPanel.rangeSymbolSelect.addEventListener("change", () => Render.markDirty());
         UI.SettingsPanel.orSymbolSelect.addEventListener("change", () => Render.markDirty());
+        UI.SettingsPanel.showCursorCheckbox.addEventListener("change", () => Render.markDirty());
         Command.updateViewModeRoundBar();
         Command.updateViewScaleRoundBar();
         Command.updateViewLockRoundBar();

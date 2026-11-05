@@ -23,6 +23,8 @@ export const setLaneWidth = (laneIndex: number, width: number): void =>
         Render.markDirty(Render.RenderItemId.Size);
     }
 };
+export const isShowCursor = (): boolean =>
+    UI.SettingsPanel.showCursorCheckbox.checked;
 export const renderer = (model: Type.Model, view: Type.View, dirty: Set<string>, timeLimit?: number, options?: Type.RenderingOptions) =>
 {
     if (0 < dirty.size)
@@ -126,7 +128,7 @@ export const renderer = (model: Type.Model, view: Type.View, dirty: Set<string>,
                 drawPopup(view);
                 break;
             case "CURSOR_LANE":
-                if (UI.SettingsPanel.showCursorCheckbox.checked)
+                if (isShowCursor())
                 {
                     const { slide, lane } = Model.getSlideAndLane(0);
                     drawCursorLane(view, slide, lane);
@@ -158,7 +160,7 @@ export const renderer = (model: Type.Model, view: Type.View, dirty: Set<string>,
                 else
                 if (i.startsWith("CURSOR_LINE:"))
                 {
-                    if (UI.SettingsPanel.showCursorCheckbox.checked)
+                    if (isShowCursor())
                     {
                         const cursorIndex = Number.parseInt(i.substring("CURSOR_LINE:".length));
                         if (undefined !== cursorIndex && cursorIndex < Model.data.cursor.length)
@@ -174,7 +176,7 @@ export const renderer = (model: Type.Model, view: Type.View, dirty: Set<string>,
                 else
                 if (i.startsWith("CURSOR_HANDLE:"))
                 {
-                    if (UI.SettingsPanel.showCursorCheckbox.checked)
+                    if (isShowCursor())
                     {
                         const cursorIndex = Number.parseInt(i.substring("CURSOR_HANDLE:".length));
                         if (undefined !== cursorIndex && cursorIndex < Model.data.cursor.length)

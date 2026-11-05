@@ -1784,6 +1784,7 @@ declare module "script/ruler" {
     export const toggleFoldCursorLane: () => boolean;
     export const cursorLaneWidth: number;
     export const setLaneWidth: (laneIndex: number, width: number) => void;
+    export const isShowCursor: () => boolean;
     export const renderer: (model: Type.Model, view: Type.View, dirty: Set<string>, timeLimit?: number, options?: Type.RenderingOptions) => void;
     export const makeSureAreaLayer: () => SVGGElement;
     export const cursorLayerSource: {
