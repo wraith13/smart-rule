@@ -1858,6 +1858,7 @@ declare module "script/ruler" {
     export const drawLaneUnitPopup: (_view: Type.View, popup: Type.LaneUnitPopup) => void;
     export const resize: () => void;
     export const getCursorLaneBezelWidth: () => number;
+    export const getCursorLaneLength: () => number;
     export const getCursorLaneWidth: () => number;
     export const getRulerWidth: () => number;
     export const initialize: () => void;

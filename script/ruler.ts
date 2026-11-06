@@ -1817,8 +1817,20 @@ export const resize = () =>
 };
 export const getCursorLaneBezelWidth = (): number =>
     Model.data.cursor.length <= 1 ? 0: config.render.ruler.cursorLaneBezelWidth;
+export const getCursorLaneLength = (): number =>
+{
+    switch(true)
+    {
+    case !isShowCursor():
+        return 0;
+    case isFoldedCursorLane:
+        return 1;
+    default:
+        return Model.data.cursor.length;
+    }
+};
 export const getCursorLaneWidth = (): number =>
-    cursorLaneWidth *(isFoldedCursorLane ? 1: Model.data.cursor.length);
+    cursorLaneWidth *getCursorLaneLength();
 export const getRulerWidth = (): number =>
     LaneWidths.reduce((a, b) => a + b, 0);
 export const initialize = (): void =>
