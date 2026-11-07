@@ -11539,7 +11539,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         Render.markDirty("CURSOR_LANE");
     };
     exports.resize = resize;
-    const getCursorLaneBezelWidth = () => Model.data.cursor.length <= 1 ? 0 : config_json_6.default.render.ruler.cursorLaneBezelWidth;
+    const getCursorLaneBezelWidth = () => (Model.data.cursor.length <= 1 || !(0, exports.isShowCursor)()) ? 0 : config_json_6.default.render.ruler.cursorLaneBezelWidth;
     exports.getCursorLaneBezelWidth = getCursorLaneBezelWidth;
     const getCursorLaneLength = () => {
         switch (true) {

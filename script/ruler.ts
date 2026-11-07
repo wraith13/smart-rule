@@ -1816,12 +1816,12 @@ export const resize = () =>
     Render.markDirty("CURSOR_LANE");
 };
 export const getCursorLaneBezelWidth = (): number =>
-    Model.data.cursor.length <= 1 ? 0: config.render.ruler.cursorLaneBezelWidth;
+    (Model.data.cursor.length <= 1 || ! isShowCursor()) ? 0: config.render.ruler.cursorLaneBezelWidth;
 export const getCursorLaneLength = (): number =>
 {
     switch(true)
     {
-    case !isShowCursor():
+    case ! isShowCursor():
         return 0;
     case isFoldedCursorLane:
         return 1;

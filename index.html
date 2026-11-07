@@ -2,7 +2,7 @@
 <!--
     This file is genereted by build.js. このファイルは build.js によって生成されました。
     build options: ../build.json all
-    build at: Sat Nov 07 2026 09:43:48 GMT+0900 (日本標準時)
+    build at: Sun Nov 08 2026 00:25:45 GMT+0900 (日本標準時)
     repository: https://github.com/wraith13/smart-rule/
 -->
 <!-- license:
@@ -704,8 +704,8 @@ button:focus
 <div id="toast-panel"></div>
 <script type="text/javascript">
 const build = {
-    at: "Sat Nov 07 2026 09:43:48 GMT+0900 (日本標準時)",
-    tick: 1794012228046
+    at: "Sun Nov 08 2026 00:25:45 GMT+0900 (日本標準時)",
+    tick: 1794065145997
 };
 const evilCommonjsConfig = {
     "log": {
@@ -12606,7 +12606,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         Render.markDirty("CURSOR_LANE");
     };
     exports.resize = resize;
-    const getCursorLaneBezelWidth = () => Model.data.cursor.length <= 1 ? 0 : config_json_6.default.render.ruler.cursorLaneBezelWidth;
+    const getCursorLaneBezelWidth = () => (Model.data.cursor.length <= 1 || !(0, exports.isShowCursor)()) ? 0 : config_json_6.default.render.ruler.cursorLaneBezelWidth;
     exports.getCursorLaneBezelWidth = getCursorLaneBezelWidth;
     const getCursorLaneLength = () => {
         switch (true) {
