@@ -10005,10 +10005,15 @@ define("script/render", ["require", "exports", "script/view", "script/model", "r
     let currentRenderer;
     const isDirty = () => 0 < dirty.size;
     exports.isDirty = isDirty;
-    const markDirty = (item) => {
-        dirty.add(item !== null && item !== void 0 ? item : RenderItemId.AllItems);
-        if (item !== RenderItemId.Popup && View.hasPopup()) {
-            (0, exports.clearPopup)();
+    const markDirty = (...items) => {
+        if (0 === items.length) {
+            items = [RenderItemId.AllItems];
+        }
+        for (const item of items) {
+            dirty.add(item);
+            if (item !== RenderItemId.Popup && View.hasPopup()) {
+                (0, exports.clearPopup)();
+            }
         }
         (0, exports.requestRender)();
     };
@@ -12361,7 +12366,7 @@ define("script/event", ["require", "exports", "script/url", "script/type", "scri
         UI.SettingsPanel.approximateSymbolSelect.addEventListener("change", () => Render.markDirty());
         UI.SettingsPanel.rangeSymbolSelect.addEventListener("change", () => Render.markDirty());
         UI.SettingsPanel.orSymbolSelect.addEventListener("change", () => Render.markDirty());
-        UI.SettingsPanel.showCursorCheckbox.addEventListener("change", () => Render.markDirty());
+        UI.SettingsPanel.showCursorCheckbox.addEventListener("change", () => Render.markDirty("CURSOR_GARBAGE_COLLECTOR", Render.RenderItemId.AllItems));
         Command.updateViewModeRoundBar();
         Command.updateViewScaleRoundBar();
         Command.updateViewLockRoundBar();

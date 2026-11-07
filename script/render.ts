@@ -14,12 +14,19 @@ let dirty = new Set<string>();
 let currentRenderer: (model: Type.Model, view: Type.View, dirty: Set<string>, timeLimit?: number, options?: Type.RenderingOptions) => unknown;
 export const isDirty = (): boolean =>
     0 < dirty.size;
-export const markDirty = (item?: string) =>
+export const markDirty = (...items: string[]) =>
 {
-    dirty.add(item ?? RenderItemId.AllItems);
-    if (item !== RenderItemId.Popup && View.hasPopup())
+    if (0 === items.length)
     {
-        clearPopup();
+        items = [RenderItemId.AllItems];
+    }
+    for (const item of items)
+    {
+        dirty.add(item);
+        if (item !== RenderItemId.Popup && View.hasPopup())
+        {
+            clearPopup();
+        }
     }
     requestRender();
 };

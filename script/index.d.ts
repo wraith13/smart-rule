@@ -1754,7 +1754,7 @@ declare module "script/render" {
     }
     let currentRenderer: (model: Type.Model, view: Type.View, dirty: Set<string>, timeLimit?: number, options?: Type.RenderingOptions) => unknown;
     export const isDirty: () => boolean;
-    export const markDirty: (item?: string) => void;
+    export const markDirty: (...items: string[]) => void;
     export const requestRender: () => void;
     export const resetDirty: (item: string) => void;
     export const resize: () => void;

@@ -566,7 +566,7 @@ export const initialize = () =>
     UI.SettingsPanel.approximateSymbolSelect.addEventListener("change", () => Render.markDirty());
     UI.SettingsPanel.rangeSymbolSelect.addEventListener("change", () => Render.markDirty());
     UI.SettingsPanel.orSymbolSelect.addEventListener("change", () => Render.markDirty());
-    UI.SettingsPanel.showCursorCheckbox.addEventListener("change", () => Render.markDirty());
+    UI.SettingsPanel.showCursorCheckbox.addEventListener("change", () => Render.markDirty("CURSOR_GARBAGE_COLLECTOR", Render.RenderItemId.AllItems));
     Command.updateViewModeRoundBar();
     Command.updateViewScaleRoundBar();
     Command.updateViewLockRoundBar();
