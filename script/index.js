@@ -8547,12 +8547,14 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                     break;
             }
         }
-        (0, exports.addConstTicks)(slide, lane, view, ticks, tickWindow, Calculation.namedNumberList
-            .map(namedNumber => ({
-            value: Calculation.getNamedNumberValue(namedNumber),
-            label: Calculation.getNamedNumberLabel(namedNumber),
-            color: Theme.resolve(config_json_3.default.model.constantTable.elementaryNumberColor),
-        })));
+        if (1.5 <= view.viewScaleExponent) {
+            (0, exports.addConstTicks)(slide, lane, view, ticks, tickWindow, Calculation.namedNumberList
+                .map(namedNumber => ({
+                value: Calculation.getNamedNumberValue(namedNumber),
+                label: Calculation.getNamedNumberLabel(namedNumber),
+                color: Theme.resolve(config_json_3.default.model.constantTable.elementaryNumberColor),
+            })));
+        }
         // console.log(`designed ticks for lane: ${lane.name ?? "unnamed"}, ticks: ${ticks.map(tick => `${tick.value} (${tick.type})`).join(", ")}`);
         // console.log(`min: ${min}, max: ${max}`);
         const result = {

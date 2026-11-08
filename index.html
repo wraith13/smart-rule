@@ -2,7 +2,7 @@
 <!--
     This file is genereted by build.js. このファイルは build.js によって生成されました。
     build options: ../build.json all
-    build at: Sun Nov 08 2026 02:11:18 GMT+0900 (日本標準時)
+    build at: Mon Nov 09 2026 04:29:30 GMT+0900 (日本標準時)
     repository: https://github.com/wraith13/smart-rule/
 -->
 <!-- license:
@@ -705,8 +705,8 @@ button:focus
 <div id="toast-panel"></div>
 <script type="text/javascript">
 const build = {
-    at: "Sun Nov 08 2026 02:11:18 GMT+0900 (日本標準時)",
-    tick: 1794071478014
+    at: "Mon Nov 09 2026 04:29:30 GMT+0900 (日本標準時)",
+    tick: 1794166170622
 };
 const evilCommonjsConfig = {
     "log": {
@@ -9615,12 +9615,14 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                     break;
             }
         }
-        (0, exports.addConstTicks)(slide, lane, view, ticks, tickWindow, Calculation.namedNumberList
-            .map(namedNumber => ({
-            value: Calculation.getNamedNumberValue(namedNumber),
-            label: Calculation.getNamedNumberLabel(namedNumber),
-            color: Theme.resolve(config_json_3.default.model.constantTable.elementaryNumberColor),
-        })));
+        if (1.5 <= view.viewScaleExponent) {
+            (0, exports.addConstTicks)(slide, lane, view, ticks, tickWindow, Calculation.namedNumberList
+                .map(namedNumber => ({
+                value: Calculation.getNamedNumberValue(namedNumber),
+                label: Calculation.getNamedNumberLabel(namedNumber),
+                color: Theme.resolve(config_json_3.default.model.constantTable.elementaryNumberColor),
+            })));
+        }
         // console.log(`designed ticks for lane: ${lane.name ?? "unnamed"}, ticks: ${ticks.map(tick => `${tick.value} (${tick.type})`).join(", ")}`);
         // console.log(`min: ${min}, max: ${max}`);
         const result = {
