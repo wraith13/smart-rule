@@ -8,8 +8,11 @@ declare module "script/locale" {
             Save: string;
             "Save as SVG image": string;
             "Save as PNG image": string;
+            "Copy as PNG image": string;
             "Copy as URL": string;
+            "Image copied to clipboard.": string;
             "URL copied to clipboard.": string;
+            "Failed to copy image to clipboard.": string;
             "Failed to copy URL to clipboard.": string;
             "Failed to load from URL.": string;
             Settings: string;
@@ -47,8 +50,11 @@ declare module "script/locale" {
             Save: string;
             "Save as SVG image": string;
             "Save as PNG image": string;
+            "Copy as PNG image": string;
             "Copy as URL": string;
+            "Image copied to clipboard.": string;
             "URL copied to clipboard.": string;
+            "Failed to copy image to clipboard.": string;
             "Failed to copy URL to clipboard.": string;
             "Failed to load from URL.": string;
             Settings: string;
@@ -262,6 +268,7 @@ declare module "script/ui" {
     export namespace SavePanel {
         const saveAsSvgImageButton: HTMLButtonElement;
         const saveAsPngImageButton: HTMLButtonElement;
+        const copyAsPngButton: HTMLButtonElement;
         const copyAsUrlButton: HTMLButtonElement;
     }
     export namespace SettingsPanel {
@@ -2166,6 +2173,7 @@ declare module "script/command" {
     export const addHistoryLane: () => void;
     export const saveAsSvgImage: () => void;
     export const saveAsPngImage: () => void;
+    export const copyAsPngImage: () => void;
     export const copyAsUrl: () => void;
     export const updateViewModeRoundBar: () => void;
     export const getViewScaleRate: () => number;

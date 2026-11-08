@@ -94,6 +94,7 @@ export namespace SavePanel
 {
     export const saveAsSvgImageButton = HTML.getElementById("button", "save-svg-image-button");
     export const saveAsPngImageButton = HTML.getElementById("button", "save-png-image-button");
+    export const copyAsPngButton = HTML.getElementById("button", "copy-as-png-button");
     export const copyAsUrlButton = HTML.getElementById("button", "copy-as-url-button");
 }
 export namespace SettingsPanel

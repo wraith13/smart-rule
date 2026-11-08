@@ -67,11 +67,6 @@ export const addEmwEnergyLane = () => addConstantLane("emw-energy");
 export const addHistoryLane = () => addConstantLane("history");
 export const saveAsSvgImage = () =>
 {
-    // if (!UI.SettingsPanel.showCursorCheckbox.checked)
-    // {
-    //     Ruler.renderer(Model.data, View.data, new Set(["CURSOR_LANE"]), undefined, { showCursor: false });
-    //     Render.markDirty("CURSOR_LANE"); // 保存が終わったらカーソルを描画させる様にリクエストしておく。 / EN: Request to draw the cursor after saving.
-    // }
     const serializer = new XMLSerializer();
     const source = serializer.serializeToString(UI.rulerSvg);
     const blob = new Blob([source], { type: "image/svg+xml" });
@@ -90,10 +85,6 @@ export const saveAsPngImage = () =>
     const ctx = canvas.getContext("2d");
     if (ctx)
     {
-        // if (!UI.SettingsPanel.showCursorCheckbox.checked)
-        // {
-        //     Ruler.renderer(Model.data, View.data, new Set(["CURSOR_LANE"]), undefined, { showCursor: false });
-        // }
         const img = new Image();
         const serializer = new XMLSerializer();
         const source = serializer.serializeToString(UI.rulerSvg);
@@ -119,6 +110,55 @@ export const saveAsPngImage = () =>
                 "image/png"
             );
             // Render.markDirty("CURSOR_LANE");
+        };
+        img.src = url;
+    }
+};
+export const copyAsPngImage = () =>
+{
+    const canvas = document.createElement("canvas");
+    canvas.width = UI.rulerSvg.viewBox.baseVal.width;
+    canvas.height = UI.rulerSvg.viewBox.baseVal.height;
+    const ctx = canvas.getContext("2d");
+    if (ctx)
+    {
+        const img = new Image();
+        const serializer = new XMLSerializer();
+        const source = serializer.serializeToString(UI.rulerSvg);
+        const url = URL.createObjectURL(new Blob([source], { type: "image/svg+xml" }));
+        img.onload = () =>
+        {
+            ctx.drawImage(img, 0, 0);
+            URL.revokeObjectURL(url);
+            canvas.toBlob
+            (
+                (blob) =>
+                {
+                    if (blob)
+                    {
+                        navigator.clipboard.write
+                        (
+                            [
+                                new ClipboardItem
+                                (
+                                    {
+                                        "image/png": blob,
+                                    }
+                                ),
+                            ]
+                        ).then
+                        (
+                            () => UI.ToastPanel.show({ message: Locale.map("Image copied to clipboard.") }),
+                            (err) =>
+                            {
+                                UI.ToastPanel.show({ message: Locale.map("Failed to copy image to clipboard."), style: "error" });
+                                console.error(Locale.map("Failed to copy image to clipboard."), err);
+                            }
+                        );
+                    }
+                },
+                "image/png"
+            );
         };
         img.src = url;
     }

@@ -42,8 +42,11 @@ define("resource/lang/en", [], {
     "Save": "Save",
     "Save as SVG image": "Save as SVG image",
     "Save as PNG image": "Save as PNG image",
+    "Copy as PNG image": "Copy as PNG image",
     "Copy as URL": "Copy as URL",
+    "Image copied to clipboard.": "Image copied to clipboard.",
     "URL copied to clipboard.": "URL copied to clipboard.",
+    "Failed to copy image to clipboard.": "Failed to copy image to clipboard.",
     "Failed to copy URL to clipboard.": "Failed to copy URL to clipboard.",
     "Failed to load from URL.": "Failed to load from URL.",
     "Settings": "Settings",
@@ -81,8 +84,11 @@ define("resource/lang/ja", [], {
     "Save": "保存",
     "Save as SVG image": "SVG画像として保存",
     "Save as PNG image": "PNG画像として保存",
+    "Copy as PNG image": "PNG画像としてコピー",
     "Copy as URL": "URLとしてコピー",
+    "Image copied to clipboard.": "画像がクリップボードにコピーされました。",
     "URL copied to clipboard.": "URLがクリップボードにコピーされました。",
+    "Failed to copy image to clipboard.": "画像のクリップボードへのコピーに失敗しました。",
     "Failed to copy URL to clipboard.": "URLのクリップボードへのコピーに失敗しました。",
     "Failed to load from URL.": "URLからの読み込みに失敗しました。",
     "Settings": "設定",
@@ -564,6 +570,7 @@ define("script/ui", ["require", "exports", "script/locale", "script/html", "scri
     (function (SavePanel) {
         SavePanel.saveAsSvgImageButton = HTML.getElementById("button", "save-svg-image-button");
         SavePanel.saveAsPngImageButton = HTML.getElementById("button", "save-png-image-button");
+        SavePanel.copyAsPngButton = HTML.getElementById("button", "copy-as-png-button");
         SavePanel.copyAsUrlButton = HTML.getElementById("button", "copy-as-url-button");
     })(SavePanel || (exports.SavePanel = SavePanel = {}));
     var SettingsPanel;
@@ -11680,7 +11687,7 @@ define("script/json-eval-updater", ["require", "exports", "script/url", "script/
 define("script/command", ["require", "exports", "script/locale", "script/url", "script/calculation", "script/type", "script/ui", "script/settings", "script/theme", "script/model", "script/view", "script/render", "script/ruler", "resource/config"], function (require, exports, Locale, Url, Calculation, Type, UI, Settings, Theme, Model, View, Render, Ruler, config_json_8) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.updateTheme = exports.updateLanguage = exports.loadFromUrl = exports.updateViewLockRoundBar = exports.updateViewScaleRoundBar = exports.getViewScaleExponentFromRate = exports.getViewScaleRate = exports.updateViewModeRoundBar = exports.copyAsUrl = exports.saveAsPngImage = exports.saveAsSvgImage = exports.addHistoryLane = exports.addEmwEnergyLane = exports.addEmwFrequencyLane = exports.addEmwWavelengthLane = exports.addSoundFrequencyLane = exports.addCountingLane = exports.addTemperatureLane = exports.addEnergyLane = exports.addSpeedLane = exports.addTimeLane = exports.addMassLane = exports.addVolumeLane = exports.addAreaLane = exports.addSizeLane = exports.addConstantLane = exports.addJaDigitLane = exports.addEnDigitLane = exports.addSiDigitLane = exports.addDigitLane = exports.toggleFoldCursorLane = exports.addCursor = exports.addLane = exports.addSlide = void 0;
+    exports.initialize = exports.updateTheme = exports.updateLanguage = exports.loadFromUrl = exports.updateViewLockRoundBar = exports.updateViewScaleRoundBar = exports.getViewScaleExponentFromRate = exports.getViewScaleRate = exports.updateViewModeRoundBar = exports.copyAsUrl = exports.copyAsPngImage = exports.saveAsPngImage = exports.saveAsSvgImage = exports.addHistoryLane = exports.addEmwEnergyLane = exports.addEmwFrequencyLane = exports.addEmwWavelengthLane = exports.addSoundFrequencyLane = exports.addCountingLane = exports.addTemperatureLane = exports.addEnergyLane = exports.addSpeedLane = exports.addTimeLane = exports.addMassLane = exports.addVolumeLane = exports.addAreaLane = exports.addSizeLane = exports.addConstantLane = exports.addJaDigitLane = exports.addEnDigitLane = exports.addSiDigitLane = exports.addDigitLane = exports.toggleFoldCursorLane = exports.addCursor = exports.addLane = exports.addSlide = void 0;
     Locale = __importStar(Locale);
     Url = __importStar(Url);
     Calculation = __importStar(Calculation);
@@ -11767,11 +11774,6 @@ define("script/command", ["require", "exports", "script/locale", "script/url", "
     const addHistoryLane = () => (0, exports.addConstantLane)("history");
     exports.addHistoryLane = addHistoryLane;
     const saveAsSvgImage = () => {
-        // if (!UI.SettingsPanel.showCursorCheckbox.checked)
-        // {
-        //     Ruler.renderer(Model.data, View.data, new Set(["CURSOR_LANE"]), undefined, { showCursor: false });
-        //     Render.markDirty("CURSOR_LANE"); // 保存が終わったらカーソルを描画させる様にリクエストしておく。 / EN: Request to draw the cursor after saving.
-        // }
         const serializer = new XMLSerializer();
         const source = serializer.serializeToString(UI.rulerSvg);
         const blob = new Blob([source], { type: "image/svg+xml" });
@@ -11789,10 +11791,6 @@ define("script/command", ["require", "exports", "script/locale", "script/url", "
         canvas.height = UI.rulerSvg.viewBox.baseVal.height;
         const ctx = canvas.getContext("2d");
         if (ctx) {
-            // if (!UI.SettingsPanel.showCursorCheckbox.checked)
-            // {
-            //     Ruler.renderer(Model.data, View.data, new Set(["CURSOR_LANE"]), undefined, { showCursor: false });
-            // }
             const img = new Image();
             const serializer = new XMLSerializer();
             const source = serializer.serializeToString(UI.rulerSvg);
@@ -11816,6 +11814,36 @@ define("script/command", ["require", "exports", "script/locale", "script/url", "
         }
     };
     exports.saveAsPngImage = saveAsPngImage;
+    const copyAsPngImage = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = UI.rulerSvg.viewBox.baseVal.width;
+        canvas.height = UI.rulerSvg.viewBox.baseVal.height;
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+            const img = new Image();
+            const serializer = new XMLSerializer();
+            const source = serializer.serializeToString(UI.rulerSvg);
+            const url = URL.createObjectURL(new Blob([source], { type: "image/svg+xml" }));
+            img.onload = () => {
+                ctx.drawImage(img, 0, 0);
+                URL.revokeObjectURL(url);
+                canvas.toBlob((blob) => {
+                    if (blob) {
+                        navigator.clipboard.write([
+                            new ClipboardItem({
+                                "image/png": blob,
+                            }),
+                        ]).then(() => UI.ToastPanel.show({ message: Locale.map("Image copied to clipboard.") }), (err) => {
+                            UI.ToastPanel.show({ message: Locale.map("Failed to copy image to clipboard."), style: "error" });
+                            console.error(Locale.map("Failed to copy image to clipboard."), err);
+                        });
+                    }
+                }, "image/png");
+            };
+            img.src = url;
+        }
+    };
+    exports.copyAsPngImage = copyAsPngImage;
     const copyAsUrl = () => {
         const url = new URL(window.location.href.replace(/#/g, "?"));
         url.searchParams.set("m", JSON.stringify(Model.data));
@@ -12356,6 +12384,7 @@ define("script/event", ["require", "exports", "script/url", "script/type", "scri
         (0, exports.bindCommandToButton)(UI.addHistoryLaneButton, Command.addHistoryLane);
         (0, exports.bindCommandToButton)(UI.SavePanel.saveAsSvgImageButton, Command.saveAsSvgImage);
         (0, exports.bindCommandToButton)(UI.SavePanel.saveAsPngImageButton, Command.saveAsPngImage);
+        (0, exports.bindCommandToButton)(UI.SavePanel.copyAsPngButton, Command.copyAsPngImage);
         (0, exports.bindCommandToButton)(UI.SavePanel.copyAsUrlButton, Command.copyAsUrl);
         UI.SettingsPanel.languageSelect.addEventListener("change", () => Command.updateLanguage());
         UI.SettingsPanel.themeSelect.addEventListener("change", () => Command.updateTheme());
