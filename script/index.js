@@ -8550,7 +8550,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                     break;
             }
         }
-        if (config_json_3.default.model.namedNumber.minViewScaleExponent <= view.viewScaleExponent) {
+        if (30 <= (0, exports.getWidth)(slide, lane, 1.5, 7, view, isInverted)) {
             (0, exports.addConstTicks)(slide, lane, view, ticks, tickWindow, Calculation.namedNumberList
                 .map(namedNumber => ({
                 value: Calculation.getNamedNumberValue(namedNumber),
@@ -8596,12 +8596,14 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
         else {
             ticks.push({ value: 0, type: "long", });
         }
-        (0, exports.addConstTicks)(slide, lane, view, ticks, tickWindow, Calculation.namedNumberList
-            .map(namedNumber => ({
-            value: Calculation.getNamedNumberValue(namedNumber),
-            label: Calculation.getNamedNumberLabel(namedNumber),
-            color: Theme.resolve(config_json_3.default.model.constantTable.elementaryNumberColor),
-        })));
+        if (30 <= (0, exports.getWidth)(slide, lane, 1.5, 7, view, isInverted)) {
+            (0, exports.addConstTicks)(slide, lane, view, ticks, tickWindow, Calculation.namedNumberList
+                .map(namedNumber => ({
+                value: Calculation.getNamedNumberValue(namedNumber),
+                label: Calculation.getNamedNumberLabel(namedNumber),
+                color: Theme.resolve(config_json_3.default.model.constantTable.elementaryNumberColor),
+            })));
+        }
         // console.log(`designed ticks for lane: ${lane.name ?? "unnamed"}, ticks: ${ticks.map(tick => `${tick.value} (${tick.type})`).join(", ")}`);
         // console.log(`min: ${min}, max: ${max}`);
         const result = {
