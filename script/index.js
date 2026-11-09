@@ -727,6 +727,9 @@ define("resource/config", [], {
             "maxRange": 3000,
             "cacheSize": 1000000
         },
+        "namedNumber": {
+            "minViewScaleExponent": 1.5
+        },
         "constantTable": {
             "standardNumberColor": {
                 "light": "blue",
@@ -8547,7 +8550,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                     break;
             }
         }
-        if (1.5 <= view.viewScaleExponent) {
+        if (config_json_3.default.model.namedNumber.minViewScaleExponent <= view.viewScaleExponent) {
             (0, exports.addConstTicks)(slide, lane, view, ticks, tickWindow, Calculation.namedNumberList
                 .map(namedNumber => ({
                 value: Calculation.getNamedNumberValue(namedNumber),

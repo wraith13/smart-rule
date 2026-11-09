@@ -1962,6 +1962,9 @@ declare module "script/json-eval-updater" {
                     maxRange: number;
                     cacheSize: number;
                 };
+                namedNumber: {
+                    minViewScaleExponent: number;
+                };
                 constantTable: {
                     standardNumberColor: {
                         light: string;

@@ -1901,7 +1901,7 @@ export const designLogarithmicTicks = (slide: Type.SlideUnit, view: Type.View, l
             break;
         }
     }
-    if (1.5 <= view.viewScaleExponent)
+    if (config.model.namedNumber.minViewScaleExponent <= view.viewScaleExponent)
     {
         addConstTicks
         (
