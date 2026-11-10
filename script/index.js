@@ -728,7 +728,7 @@ define("resource/config", [], {
             "cacheSize": 1000000
         },
         "namedNumber": {
-            "minViewScaleExponent": 1.5
+            "minViewWidth": 30
         },
         "constantTable": {
             "standardNumberColor": {
@@ -8550,7 +8550,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                     break;
             }
         }
-        if (30 <= (0, exports.getWidth)(slide, lane, 1.5, 7, view, isInverted)) {
+        if (config_json_3.default.model.namedNumber.minViewWidth <= (0, exports.getWidth)(slide, lane, 1.6, 6.5, view, isInverted)) {
             (0, exports.addConstTicks)(slide, lane, view, ticks, tickWindow, Calculation.namedNumberList
                 .map(namedNumber => ({
                 value: Calculation.getNamedNumberValue(namedNumber),
@@ -8596,7 +8596,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
         else {
             ticks.push({ value: 0, type: "long", });
         }
-        if (30 <= (0, exports.getWidth)(slide, lane, 1.5, 7, view, isInverted)) {
+        if (config_json_3.default.model.namedNumber.minViewWidth <= (0, exports.getWidth)(slide, lane, 1.6, 6.5, view, isInverted)) {
             (0, exports.addConstTicks)(slide, lane, view, ticks, tickWindow, Calculation.namedNumberList
                 .map(namedNumber => ({
                 value: Calculation.getNamedNumberValue(namedNumber),
@@ -8690,12 +8690,14 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                 break;
             }
         }
-        (0, exports.addConstTicks)(slide, lane, view, ticks, tickWindow, Calculation.namedNumberList
-            .map(namedNumber => ({
-            value: Calculation.getNamedNumberValue(namedNumber),
-            label: Calculation.getNamedNumberLabel(namedNumber),
-            color: Theme.resolve(config_json_3.default.model.constantTable.elementaryNumberColor),
-        })));
+        if (config_json_3.default.model.namedNumber.minViewWidth <= (0, exports.getWidth)(slide, lane, 1.6, 6.5, view, isInverted)) {
+            (0, exports.addConstTicks)(slide, lane, view, ticks, tickWindow, Calculation.namedNumberList
+                .map(namedNumber => ({
+                value: Calculation.getNamedNumberValue(namedNumber),
+                label: Calculation.getNamedNumberLabel(namedNumber),
+                color: Theme.resolve(config_json_3.default.model.constantTable.elementaryNumberColor),
+            })));
+        }
         // console.log(`designed ticks for lane: ${lane.name ?? "unnamed"}, ticks: ${ticks.map(tick => `${tick.value} (${tick.type})`).join(", ")}`);
         // console.log(`min: ${min}, max: ${max}`);
         const result = {

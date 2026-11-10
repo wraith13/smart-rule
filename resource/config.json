@@ -71,7 +71,7 @@
             "cacheSize": 1000000
         },
         "namedNumber": {
-            "minViewScaleExponent": 1.5
+            "minViewWidth": 30
         },
         "constantTable": {
             "standardNumberColor": {

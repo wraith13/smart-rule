@@ -2,7 +2,7 @@
 <!--
     This file is genereted by build.js. このファイルは build.js によって生成されました。
     build options: ../build.json all
-    build at: Tue Nov 10 2026 07:50:53 GMT+0900 (日本標準時)
+    build at: Tue Nov 10 2026 21:05:15 GMT+0900 (日本標準時)
     repository: https://github.com/wraith13/smart-rule/
 -->
 <!-- license:
@@ -705,8 +705,8 @@ button:focus
 <div id="toast-panel"></div>
 <script type="text/javascript">
 const build = {
-    at: "Tue Nov 10 2026 07:50:53 GMT+0900 (日本標準時)",
-    tick: 1794264653803
+    at: "Tue Nov 10 2026 21:05:15 GMT+0900 (日本標準時)",
+    tick: 1794312315195
 };
 const evilCommonjsConfig = {
     "log": {
@@ -1796,7 +1796,7 @@ define("resource/config", [], {
             "cacheSize": 1000000
         },
         "namedNumber": {
-            "minViewScaleExponent": 1.5
+            "minViewWidth": 30
         },
         "constantTable": {
             "standardNumberColor": {
@@ -9618,7 +9618,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                     break;
             }
         }
-        if (30 <= (0, exports.getWidth)(slide, lane, 1.5, 7, view, isInverted)) {
+        if (config_json_3.default.model.namedNumber.minViewWidth <= (0, exports.getWidth)(slide, lane, 1.6, 6.5, view, isInverted)) {
             (0, exports.addConstTicks)(slide, lane, view, ticks, tickWindow, Calculation.namedNumberList
                 .map(namedNumber => ({
                 value: Calculation.getNamedNumberValue(namedNumber),
@@ -9664,7 +9664,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
         else {
             ticks.push({ value: 0, type: "long", });
         }
-        if (30 <= (0, exports.getWidth)(slide, lane, 1.5, 7, view, isInverted)) {
+        if (config_json_3.default.model.namedNumber.minViewWidth <= (0, exports.getWidth)(slide, lane, 1.6, 6.5, view, isInverted)) {
             (0, exports.addConstTicks)(slide, lane, view, ticks, tickWindow, Calculation.namedNumberList
                 .map(namedNumber => ({
                 value: Calculation.getNamedNumberValue(namedNumber),
@@ -9758,12 +9758,14 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                 break;
             }
         }
-        (0, exports.addConstTicks)(slide, lane, view, ticks, tickWindow, Calculation.namedNumberList
-            .map(namedNumber => ({
-            value: Calculation.getNamedNumberValue(namedNumber),
-            label: Calculation.getNamedNumberLabel(namedNumber),
-            color: Theme.resolve(config_json_3.default.model.constantTable.elementaryNumberColor),
-        })));
+        if (config_json_3.default.model.namedNumber.minViewWidth <= (0, exports.getWidth)(slide, lane, 1.6, 6.5, view, isInverted)) {
+            (0, exports.addConstTicks)(slide, lane, view, ticks, tickWindow, Calculation.namedNumberList
+                .map(namedNumber => ({
+                value: Calculation.getNamedNumberValue(namedNumber),
+                label: Calculation.getNamedNumberLabel(namedNumber),
+                color: Theme.resolve(config_json_3.default.model.constantTable.elementaryNumberColor),
+            })));
+        }
         // console.log(`designed ticks for lane: ${lane.name ?? "unnamed"}, ticks: ${ticks.map(tick => `${tick.value} (${tick.type})`).join(", ")}`);
         // console.log(`min: ${min}, max: ${max}`);
         const result = {

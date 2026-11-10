@@ -1901,7 +1901,7 @@ export const designLogarithmicTicks = (slide: Type.SlideUnit, view: Type.View, l
             break;
         }
     }
-    if (30 <= getWidth(slide, lane, 1.5, 7, view, isInverted))
+    if (config.model.namedNumber.minViewWidth <= getWidth(slide, lane, 1.6, 6.5, view, isInverted))
     {
         addConstTicks
         (
@@ -1969,7 +1969,7 @@ export const designLinearTicks = (slide: Type.SlideUnit, view: Type.View, lane: 
     {
         ticks.push({ value: 0, type: "long", });
     }
-    if (30 <= getWidth(slide, lane, 1.5, 7, view, isInverted))
+    if (config.model.namedNumber.minViewWidth <= getWidth(slide, lane, 1.6, 6.5, view, isInverted))
     {
         addConstTicks
         (
@@ -2091,24 +2091,27 @@ export const designCurvedTicks = (slide: Type.SlideUnit, view: Type.View, lane: 
             break;
         }
     }
-    addConstTicks
-    (
-        slide,
-        lane,
-        view,
-        ticks,
-        tickWindow,
-        Calculation.namedNumberList
-            .map
-            (
-                namedNumber =>
-                ({
-                    value: Calculation.getNamedNumberValue(namedNumber),
-                    label: Calculation.getNamedNumberLabel(namedNumber),
-                    color: Theme.resolve(config.model.constantTable.elementaryNumberColor),
-                })
-            )
-    );
+    if (config.model.namedNumber.minViewWidth <= getWidth(slide, lane, 1.6, 6.5, view, isInverted))
+    {
+        addConstTicks
+        (
+            slide,
+            lane,
+            view,
+            ticks,
+            tickWindow,
+            Calculation.namedNumberList
+                .map
+                (
+                    namedNumber =>
+                    ({
+                        value: Calculation.getNamedNumberValue(namedNumber),
+                        label: Calculation.getNamedNumberLabel(namedNumber),
+                        color: Theme.resolve(config.model.constantTable.elementaryNumberColor),
+                    })
+                )
+        );
+    }
     // console.log(`designed ticks for lane: ${lane.name ?? "unnamed"}, ticks: ${ticks.map(tick => `${tick.value} (${tick.type})`).join(", ")}`);
     // console.log(`min: ${min}, max: ${max}`);
     const result =
