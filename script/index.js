@@ -7127,6 +7127,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
     };
     exports.getSlidePositionAt = getSlidePositionAt;
     const getPrimaryTick = (lane) => {
+        var _a;
         switch (lane.type) {
             case "primary":
                 return undefined;
@@ -7145,54 +7146,61 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
             case "root":
                 return undefined;
             case "exponential":
-                return undefined;
+                // return undefined;
+                const namedNumber = (_a = lane.base) !== null && _a !== void 0 ? _a : "e";
+                return {
+                    value: Calculation.getNamedNumberValue(namedNumber),
+                    label: Calculation.getNamedNumberLabel(namedNumber),
+                    type: "long",
+                    color: Theme.resolve(config_json_3.default.model.constantTable.standardNumberColor),
+                };
             case "logarithmic":
                 return undefined;
             case "sine":
                 return {
                     value: 0,
                     type: "long",
-                    color: "green",
+                    color: Theme.resolve(config_json_3.default.model.constantTable.elementaryNumberColor),
                 };
             case "cosine":
                 return {
                     value: 1,
                     type: "long",
-                    color: "green",
+                    color: Theme.resolve(config_json_3.default.model.constantTable.elementaryNumberColor),
                 };
             case "tangent":
                 return {
                     value: { value: NaN, position: Math.PI / 2, },
                     label: "±∞",
                     type: "long",
-                    color: "green",
+                    color: Theme.resolve(config_json_3.default.model.constantTable.elementaryNumberColor),
                 };
             case "secant":
                 return {
                     value: 0,
                     type: "long",
-                    color: "green",
+                    color: Theme.resolve(config_json_3.default.model.constantTable.elementaryNumberColor),
                 };
             case "cosecant":
                 return {
                     value: { value: NaN, position: 0, },
                     label: "±∞",
                     type: "long",
-                    color: "green",
+                    color: Theme.resolve(config_json_3.default.model.constantTable.elementaryNumberColor),
                 };
             case "cotangent":
                 return {
                     value: { value: NaN, position: 0, },
                     label: "±∞",
                     type: "long",
-                    color: "green",
+                    color: Theme.resolve(config_json_3.default.model.constantTable.elementaryNumberColor),
                 };
             case "arcsine":
                 return {
                     value: Math.PI / 2,
                     label: "π/2",
                     type: "long",
-                    color: "green",
+                    color: Theme.resolve(config_json_3.default.model.constantTable.elementaryNumberColor),
                 };
             case "arccosine":
                 return undefined;
@@ -7205,7 +7213,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                     value: Math.PI / 2,
                     label: "π/2",
                     type: "long",
-                    color: "green",
+                    color: Theme.resolve(config_json_3.default.model.constantTable.elementaryNumberColor),
                 };
             case "arccotangent":
                 return undefined;
