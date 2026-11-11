@@ -8520,6 +8520,10 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
         const beginDigit = Math.max(Math.floor(Math.log10(lowValue)), -308);
         const endDigit = Math.min(Math.ceil(Math.log10(highValue)), 308);
         const scale = 10;
+        const primaryTick = (0, exports.getPrimaryTick)(lane);
+        if (primaryTick) {
+            ticks.push(primaryTick);
+        }
         for (let digit = beginDigit; digit <= endDigit; ++digit) {
             const a = Math.pow(10, digit);
             const width = (0, exports.getWidth)(slide, lane, a, a * scale, view, isInverted);

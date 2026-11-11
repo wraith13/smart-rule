@@ -2,7 +2,7 @@
 <!--
     This file is genereted by build.js. このファイルは build.js によって生成されました。
     build options: ../build.json all
-    build at: Wed Nov 11 2026 02:46:40 GMT+0900 (日本標準時)
+    build at: Wed Nov 11 2026 23:49:56 GMT+0900 (日本標準時)
     repository: https://github.com/wraith13/smart-rule/
 -->
 <!-- license:
@@ -705,8 +705,8 @@ button:focus
 <div id="toast-panel"></div>
 <script type="text/javascript">
 const build = {
-    at: "Wed Nov 11 2026 02:46:40 GMT+0900 (日本標準時)",
-    tick: 1794332800853
+    at: "Wed Nov 11 2026 23:49:56 GMT+0900 (日本標準時)",
+    tick: 1794408596518
 };
 const evilCommonjsConfig = {
     "log": {
@@ -9588,6 +9588,10 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
         const beginDigit = Math.max(Math.floor(Math.log10(lowValue)), -308);
         const endDigit = Math.min(Math.ceil(Math.log10(highValue)), 308);
         const scale = 10;
+        const primaryTick = (0, exports.getPrimaryTick)(lane);
+        if (primaryTick) {
+            ticks.push(primaryTick);
+        }
         for (let digit = beginDigit; digit <= endDigit; ++digit) {
             const a = Math.pow(10, digit);
             const width = (0, exports.getWidth)(slide, lane, a, a * scale, view, isInverted);
