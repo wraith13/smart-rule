@@ -8520,10 +8520,6 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
         const beginDigit = Math.max(Math.floor(Math.log10(lowValue)), -308);
         const endDigit = Math.min(Math.ceil(Math.log10(highValue)), 308);
         const scale = 10;
-        const primaryTick = (0, exports.getPrimaryTick)(lane);
-        if (primaryTick) {
-            ticks.push(primaryTick);
-        }
         for (let digit = beginDigit; digit <= endDigit; ++digit) {
             const a = Math.pow(10, digit);
             const width = (0, exports.getWidth)(slide, lane, a, a * scale, view, isInverted);
@@ -8569,6 +8565,17 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                 label: Calculation.getNamedNumberLabel(namedNumber),
                 color: Theme.resolve(config_json_3.default.model.constantTable.elementaryNumberColor),
             })));
+        }
+        const primaryTick = (0, exports.getPrimaryTick)(lane);
+        if (primaryTick) {
+            const duplicateTick = ticks.find(tick => Type.getExValueNumber(tick.value) === Type.getExValueNumber(primaryTick.value));
+            if (duplicateTick) {
+                duplicateTick.type = "long";
+                duplicateTick.color = primaryTick.color;
+            }
+            else {
+                ticks.push(primaryTick);
+            }
         }
         // console.log(`designed ticks for lane: ${lane.name ?? "unnamed"}, ticks: ${ticks.map(tick => `${tick.value} (${tick.type})`).join(", ")}`);
         // console.log(`min: ${min}, max: ${max}`);
