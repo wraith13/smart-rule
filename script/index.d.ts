@@ -557,6 +557,7 @@ declare module "script/type" {
     export type LaneContext = "left-end" | "center" | "right-end" | "single";
     export type TickType = "none" | "mini" | "short" | "medium" | "long";
     export const getNextTickType: (tickType: TickType, direction: "shorter" | "longer") => TickType;
+    export const getLongerTickType: (a: TickType, b: TickType) => TickType;
     export type ValueType = number;
     export type ValueWithBasePosition = {
         value: ValueType;
@@ -1671,6 +1672,7 @@ declare module "script/model" {
         label?: string;
         color?: string;
     }[]) => void;
+    export const mergeTick: (ticks: Type.Tick[], primaryTick: Type.Tick | undefined) => Type.Tick[];
     export const designLogarithmicTicks: (slide: Type.SlideUnit, view: Type.View, lane: Type.Lane, tickWindow: ValueTickWindow) => Type.LaneContent;
     export const designLinearTicks: (slide: Type.SlideUnit, view: Type.View, lane: Type.Lane, tickWindow: ValueTickWindow) => Type.LaneContent;
     export const designCurvedTicks: (slide: Type.SlideUnit, view: Type.View, lane: Type.Lane, tickWindow: ValueTickWindow) => Type.LaneContent;

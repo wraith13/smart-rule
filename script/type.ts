@@ -193,6 +193,20 @@ export const getNextTickType = (tickType: TickType, direction: "shorter" | "long
         throw new Error(`🦋 FIXME: getNextTickType: unknown direction: ${direction}`);
     }
 };
+export const getLongerTickType = (a: TickType, b: TickType): TickType =>
+{
+    const order: TickType[] = [ "none", "mini", "short", "medium", "long" ];
+    const aIndex = order.indexOf(a);
+    const bIndex = order.indexOf(b);
+    if (0 <= aIndex && 0 <= bIndex)
+    {
+        return order[Math.max(aIndex, bIndex)];
+    }
+    else
+    {
+        throw new Error(`🦋 FIXME: getLongerTickType: unknown tickType: ${a}, ${b}`);
+    }
+};
 // export type ValueType = Calculation.NumberOrComplex;
 export type ValueType = number;
 export type ValueWithBasePosition = { value: ValueType; basePosition: number; quarter: number; };

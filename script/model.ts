@@ -1851,6 +1851,23 @@ export const addConstTicks = (slide: Type.SlideUnit, lane: Type.Lane, view: Type
         }
     }
 };
+export const mergeTick = (ticks: Type.Tick[], primaryTick: Type.Tick | undefined): Type.Tick[] =>
+{
+    if (primaryTick)
+    {
+        const duplicateTick = ticks.find(tick => Type.getExValueNumber(tick.value) === Type.getExValueNumber(primaryTick.value));
+        if (duplicateTick)
+        {
+            duplicateTick.type = Type.getLongerTickType(duplicateTick.type, primaryTick.type);
+            duplicateTick.color = primaryTick.color ?? duplicateTick.color;
+        }
+        else
+        {
+            ticks.push(primaryTick);
+        }
+    }
+    return ticks;
+};
 export const designLogarithmicTicks = (slide: Type.SlideUnit, view: Type.View, lane: Type.Lane, tickWindow: ValueTickWindow): Type.LaneContent =>
 {
     const { topValue, bottomValue } = tickWindow;
@@ -1929,20 +1946,7 @@ export const designLogarithmicTicks = (slide: Type.SlideUnit, view: Type.View, l
                 )
         );
     }
-    const primaryTick = getPrimaryTick(lane);
-    if (primaryTick)
-    {
-        const duplicateTick = ticks.find(tick => Type.getExValueNumber(tick.value) === Type.getExValueNumber(primaryTick.value));
-        if (duplicateTick)
-        {
-            duplicateTick.type = "long";
-            duplicateTick.color = primaryTick.color;
-        }
-        else
-        {
-            ticks.push(primaryTick);
-        }
-    }
+    mergeTick(ticks, getPrimaryTick(lane));
     // console.log(`designed ticks for lane: ${lane.name ?? "unnamed"}, ticks: ${ticks.map(tick => `${tick.value} (${tick.type})`).join(", ")}`);
     // console.log(`min: ${min}, max: ${max}`);
     const result =

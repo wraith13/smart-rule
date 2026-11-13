@@ -1465,7 +1465,7 @@ define("script/calculation", ["require", "exports", "script/settings", "resource
 define("script/type", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.getTickValue = exports.getExValuePosition = exports.getExValueNumber = exports.isValueWithPosition = exports.isValueWithBasePosition = exports.getNextTickType = exports.getViewScale = exports.viewModeList = exports.isThemeTable = exports.getNext = void 0;
+    exports.getTickValue = exports.getExValuePosition = exports.getExValueNumber = exports.isValueWithPosition = exports.isValueWithBasePosition = exports.getLongerTickType = exports.getNextTickType = exports.getViewScale = exports.viewModeList = exports.isThemeTable = exports.getNext = void 0;
     const getNext = (list, current, isReverse) => {
         const currentIndex = list.indexOf(current);
         if (0 <= currentIndex) {
@@ -1520,6 +1520,18 @@ define("script/type", ["require", "exports"], function (require, exports) {
         }
     };
     exports.getNextTickType = getNextTickType;
+    const getLongerTickType = (a, b) => {
+        const order = ["none", "mini", "short", "medium", "long"];
+        const aIndex = order.indexOf(a);
+        const bIndex = order.indexOf(b);
+        if (0 <= aIndex && 0 <= bIndex) {
+            return order[Math.max(aIndex, bIndex)];
+        }
+        else {
+            throw new Error(`🦋 FIXME: getLongerTickType: unknown tickType: ${a}, ${b}`);
+        }
+    };
+    exports.getLongerTickType = getLongerTickType;
     const isValueWithBasePosition = (value) => "object" === typeof value && null !== value &&
         "value" in value && "number" === typeof value.value &&
         "basePosition" in value && "number" === typeof value.basePosition &&
@@ -6894,7 +6906,7 @@ define("resource/constant/history", [], {
 define("script/model", ["require", "exports", "script/locale", "script/calculation", "script/type", "script/url", "script/settings", "script/theme", "script/comparer", "resource/config", "resource/digit/$si", "resource/digit/en", "resource/digit/ja", "resource/angle/sin", "resource/angle/cos", "resource/angle/tan", "resource/angle/sec", "resource/angle/csc", "resource/angle/cot", "resource/constant/size", "resource/constant/area", "resource/constant/volume", "resource/constant/mass", "resource/constant/time", "resource/constant/speed", "resource/constant/energy", "resource/constant/temperature", "resource/constant/counting", "resource/constant/sound-frequency", "resource/constant/emw-wavelength", "resource/constant/emw-frequency", "resource/constant/emw-energy", "resource/constant/history"], function (require, exports, Locale, Calculation, Type, Url, Settings, Theme, Comparer, config_json_3, _si_json_1, en_json_2, ja_json_2, sin_json_1, cos_json_1, tan_json_1, sec_json_1, csc_json_1, cot_json_1, size_json_1, area_json_1, volume_json_1, mass_json_1, time_json_1, speed_json_1, energy_json_1, temperature_json_1, counting_json_1, sound_frequency_json_1, emw_wavelength_json_1, emw_frequency_json_1, emw_energy_json_1, history_json_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.hasDataArea = exports.getLaneContext = exports.getCursorValues = exports.getCursorValue = exports.getCursorPosition = exports.makeSure = exports.removeLane = exports.makeLane = exports.addConstantLane = exports.addDigitLane = exports.addLane = exports.getSlideFromLane = exports.getLane = exports.getLastSlideAndLastLane = exports.getSlideAndLane = exports.makeSureSlide = exports.makeSlide = exports.getLaneIndex = exports.getSlideIndexFromLane = exports.getSlideIndex = exports.isRootSlide = exports.getRootSlideAndRootLane = exports.getRootSlide = exports.isPrimaryLane = exports.isRootLane = exports.getRootLane = exports.makeRootLane = exports.designTicks = exports.complementMinMaxArea = exports.getBottomTick = exports.getTopTick = exports.designOscillatingTicks = exports.designPeriodicTicks = exports.getUnitList = exports.designConstantTicks = exports.makeConstantStandardTickUnit = exports.designConstantTickType = exports.designConstantTickColor = exports.designConstantAreas = exports.makeAreaSpanLabel = exports.formatUniverseEpochDurationForHuman = exports.numberToLocaleString = exports.getLocaleDigitTable = exports.designDigitTicks = exports.makeDigitLabel = exports.designPrimeDecompositionTicks = exports.factorsToString = exports.designPrimeNumbersTicks = exports.designCurvedTicks = exports.designLinearTicks = exports.designLogarithmicTicks = exports.addConstTicks = exports.designAngleTicks360 = exports.designAngleTicks90 = exports.designAngleTicks30 = exports.getMajorRateFromAngle = exports.getMajorRateCore = exports.designAngleTicks10 = exports.designAngleTicksInverted10 = exports.designAngleTicksRegular10 = exports.makeTick = exports.getDigitIndexFromWidth = exports.designCurvedTicks10 = exports.designLinearTicks10 = exports.designLogarithmicTicks10 = exports.designTickType = exports.getLongTickSpaceWidth = exports.makePositionTickWindowFromPositionAndWidth = exports.makePositionTickWindowFromWindow = exports.ValueTickWindowToPositionTickWindow = exports.PositionTickWindowToValueTickWindow = exports.getSnapReferenceLaneIndex = exports.getConvenientWidth = exports.getWidth = exports.getPositionAt = exports.getSlideOffset = exports.getAnchorSlideAndLane = exports.getRawViewPositionAt = exports.logPositionToLinearPosition = exports.linearPositionToLogPosition = exports.getLinearPositionAt = exports.getValueAt = exports.getRawValueAt = exports.angleToQuarter = exports.getPrimaryPositionAt = exports.getPrimaryValueAt = exports.getDenseLabel = exports.applySymbols = exports.applySymbolsForString = exports.applyOrSymbol = exports.getOrSymbol = exports.applyRangeSymbol = exports.getRangeSymbol = exports.applyApproximateSymbol = exports.makeApproximateLabel = exports.getApproximateSymbol = exports.applyApproximateInfinitySmallAsZero = exports.getApproximateInfinitySmallAsZero = exports.getMaxValue = exports.getMinValue = exports.getWidthValueRatioFromAngleTicks = exports.getAngleTick = exports.getAngleTable = exports.getPrimaryTick = exports.getSlidePositionAt = exports.isDiscreteLane = exports.isOscillatingLane = exports.isPeriodicLane = exports.getPrimaryPeriod = exports.getPrimaryPeriod360 = exports.getSlidePosition = exports.isInvertedSlide = exports.isInvertedLane = exports.getAllLanes = exports.getAllLaneCount = exports.RootLaneIndex = exports.RootSlideIndex = exports.ticksCache = exports.addCursor = exports.data = exports.getConstantTable = exports.constant = exports.getDigitTable = exports.digit = void 0;
+    exports.initialize = exports.hasDataArea = exports.getLaneContext = exports.getCursorValues = exports.getCursorValue = exports.getCursorPosition = exports.makeSure = exports.removeLane = exports.makeLane = exports.addConstantLane = exports.addDigitLane = exports.addLane = exports.getSlideFromLane = exports.getLane = exports.getLastSlideAndLastLane = exports.getSlideAndLane = exports.makeSureSlide = exports.makeSlide = exports.getLaneIndex = exports.getSlideIndexFromLane = exports.getSlideIndex = exports.isRootSlide = exports.getRootSlideAndRootLane = exports.getRootSlide = exports.isPrimaryLane = exports.isRootLane = exports.getRootLane = exports.makeRootLane = exports.designTicks = exports.complementMinMaxArea = exports.getBottomTick = exports.getTopTick = exports.designOscillatingTicks = exports.designPeriodicTicks = exports.getUnitList = exports.designConstantTicks = exports.makeConstantStandardTickUnit = exports.designConstantTickType = exports.designConstantTickColor = exports.designConstantAreas = exports.makeAreaSpanLabel = exports.formatUniverseEpochDurationForHuman = exports.numberToLocaleString = exports.getLocaleDigitTable = exports.designDigitTicks = exports.makeDigitLabel = exports.designPrimeDecompositionTicks = exports.factorsToString = exports.designPrimeNumbersTicks = exports.designCurvedTicks = exports.designLinearTicks = exports.designLogarithmicTicks = exports.mergeTick = exports.addConstTicks = exports.designAngleTicks360 = exports.designAngleTicks90 = exports.designAngleTicks30 = exports.getMajorRateFromAngle = exports.getMajorRateCore = exports.designAngleTicks10 = exports.designAngleTicksInverted10 = exports.designAngleTicksRegular10 = exports.makeTick = exports.getDigitIndexFromWidth = exports.designCurvedTicks10 = exports.designLinearTicks10 = exports.designLogarithmicTicks10 = exports.designTickType = exports.getLongTickSpaceWidth = exports.makePositionTickWindowFromPositionAndWidth = exports.makePositionTickWindowFromWindow = exports.ValueTickWindowToPositionTickWindow = exports.PositionTickWindowToValueTickWindow = exports.getSnapReferenceLaneIndex = exports.getConvenientWidth = exports.getWidth = exports.getPositionAt = exports.getSlideOffset = exports.getAnchorSlideAndLane = exports.getRawViewPositionAt = exports.logPositionToLinearPosition = exports.linearPositionToLogPosition = exports.getLinearPositionAt = exports.getValueAt = exports.getRawValueAt = exports.angleToQuarter = exports.getPrimaryPositionAt = exports.getPrimaryValueAt = exports.getDenseLabel = exports.applySymbols = exports.applySymbolsForString = exports.applyOrSymbol = exports.getOrSymbol = exports.applyRangeSymbol = exports.getRangeSymbol = exports.applyApproximateSymbol = exports.makeApproximateLabel = exports.getApproximateSymbol = exports.applyApproximateInfinitySmallAsZero = exports.getApproximateInfinitySmallAsZero = exports.getMaxValue = exports.getMinValue = exports.getWidthValueRatioFromAngleTicks = exports.getAngleTick = exports.getAngleTable = exports.getPrimaryTick = exports.getSlidePositionAt = exports.isDiscreteLane = exports.isOscillatingLane = exports.isPeriodicLane = exports.getPrimaryPeriod = exports.getPrimaryPeriod360 = exports.getSlidePosition = exports.isInvertedSlide = exports.isInvertedLane = exports.getAllLanes = exports.getAllLaneCount = exports.RootLaneIndex = exports.RootSlideIndex = exports.ticksCache = exports.addCursor = exports.data = exports.getConstantTable = exports.constant = exports.getDigitTable = exports.digit = void 0;
     Locale = __importStar(Locale);
     Calculation = __importStar(Calculation);
     Type = __importStar(Type);
@@ -8510,6 +8522,21 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
         }
     };
     exports.addConstTicks = addConstTicks;
+    const mergeTick = (ticks, primaryTick) => {
+        var _a;
+        if (primaryTick) {
+            const duplicateTick = ticks.find(tick => Type.getExValueNumber(tick.value) === Type.getExValueNumber(primaryTick.value));
+            if (duplicateTick) {
+                duplicateTick.type = Type.getLongerTickType(duplicateTick.type, primaryTick.type);
+                duplicateTick.color = (_a = primaryTick.color) !== null && _a !== void 0 ? _a : duplicateTick.color;
+            }
+            else {
+                ticks.push(primaryTick);
+            }
+        }
+        return ticks;
+    };
+    exports.mergeTick = mergeTick;
     const designLogarithmicTicks = (slide, view, lane, tickWindow) => {
         var _a, _b;
         const { topValue, bottomValue } = tickWindow;
@@ -8566,17 +8593,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                 color: Theme.resolve(config_json_3.default.model.constantTable.elementaryNumberColor),
             })));
         }
-        const primaryTick = (0, exports.getPrimaryTick)(lane);
-        if (primaryTick) {
-            const duplicateTick = ticks.find(tick => Type.getExValueNumber(tick.value) === Type.getExValueNumber(primaryTick.value));
-            if (duplicateTick) {
-                duplicateTick.type = "long";
-                duplicateTick.color = primaryTick.color;
-            }
-            else {
-                ticks.push(primaryTick);
-            }
-        }
+        (0, exports.mergeTick)(ticks, (0, exports.getPrimaryTick)(lane));
         // console.log(`designed ticks for lane: ${lane.name ?? "unnamed"}, ticks: ${ticks.map(tick => `${tick.value} (${tick.type})`).join(", ")}`);
         // console.log(`min: ${min}, max: ${max}`);
         const result = {
