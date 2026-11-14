@@ -557,7 +557,7 @@ declare module "script/type" {
     export type LaneContext = "left-end" | "center" | "right-end" | "single";
     export type TickType = "none" | "mini" | "short" | "medium" | "long";
     export const getNextTickType: (tickType: TickType, direction: "shorter" | "longer") => TickType;
-    export const getLongerTickType: (a: TickType, b: TickType) => TickType;
+    export const getLongerTickType: (...ticks: TickType[]) => TickType;
     export type ValueType = number;
     export type ValueWithBasePosition = {
         value: ValueType;

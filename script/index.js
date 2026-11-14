@@ -1520,15 +1520,14 @@ define("script/type", ["require", "exports"], function (require, exports) {
         }
     };
     exports.getNextTickType = getNextTickType;
-    const getLongerTickType = (a, b) => {
+    const getLongerTickType = (...ticks) => {
         const order = ["none", "mini", "short", "medium", "long"];
-        const aIndex = order.indexOf(a);
-        const bIndex = order.indexOf(b);
-        if (0 <= aIndex && 0 <= bIndex) {
-            return order[Math.max(aIndex, bIndex)];
+        const indices = ticks.map(a => order.indexOf(a));
+        if (indices.every(i => 0 <= i)) {
+            return order[Math.max(...indices)];
         }
         else {
-            throw new Error(`🦋 FIXME: getLongerTickType: unknown tickType: ${a}, ${b}`);
+            throw new Error(`🦋 FIXME: getLongerTickType: unknown tickType: ${ticks.join(", ")}`);
         }
     };
     exports.getLongerTickType = getLongerTickType;
