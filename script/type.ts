@@ -197,13 +197,20 @@ export const getLongerTickType = (...ticks: TickType[]): TickType =>
 {
     const order: TickType[] = [ "none", "mini", "short", "medium", "long" ];
     const indices = ticks.map(a => order.indexOf(a));
-    if (indices.every(i => 0 <= i))
+    if (0 < indices.length)
     {
-        return order[Math.max(...indices)];
+        if (indices.every(i => 0 <= i))
+        {
+            return order[Math.max(...indices)];
+        }
+        else
+        {
+            throw new Error(`🦋 FIXME: getLongerTickType: unknown tickType: ${ticks.join(", ")}`);
+        }
     }
     else
     {
-        throw new Error(`🦋 FIXME: getLongerTickType: unknown tickType: ${ticks.join(", ")}`);
+        throw new Error(`🦋 FIXME: getLongerTickType: no tickTypes provided`);
     }
 };
 // export type ValueType = Calculation.NumberOrComplex;
