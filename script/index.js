@@ -1523,11 +1523,16 @@ define("script/type", ["require", "exports"], function (require, exports) {
     const getLongerTickType = (...ticks) => {
         const order = ["none", "mini", "short", "medium", "long"];
         const indices = ticks.map(a => order.indexOf(a));
-        if (indices.every(i => 0 <= i)) {
-            return order[Math.max(...indices)];
+        if (0 < indices.length) {
+            if (indices.every(i => 0 <= i)) {
+                return order[Math.max(...indices)];
+            }
+            else {
+                throw new Error(`🦋 FIXME: getLongerTickType: unknown tickType: ${ticks.join(", ")}`);
+            }
         }
         else {
-            throw new Error(`🦋 FIXME: getLongerTickType: unknown tickType: ${ticks.join(", ")}`);
+            throw new Error(`🦋 FIXME: getLongerTickType: no tickTypes provided`);
         }
     };
     exports.getLongerTickType = getLongerTickType;
@@ -7978,7 +7983,10 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
         const lowValue = (_a = Calculation.nanToNull(Type.getExValueNumber(!isInverted ? topValue : bottomValue))) !== null && _a !== void 0 ? _a : (0, exports.getMinValue)(lane);
         const highValue = (_b = Calculation.nanToNull(Type.getExValueNumber(!isInverted ? bottomValue : topValue))) !== null && _b !== void 0 ? _b : (0, exports.getMaxValue)(lane);
         const unit = Math.pow(10, unitDigt);
-        const width = (0, exports.getWidth)(slide, lane, base, base + unit, view, isInverted);
+        // const width = getWidth(slide, lane, base, base + unit, view, isInverted);
+        const width = 0 <= base ?
+            (0, exports.getWidth)(slide, lane, base, base + unit, view, isInverted) :
+            (0, exports.getWidth)(slide, lane, base + (unit * 9), base + (unit * 10), view, isInverted);
         for (let b = 0; b <= 9; ++b) {
             const value = Calculation.roundE(base + (unit * b), unitDigt - 3);
             const nextValue = Calculation.roundE(base + (unit * (b + 1)), unitDigt - 3);
@@ -7988,7 +7996,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                     if (0 < b) {
                         switch (true) {
                             case config_json_3.default.render.ruler.tickDensityThreshold_10 <= width:
-                                ticks.push({ value, type: "long" });
+                                ticks.push({ value, type: "long", });
                                 break;
                             // case base <= 0 && 0 === parent.index && 1 === b:
                             //     ticks.push({ value, type: "long", });

@@ -1183,7 +1183,10 @@ export const designLinearTicks10 = (view: Type.View, slide: Type.SlideUnit, lane
     const lowValue = Calculation.nanToNull(Type.getExValueNumber( ! isInverted ? topValue: bottomValue)) ?? getMinValue(lane);
     const highValue = Calculation.nanToNull(Type.getExValueNumber( ! isInverted ? bottomValue: topValue)) ?? getMaxValue(lane);
     const unit = Math.pow(10, unitDigt);
-    const width = getWidth(slide, lane, base, base + unit, view, isInverted);
+    // const width = getWidth(slide, lane, base, base + unit, view, isInverted);
+    const width = 0 <= base ?
+        getWidth(slide, lane, base, base +unit, view, isInverted):
+        getWidth(slide, lane, base +(unit *9), base +(unit *10), view, isInverted);
     for(let b = 0; b <= 9; ++b)
     {
         const value = Calculation.roundE(base + (unit *b), unitDigt -3);
@@ -1198,7 +1201,7 @@ export const designLinearTicks10 = (view: Type.View, slide: Type.SlideUnit, lane
                     switch(true)
                     {
                     case config.render.ruler.tickDensityThreshold_10 <= width:
-                        ticks.push({ value, type: "long" });
+                        ticks.push({ value, type: "long", });
                         break;
                     // case base <= 0 && 0 === parent.index && 1 === b:
                     //     ticks.push({ value, type: "long", });
