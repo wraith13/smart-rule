@@ -324,11 +324,24 @@ export const getPrimaryTick = (lane: Type.Lane): Type.Tick | undefined =>
             color: Theme.resolve(config.model.constantTable.elementaryNumberColor),
         };
     case "arccosine":
-        return undefined;
+        return {
+            value: 0,
+            type: "long",
+            color: Theme.resolve(config.render.ruler.foregroundColor),
+        };
     case "arctangent":
-        return undefined;
+        return {
+            value: Math.PI /4,
+            label: "π/4",
+            type: "long",
+            color: Theme.resolve(config.model.constantTable.elementaryNumberColor),
+        };
     case "arcsecant":
-        return undefined;
+        return {
+            value: 0,
+            type: "long",
+            color: Theme.resolve(config.render.ruler.foregroundColor),
+        };
     case "arccosecant":
         return {
             value: Math.PI /2,
@@ -337,7 +350,12 @@ export const getPrimaryTick = (lane: Type.Lane): Type.Tick | undefined =>
             color: Theme.resolve(config.model.constantTable.elementaryNumberColor),
         };
     case "arccotangent":
-        return undefined;
+        return {
+            value: Math.PI /4,
+            label: "π/4",
+            type: "long",
+            color: Theme.resolve(config.model.constantTable.elementaryNumberColor),
+        };
     default:
         throw new Error(`🦋 FIXME: getPrimaryTick not implemented for lane type: ${lane.type}`);
     }

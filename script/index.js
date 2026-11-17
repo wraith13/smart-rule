@@ -7219,11 +7219,24 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                     color: Theme.resolve(config_json_3.default.model.constantTable.elementaryNumberColor),
                 };
             case "arccosine":
-                return undefined;
+                return {
+                    value: 0,
+                    type: "long",
+                    color: Theme.resolve(config_json_3.default.render.ruler.foregroundColor),
+                };
             case "arctangent":
-                return undefined;
+                return {
+                    value: Math.PI / 4,
+                    label: "π/4",
+                    type: "long",
+                    color: Theme.resolve(config_json_3.default.model.constantTable.elementaryNumberColor),
+                };
             case "arcsecant":
-                return undefined;
+                return {
+                    value: 0,
+                    type: "long",
+                    color: Theme.resolve(config_json_3.default.render.ruler.foregroundColor),
+                };
             case "arccosecant":
                 return {
                     value: Math.PI / 2,
@@ -7232,7 +7245,12 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                     color: Theme.resolve(config_json_3.default.model.constantTable.elementaryNumberColor),
                 };
             case "arccotangent":
-                return undefined;
+                return {
+                    value: Math.PI / 4,
+                    label: "π/4",
+                    type: "long",
+                    color: Theme.resolve(config_json_3.default.model.constantTable.elementaryNumberColor),
+                };
             default:
                 throw new Error(`🦋 FIXME: getPrimaryTick not implemented for lane type: ${lane.type}`);
         }
