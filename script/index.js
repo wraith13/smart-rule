@@ -7222,7 +7222,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                 return {
                     value: 0,
                     type: "long",
-                    color: Theme.resolve(config_json_3.default.render.ruler.foregroundColor),
+                    color: Theme.resolve(config_json_3.default.model.constantTable.elementaryNumberColor),
                 };
             case "arctangent":
                 return {
@@ -7235,7 +7235,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                 return {
                     value: 0,
                     type: "long",
-                    color: Theme.resolve(config_json_3.default.render.ruler.foregroundColor),
+                    color: Theme.resolve(config_json_3.default.model.constantTable.elementaryNumberColor),
                 };
             case "arccosecant":
                 return {
@@ -8696,9 +8696,6 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
         const endValue = Math.ceil(highValue / unit) * unit;
         const primaryTick = (0, exports.getPrimaryTick)(lane);
         const primaryTickValue = undefined !== primaryTick ? Type.getExValueNumber(primaryTick.value) : undefined;
-        if (undefined !== primaryTick && !(0, exports.isPeriodicLane)(lane)) {
-            ticks.push(primaryTick);
-        }
         let previousValue = beginValue - unit;
         for (let i = beginValue; i <= endValue; i += unit) {
             if (previousValue < i) {
@@ -8750,6 +8747,9 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                 // 計算が桁落ちしてるので、ここで break しないと無限ループになる。 / EN: The calculation is suffering from loss of significance, so if we don't break here, it will result in an infinite loop.
                 break;
             }
+        }
+        if (undefined !== primaryTick && !(0, exports.isPeriodicLane)(lane)) {
+            ticks.push(primaryTick);
         }
         if (config_json_3.default.model.namedNumber.minViewWidth <= (0, exports.getWidth)(slide, lane, 1.6, 6.5, view, isInverted)) {
             (0, exports.addConstTicks)(slide, lane, view, ticks, tickWindow, Calculation.namedNumberList

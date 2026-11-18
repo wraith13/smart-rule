@@ -327,7 +327,7 @@ export const getPrimaryTick = (lane: Type.Lane): Type.Tick | undefined =>
         return {
             value: 0,
             type: "long",
-            color: Theme.resolve(config.render.ruler.foregroundColor),
+            color: Theme.resolve(config.model.constantTable.elementaryNumberColor),
         };
     case "arctangent":
         return {
@@ -340,7 +340,7 @@ export const getPrimaryTick = (lane: Type.Lane): Type.Tick | undefined =>
         return {
             value: 0,
             type: "long",
-            color: Theme.resolve(config.render.ruler.foregroundColor),
+            color: Theme.resolve(config.model.constantTable.elementaryNumberColor),
         };
     case "arccosecant":
         return {
@@ -2072,10 +2072,6 @@ export const designCurvedTicks = (slide: Type.SlideUnit, view: Type.View, lane: 
     const endValue = Math.ceil(highValue / unit) * unit;
     const primaryTick = getPrimaryTick(lane);
     const primaryTickValue = undefined !== primaryTick ? Type.getExValueNumber(primaryTick.value): undefined;
-    if (undefined !== primaryTick && ! isPeriodicLane(lane))
-    {
-        ticks.push(primaryTick);
-    }
     let previousValue = beginValue -unit;
     for(let i = beginValue; i <= endValue; i += unit)
     {
@@ -2136,6 +2132,10 @@ export const designCurvedTicks = (slide: Type.SlideUnit, view: Type.View, lane: 
             // 計算が桁落ちしてるので、ここで break しないと無限ループになる。 / EN: The calculation is suffering from loss of significance, so if we don't break here, it will result in an infinite loop.
             break;
         }
+    }
+    if (undefined !== primaryTick && ! isPeriodicLane(lane))
+    {
+        ticks.push(primaryTick);
     }
     if (config.model.namedNumber.minViewWidth <= getWidth(slide, lane, 1.6, 6.5, view, isInverted))
     {
