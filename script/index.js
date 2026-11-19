@@ -8703,7 +8703,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                 const value = Calculation.roundE(i, unitDigt - 3);
                 // const width = getConvenientWidth(slide, lane, value, value +unit, view, isInverted);
                 const width = undefined !== primaryTickValue ?
-                    ((_a = (0, exports.getWidth)(slide, lane, value, value + unit, view, isInverted)) !== null && _a !== void 0 ? _a : (0, exports.getWidth)(slide, lane, value, primaryTickValue, view, "auto")) :
+                    Math.min((_a = (0, exports.getWidth)(slide, lane, value, value + unit, view, isInverted)) !== null && _a !== void 0 ? _a : Calculation.MAX_VALUE, (0, exports.getWidth)(slide, lane, value, primaryTickValue, view, "auto")) :
                     (0, exports.getConvenientWidth)(slide, lane, value, value + unit, view, isInverted);
                 switch (true) {
                     case config_json_3.default.render.ruler.tickDensityThreshold_10 <= width:

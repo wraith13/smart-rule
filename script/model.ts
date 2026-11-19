@@ -2081,7 +2081,7 @@ export const designCurvedTicks = (slide: Type.SlideUnit, view: Type.View, lane: 
             const value = Calculation.roundE(i, unitDigt -3);
             // const width = getConvenientWidth(slide, lane, value, value +unit, view, isInverted);
             const width = undefined !== primaryTickValue ?
-                (getWidth(slide, lane, value, value +unit, view, isInverted) ?? getWidth(slide, lane, value, primaryTickValue, view, "auto")):
+                Math.min(getWidth(slide, lane, value, value +unit, view, isInverted) ?? Calculation.MAX_VALUE, getWidth(slide, lane, value, primaryTickValue, view, "auto")):
                 getConvenientWidth(slide, lane, value, value +unit, view, isInverted);
             switch(true)
             {
