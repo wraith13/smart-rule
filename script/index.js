@@ -8684,7 +8684,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
     };
     exports.designLinearTicks = designLinearTicks;
     const designCurvedTicks = (slide, view, lane, tickWindow) => {
-        var _a;
+        var _a, _b;
         const { topValue, bottomValue } = tickWindow;
         const ticks = [];
         const isInverted = (0, exports.isInvertedLane)(lane);
@@ -8702,14 +8702,17 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                 previousValue = i;
                 const value = Calculation.roundE(i, unitDigt - 3);
                 // const width = getConvenientWidth(slide, lane, value, value +unit, view, isInverted);
-                const width = undefined !== primaryTickValue ?
+                const selfWidth = undefined !== primaryTickValue ?
                     Math.min((_a = (0, exports.getWidth)(slide, lane, value, value + unit, view, isInverted)) !== null && _a !== void 0 ? _a : Calculation.MAX_VALUE, (0, exports.getWidth)(slide, lane, value, primaryTickValue, view, "auto")) :
                     (0, exports.getConvenientWidth)(slide, lane, value, value + unit, view, isInverted);
+                const frameWidth = undefined !== primaryTickValue ?
+                    ((_b = (0, exports.getWidth)(slide, lane, value, value + unit, view, isInverted)) !== null && _b !== void 0 ? _b : (0, exports.getConvenientWidth)(slide, lane, value, value + unit, view, isInverted)) :
+                    (0, exports.getConvenientWidth)(slide, lane, value, value + unit, view, isInverted);
                 switch (true) {
-                    case config_json_3.default.render.ruler.tickDensityThreshold_10 <= width:
+                    case config_json_3.default.render.ruler.tickDensityThreshold_10 <= selfWidth:
                         ticks.push({ value, type: "long", });
                         break;
-                    case config_json_3.default.render.ruler.tickDensityThreshold_5 <= width:
+                    case config_json_3.default.render.ruler.tickDensityThreshold_5 <= selfWidth:
                         ticks.push({
                             value,
                             type: "long",
@@ -8720,23 +8723,23 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                         const numberValue = Type.getExValueNumber(value);
                         const absoluteLog10 = Math.abs(Math.log10(numberValue));
                         const majorRate = Calculation.isNearlyEqual(absoluteLog10, Calculation.roundE(absoluteLog10)) ? 3.5 : 1;
-                        const digitIndex = (0, exports.getDigitIndexFromWidth)(width * majorRate);
-                        if (0 < digitIndex && 0.01 <= width) {
+                        const digitIndex = (0, exports.getDigitIndexFromWidth)(selfWidth * majorRate);
+                        if (0 < digitIndex && 0.01 <= selfWidth) {
                             if (digitIndex <= 1 || 0 === absoluteLog10 % digitIndex) {
                                 ticks.push({
                                     value,
                                     type: 0 === absoluteLog10 % (digitIndex * 3) ? "long" : "short",
-                                    color: (0, exports.getDigitIndexFromWidth)(width * majorRate * 0.5) <= digitIndex || 0 === absoluteLog10 % (digitIndex * 9) ? undefined : "gray",
+                                    color: (0, exports.getDigitIndexFromWidth)(selfWidth * majorRate * 0.5) <= digitIndex || 0 === absoluteLog10 % (digitIndex * 9) ? undefined : "gray",
                                 });
                             }
                         }
                         break;
                 }
                 switch (true) {
-                    case config_json_3.default.render.ruler.tickDensityThreshold_10 <= width:
+                    case config_json_3.default.render.ruler.tickDensityThreshold_10 <= frameWidth:
                         ticks.push(...(0, exports.designCurvedTicks10)(view, slide, lane, value, unitDigt - 1, tickWindow));
                         break;
-                    case config_json_3.default.render.ruler.tickDensityThreshold_5 <= width:
+                    case config_json_3.default.render.ruler.tickDensityThreshold_5 <= frameWidth:
                         ticks.push({ value: Calculation.roundE(value + (unit * 0.5), unitDigt - 3), type: "medium", });
                         break;
                     default:

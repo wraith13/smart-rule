@@ -2080,15 +2080,18 @@ export const designCurvedTicks = (slide: Type.SlideUnit, view: Type.View, lane: 
             previousValue = i;
             const value = Calculation.roundE(i, unitDigt -3);
             // const width = getConvenientWidth(slide, lane, value, value +unit, view, isInverted);
-            const width = undefined !== primaryTickValue ?
+            const selfWidth = undefined !== primaryTickValue ?
                 Math.min(getWidth(slide, lane, value, value +unit, view, isInverted) ?? Calculation.MAX_VALUE, getWidth(slide, lane, value, primaryTickValue, view, "auto")):
+                getConvenientWidth(slide, lane, value, value +unit, view, isInverted);
+            const frameWidth = undefined !== primaryTickValue ?
+                (getWidth(slide, lane, value, value +unit, view, isInverted) ?? getConvenientWidth(slide, lane, value, value +unit, view, isInverted)):
                 getConvenientWidth(slide, lane, value, value +unit, view, isInverted);
             switch(true)
             {
-            case config.render.ruler.tickDensityThreshold_10 <= width:
+            case config.render.ruler.tickDensityThreshold_10 <= selfWidth:
                 ticks.push({ value, type: "long", });
                 break;
-            case config.render.ruler.tickDensityThreshold_5 <= width:
+            case config.render.ruler.tickDensityThreshold_5 <= selfWidth:
                 ticks.push
                 ({
                     value,
@@ -2100,8 +2103,8 @@ export const designCurvedTicks = (slide: Type.SlideUnit, view: Type.View, lane: 
                 const numberValue = Type.getExValueNumber(value);
                 const absoluteLog10 = Math.abs(Math.log10(numberValue));
                 const majorRate = Calculation.isNearlyEqual(absoluteLog10, Calculation.roundE(absoluteLog10)) ? 3.5: 1;
-                const digitIndex = getDigitIndexFromWidth(width *majorRate);
-                if (0 < digitIndex && 0.01 <= width)
+                const digitIndex = getDigitIndexFromWidth(selfWidth *majorRate);
+                if (0 < digitIndex && 0.01 <= selfWidth)
                 {
                     if (digitIndex <= 1 || 0 === absoluteLog10 %digitIndex)
                     {
@@ -2109,7 +2112,7 @@ export const designCurvedTicks = (slide: Type.SlideUnit, view: Type.View, lane: 
                         ({
                             value,
                             type: 0 === absoluteLog10 %(digitIndex *3) ? "long": "short",
-                            color: getDigitIndexFromWidth(width *majorRate *0.5) <= digitIndex || 0 === absoluteLog10 %(digitIndex *9) ? undefined: "gray",
+                            color: getDigitIndexFromWidth(selfWidth *majorRate *0.5) <= digitIndex || 0 === absoluteLog10 %(digitIndex *9) ? undefined: "gray",
                         });
                     }
                 }
@@ -2117,10 +2120,10 @@ export const designCurvedTicks = (slide: Type.SlideUnit, view: Type.View, lane: 
             }
             switch(true)
             {
-            case config.render.ruler.tickDensityThreshold_10 <= width:
+            case config.render.ruler.tickDensityThreshold_10 <= frameWidth:
                 ticks.push(...designCurvedTicks10(view, slide, lane, value, unitDigt -1, tickWindow));
                 break;
-            case config.render.ruler.tickDensityThreshold_5 <= width:
+            case config.render.ruler.tickDensityThreshold_5 <= frameWidth:
                 ticks.push({ value: Calculation.roundE(value +(unit *0.5), unitDigt -3), type: "medium", });
                 break;
             default:
