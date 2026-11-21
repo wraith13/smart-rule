@@ -1846,6 +1846,7 @@ declare module "script/ruler" {
     export const makeNumberLabel: (tick: Type.Tick) => string;
     export const makeShortNumberLabel: (value: number) => string;
     export const getFractionDigitsFromUnit: (unit: Calculation.NumberOrComplex) => number | undefined;
+    export const isShowLabel: (tick: Type.Tick) => boolean;
     export const calculateMinimumFractionDigits: (ticks: Type.Tick[]) => Type.Tick[];
     export const drawTicks: (view: Type.View, group: SVGGElement, slide: Type.SlideUnit, lane: Type.Lane, content: Type.LaneContent) => void;
     export const garbageCollectLanes: (_view: Type.View) => void;

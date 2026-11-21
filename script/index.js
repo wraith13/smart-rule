@@ -10254,7 +10254,7 @@ define("script/document", ["require", "exports", "script/element"], function (re
 define("script/ruler", ["require", "exports", "script/locale", "script/type", "script/calculation", "script/model", "script/ui", "script/theme", "script/render", "script/document", "script/svg", "script/comparer", "resource/config"], function (require, exports, Locale, Type, Calculation, Model, UI, Theme, Render, DOCUMENT, SVG, Comparer, config_json_6) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.initialize = exports.getRulerWidth = exports.getCursorLaneWidth = exports.getCursorLaneLength = exports.getCursorLaneBezelWidth = exports.resize = exports.drawLaneUnitPopup = exports.drawLanePropertyPopup = exports.drawPopup = exports.drawCursorHandle = exports.drawCursorLine = exports.getCursorColor = exports.slideCursor = exports.snapHorizontalPosition = exports.snapVerticalPosition = exports.getAreaPositions = exports.nextPosition = exports.snapPosition = exports.regulateReferencePositions = exports.getReferenceLaneIndexFromEvent = exports.garbageCollectCursors = exports.garbageCollectLanes = exports.drawTicks = exports.calculateMinimumFractionDigits = exports.getFractionDigitsFromUnit = exports.makeShortNumberLabel = exports.makeNumberLabel = exports.makeNumberLabelPart = exports.drawAreas = exports.getAreaFill = exports.drawCursorLane = exports.drawCursorLaneTicks = exports.drawCursorLaneArea = exports.drawLane = exports.drawLeveledText = exports.getLeftOfCursorLane = exports.getLeftOfLane = exports.makeSureSlide = exports.makeStops = exports.makeVerticalGradient = exports.makeLinerGradient = exports.drawGradientDefines = exports.getLaneIndexFromPosition = exports.makeSureLabelLayer = exports.makeSureTickLayer = exports.makeSureCursorLayer = exports.getCursorLayer = exports.cursorLayerSource = exports.makeSureAreaLayer = exports.renderer = exports.isShowCursor = exports.setLaneWidth = exports.cursorLaneWidth = exports.toggleFoldCursorLane = exports.isFoldedCursorLane = exports.LaneWidths = exports.scale = void 0;
+    exports.initialize = exports.getRulerWidth = exports.getCursorLaneWidth = exports.getCursorLaneLength = exports.getCursorLaneBezelWidth = exports.resize = exports.drawLaneUnitPopup = exports.drawLanePropertyPopup = exports.drawPopup = exports.drawCursorHandle = exports.drawCursorLine = exports.getCursorColor = exports.slideCursor = exports.snapHorizontalPosition = exports.snapVerticalPosition = exports.getAreaPositions = exports.nextPosition = exports.snapPosition = exports.regulateReferencePositions = exports.getReferenceLaneIndexFromEvent = exports.garbageCollectCursors = exports.garbageCollectLanes = exports.drawTicks = exports.calculateMinimumFractionDigits = exports.isShowLabel = exports.getFractionDigitsFromUnit = exports.makeShortNumberLabel = exports.makeNumberLabel = exports.makeNumberLabelPart = exports.drawAreas = exports.getAreaFill = exports.drawCursorLane = exports.drawCursorLaneTicks = exports.drawCursorLaneArea = exports.drawLane = exports.drawLeveledText = exports.getLeftOfCursorLane = exports.getLeftOfLane = exports.makeSureSlide = exports.makeStops = exports.makeVerticalGradient = exports.makeLinerGradient = exports.drawGradientDefines = exports.getLaneIndexFromPosition = exports.makeSureLabelLayer = exports.makeSureTickLayer = exports.makeSureCursorLayer = exports.getCursorLayer = exports.cursorLayerSource = exports.makeSureAreaLayer = exports.renderer = exports.isShowCursor = exports.setLaneWidth = exports.cursorLaneWidth = exports.toggleFoldCursorLane = exports.isFoldedCursorLane = exports.LaneWidths = exports.scale = void 0;
     Locale = __importStar(Locale);
     Type = __importStar(Type);
     Calculation = __importStar(Calculation);
@@ -11037,11 +11037,13 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         return undefined;
     };
     exports.getFractionDigitsFromUnit = getFractionDigitsFromUnit;
+    const isShowLabel = (tick) => "long" === tick.type || true === tick.isShowLabel;
+    exports.isShowLabel = isShowLabel;
     const calculateMinimumFractionDigits = (ticks) => {
         var _a;
         // const numericTicks = (ticks.filter(i => "number" === typeof i.value && undefined === i.label) as (Type.Tick & { value: number })[])
         const numericTicks = ticks.filter(i => undefined === i.label)
-            .filter(i => "long" === i.type || true === i.isShowLabel)
+            .filter(i => (0, exports.isShowLabel)(i))
             .sort(Comparer.make(i => i.value));
         if (1 < numericTicks.length) {
             numericTicks[0].minimumFractionDigits = (0, exports.getFractionDigitsFromUnit)(Calculation.subtractComplexNumbers(Type.getTickValue(numericTicks[1]), Type.getTickValue(numericTicks[0])));
@@ -11108,7 +11110,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
                         // stroke: tickTrait.color,
                         stroke: color, "stroke-width": tickTrait.width, "data-tick-value": valueString }, (tick.unit ? { "data-tick-unit": tick.unit } : {})), (tick.label ? { "data-tick-label": Locale.resolve(tick.label) } : {}))));
                 }
-                if (tick.type === "long" || true === tick.isShowLabel) {
+                if ((0, exports.isShowLabel)(tick)) {
                     const tickTrait = config_json_6.default.render.ruler.tick["long"];
                     const drawLabelDirection = !drawLeftTick ? "right" :
                         !drawRightTick ? "left" :
