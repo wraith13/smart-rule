@@ -8047,7 +8047,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
     };
     exports.designLinearTicks10 = designLinearTicks10;
     const designCurvedTicks10 = (view, slide, lane, base, unitDigt, tickWindow) => {
-        var _a, _b, _c;
+        var _a, _b, _c, _d;
         const { topValue, bottomValue } = tickWindow;
         const ticks = [];
         const isInverted = (0, exports.isInvertedLane)(lane);
@@ -8062,15 +8062,21 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
             if (value < nextValue) {
                 if (lowValue < nextValue) {
                     if (value <= highValue) {
-                        const width = undefined !== primaryTickValue ?
-                            ((_c = (0, exports.getWidth)(slide, lane, value, nextValue, view, isInverted)) !== null && _c !== void 0 ? _c : (0, exports.getWidth)(slide, lane, value, primaryTickValue, view, "auto")) :
-                            (0, exports.getConvenientWidth)(slide, lane, value, nextValue, view, isInverted);
+                        // const width = undefined !== primaryTickValue ?
+                        //     (getWidth(slide, lane, value, nextValue, view, isInverted) ?? getWidth(slide, lane, value, primaryTickValue, view, "auto")):
+                        //     getConvenientWidth(slide, lane, value, nextValue, view, isInverted);
+                        const selfWidth = undefined !== primaryTickValue ?
+                            Math.min((_c = (0, exports.getWidth)(slide, lane, value, value + unit, view, isInverted)) !== null && _c !== void 0 ? _c : Calculation.MAX_VALUE, (0, exports.getWidth)(slide, lane, value, primaryTickValue, view, "auto")) :
+                            (0, exports.getConvenientWidth)(slide, lane, value, value + unit, view, isInverted);
+                        const frameWidth = undefined !== primaryTickValue ?
+                            ((_d = (0, exports.getWidth)(slide, lane, value, value + unit, view, isInverted)) !== null && _d !== void 0 ? _d : (0, exports.getConvenientWidth)(slide, lane, value, value + unit, view, isInverted)) :
+                            (0, exports.getConvenientWidth)(slide, lane, value, value + unit, view, isInverted);
                         if (0 < b) {
                             switch (true) {
-                                case config_json_3.default.render.ruler.tickDensityThreshold_10 <= width:
+                                case config_json_3.default.render.ruler.tickDensityThreshold_10 <= selfWidth:
                                     ticks.push({ value, type: "long", });
                                     break;
-                                case config_json_3.default.render.ruler.tickDensityThreshold_5 <= width:
+                                case config_json_3.default.render.ruler.tickDensityThreshold_5 <= selfWidth:
                                     ticks.push({
                                         value,
                                         type: "long",
@@ -8081,13 +8087,13 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                                     const numberValue = Type.getExValueNumber(value);
                                     const absoluteLog10 = Math.abs(Math.log10(numberValue));
                                     const majorRate = Calculation.isNearlyEqual(absoluteLog10, Calculation.roundE(absoluteLog10)) ? 3.5 : 1;
-                                    const digitIndex = (0, exports.getDigitIndexFromWidth)(width * majorRate);
+                                    const digitIndex = (0, exports.getDigitIndexFromWidth)(selfWidth * majorRate);
                                     if (0 < digitIndex) {
                                         if (digitIndex <= 1 || 0 === absoluteLog10 % digitIndex) {
                                             ticks.push({
                                                 value,
                                                 type: 0 === absoluteLog10 % (digitIndex * 3) ? "long" : "short",
-                                                color: (0, exports.getDigitIndexFromWidth)(width * majorRate * 0.5) <= digitIndex || 0 === absoluteLog10 % (digitIndex * 9) ? undefined : "gray",
+                                                color: (0, exports.getDigitIndexFromWidth)(selfWidth * majorRate * 0.5) <= digitIndex || 0 === absoluteLog10 % (digitIndex * 9) ? undefined : "gray",
                                             });
                                         }
                                     }
@@ -8103,10 +8109,10 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                             }
                         }
                         switch (true) {
-                            case config_json_3.default.render.ruler.tickDensityThreshold_10 <= width:
+                            case config_json_3.default.render.ruler.tickDensityThreshold_10 <= frameWidth:
                                 ticks.push(...(0, exports.designCurvedTicks10)(view, slide, lane, value, unitDigt - 1, tickWindow));
                                 break;
-                            case config_json_3.default.render.ruler.tickDensityThreshold_5 <= width:
+                            case config_json_3.default.render.ruler.tickDensityThreshold_5 <= frameWidth:
                                 ticks.push({ value: Calculation.roundE(value + (unit * 0.5), unitDigt - 3), type: "medium", });
                                 break;
                             default:
