@@ -1026,7 +1026,7 @@ export const getFractionDigitsFromUnit = (unit: Calculation.NumberOrComplex): nu
     return undefined;
 };
 export const isShowLabel = (tick: Type.Tick): boolean =>
-    "long" === tick.type || true === tick.isShowLabel;
+    tick.isShowLabel ?? ("long" === tick.type);
 export const calculateMinimumFractionDigits = (ticks: Type.Tick[]): Type.Tick[] =>
 {
     // const numericTicks = (ticks.filter(i => "number" === typeof i.value && undefined === i.label) as (Type.Tick & { value: number })[])

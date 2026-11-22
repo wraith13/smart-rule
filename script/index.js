@@ -11037,7 +11037,7 @@ define("script/ruler", ["require", "exports", "script/locale", "script/type", "s
         return undefined;
     };
     exports.getFractionDigitsFromUnit = getFractionDigitsFromUnit;
-    const isShowLabel = (tick) => "long" === tick.type || true === tick.isShowLabel;
+    const isShowLabel = (tick) => { var _a; return (_a = tick.isShowLabel) !== null && _a !== void 0 ? _a : ("long" === tick.type); };
     exports.isShowLabel = isShowLabel;
     const calculateMinimumFractionDigits = (ticks) => {
         var _a;
