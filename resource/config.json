@@ -247,6 +247,7 @@
             "tickDensityThreshold_E27": 0.4,
             "tickDensityThreshold_E9": 1.5,
             "tickDensityThreshold_E3": 5,
+            "tickDensityThreshold_1": 9,
             "tickDensityThreshold_5": 15,
             "tickDensityThreshold_10": 35
         }

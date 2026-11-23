@@ -2133,6 +2133,7 @@ declare module "script/json-eval-updater" {
                     tickDensityThreshold_E27: number;
                     tickDensityThreshold_E9: number;
                     tickDensityThreshold_E3: number;
+                    tickDensityThreshold_1: number;
                     tickDensityThreshold_5: number;
                     tickDensityThreshold_10: number;
                 };
