@@ -2,7 +2,7 @@
 <!--
     This file is genereted by build.js. このファイルは build.js によって生成されました。
     build options: ../build.json all
-    build at: Mon Nov 23 2026 01:13:41 GMT+0900 (日本標準時)
+    build at: Tue Nov 24 2026 00:29:48 GMT+0900 (日本標準時)
     repository: https://github.com/wraith13/smart-rule/
 -->
 <!-- license:
@@ -705,8 +705,8 @@ button:focus
 <div id="toast-panel"></div>
 <script type="text/javascript">
 const build = {
-    at: "Mon Nov 23 2026 01:13:41 GMT+0900 (日本標準時)",
-    tick: 1795364021922
+    at: "Tue Nov 24 2026 00:29:48 GMT+0900 (日本標準時)",
+    tick: 1795447788924
 };
 const evilCommonjsConfig = {
     "log": {
@@ -9163,7 +9163,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                                                 ({
                                                     value,
                                                     type: 0 === absoluteLog10 % (digitIndex * 3) ? "long" : "short",
-                                                    color: (0, exports.getDigitIndexFromWidth)(width * majorRate * 0.5) <= digitIndex || 0 === absoluteLog10 % (digitIndex * 9) ? undefined : "gray",
+                                                    // color: getDigitIndexFromWidth(width *majorRate *0.5) <= digitIndex || 0 === absoluteLog10 %(digitIndex *9) ? undefined: "gray",
                                                 });
                                         }
                                     }
@@ -9800,7 +9800,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                             ({
                                 value,
                                 type: "long",
-                                color: Math.abs(Math.log10(value)) % 3 === 0 ? undefined : "gray",
+                                // color: Math.abs(Math.log10(value)) %3 === 0 ? undefined: "gray",
                             });
                         break;
                     default:
@@ -9814,7 +9814,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                                     ({
                                         value,
                                         type: 0 === absoluteLog10 % (digitIndex * 3) ? "long" : "short",
-                                        color: (0, exports.getDigitIndexFromWidth)(width * majorRate * 0.5) <= digitIndex || 0 === absoluteLog10 % (digitIndex * 9) ? undefined : "gray",
+                                        // color: getDigitIndexFromWidth(width *majorRate *0.5) <= digitIndex || 0 === absoluteLog10 %(digitIndex *9) ? undefined: "gray",
                                     });
                             }
                         }

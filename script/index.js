@@ -8095,7 +8095,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                                                 ({
                                                     value,
                                                     type: 0 === absoluteLog10 % (digitIndex * 3) ? "long" : "short",
-                                                    color: (0, exports.getDigitIndexFromWidth)(width * majorRate * 0.5) <= digitIndex || 0 === absoluteLog10 % (digitIndex * 9) ? undefined : "gray",
+                                                    // color: getDigitIndexFromWidth(width *majorRate *0.5) <= digitIndex || 0 === absoluteLog10 %(digitIndex *9) ? undefined: "gray",
                                                 });
                                         }
                                     }
@@ -8732,7 +8732,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                             ({
                                 value,
                                 type: "long",
-                                color: Math.abs(Math.log10(value)) % 3 === 0 ? undefined : "gray",
+                                // color: Math.abs(Math.log10(value)) %3 === 0 ? undefined: "gray",
                             });
                         break;
                     default:
@@ -8746,7 +8746,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                                     ({
                                         value,
                                         type: 0 === absoluteLog10 % (digitIndex * 3) ? "long" : "short",
-                                        color: (0, exports.getDigitIndexFromWidth)(width * majorRate * 0.5) <= digitIndex || 0 === absoluteLog10 % (digitIndex * 9) ? undefined : "gray",
+                                        // color: getDigitIndexFromWidth(width *majorRate *0.5) <= digitIndex || 0 === absoluteLog10 %(digitIndex *9) ? undefined: "gray",
                                     });
                             }
                         }
