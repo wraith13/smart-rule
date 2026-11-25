@@ -1307,7 +1307,10 @@ export const designCurvedTicks10 = (view: Type.View, slide: Type.SlideUnit, lane
                                     tick =
                                     ({
                                         value,
-                                        type: 0 === absoluteLog10 %(digitIndex *3) ? "long": "short",
+                                        type:
+                                            0 === absoluteLog10 %(digitIndex *3) ? "long":
+                                            5 === b ? "medium":
+                                            "short",
                                         // color: getDigitIndexFromWidth(width *majorRate *0.5) <= digitIndex || 0 === absoluteLog10 %(digitIndex *9) ? undefined: "gray",
                                     });
                                 }
@@ -2125,7 +2128,10 @@ export const designCurvedTicks = (slide: Type.SlideUnit, view: Type.View, lane: 
                         tick =
                         ({
                             value,
-                            type: 0 === absoluteLog10 %(digitIndex *3) ? "long": "short",
+                            type:
+                                0 === absoluteLog10 %(digitIndex *3) ? "long":
+                                5 === i ? "medium":
+                                "short",
                             // color: getDigitIndexFromWidth(width *majorRate *0.5) <= digitIndex || 0 === absoluteLog10 %(digitIndex *9) ? undefined: "gray",
                         });
                     }

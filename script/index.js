@@ -8094,7 +8094,9 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                                             tick =
                                                 ({
                                                     value,
-                                                    type: 0 === absoluteLog10 % (digitIndex * 3) ? "long" : "short",
+                                                    type: 0 === absoluteLog10 % (digitIndex * 3) ? "long" :
+                                                        5 === b ? "medium" :
+                                                            "short",
                                                     // color: getDigitIndexFromWidth(width *majorRate *0.5) <= digitIndex || 0 === absoluteLog10 %(digitIndex *9) ? undefined: "gray",
                                                 });
                                         }
@@ -8745,7 +8747,9 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                                 tick =
                                     ({
                                         value,
-                                        type: 0 === absoluteLog10 % (digitIndex * 3) ? "long" : "short",
+                                        type: 0 === absoluteLog10 % (digitIndex * 3) ? "long" :
+                                            5 === i ? "medium" :
+                                                "short",
                                         // color: getDigitIndexFromWidth(width *majorRate *0.5) <= digitIndex || 0 === absoluteLog10 %(digitIndex *9) ? undefined: "gray",
                                     });
                             }
