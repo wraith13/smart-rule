@@ -8712,13 +8712,16 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
         const endValue = Math.ceil(highValue / unit) * unit;
         const primaryTick = (0, exports.getPrimaryTick)(lane);
         const primaryTickValue = undefined !== primaryTick ? Type.getExValueNumber(primaryTick.value) : undefined;
+        const maxValue = (0, exports.getMaxValue)(lane);
         let previousValue = beginValue - unit;
         for (let i = beginValue; i <= endValue; i += unit) {
             if (previousValue < i) {
                 previousValue = i;
                 const value = Calculation.roundE(i, unitDigt - 3);
-                // const width = getConvenientWidth(slide, lane, value, value +unit, view, isInverted);
-                const width = (0, exports.getConvenientWidth)(slide, lane, value, value + unit, view, "auto");
+                const nextValue = Calculation.roundE(i + unit, unitDigt - 3);
+                const width = maxValue < nextValue ?
+                    ((0, exports.getConvenientWidth)(slide, lane, value, maxValue, view, isInverted) * (maxValue - value) / unit) :
+                    (0, exports.getConvenientWidth)(slide, lane, value, nextValue, view, isInverted);
                 console.log(`designCurvedTicks: value: ${value}, width: ${width}, unit: ${unit}, unitDigt: ${unitDigt}`);
                 let tick;
                 switch (true) {
