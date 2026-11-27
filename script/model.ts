@@ -1262,6 +1262,7 @@ export const designCurvedTicks10 = (view: Type.View, slide: Type.SlideUnit, lane
     const unit = Math.pow(10, unitDigt);
     const primaryTick = getPrimaryTick(lane);
     const primaryTickValue = undefined !== primaryTick ? Type.getExValueNumber(primaryTick.value): undefined;
+    const maxValue = getMaxValue(lane);
     for(let b = 0; b <= 9; ++b)
     {
         const value = Calculation.roundE(base + (unit *b), unitDigt -3);
@@ -1272,13 +1273,10 @@ export const designCurvedTicks10 = (view: Type.View, slide: Type.SlideUnit, lane
             {
                 if (value <= highValue)
                 {
-                    const width = getConvenientWidth(slide, lane, value, value +unit, view, isInverted);
-                    // const selfWidth = undefined !== primaryTickValue ?
-                    //     Math.min(getWidth(slide, lane, value, value +unit, view, isInverted) ?? Calculation.MAX_VALUE, getWidth(slide, lane, value, primaryTickValue, view, "auto")):
-                    //     getConvenientWidth(slide, lane, value, value +unit, view, isInverted);
-                    // const frameWidth = undefined !== primaryTickValue ?
-                    //     (getWidth(slide, lane, value, value +unit, view, isInverted) ?? getConvenientWidth(slide, lane, value, value +unit, view, isInverted)):
-                    //     getConvenientWidth(slide, lane, value, value +unit, view, isInverted);
+                    const width =
+                        maxValue < nextValue ?
+                        getConvenientWidth(slide, lane, value, maxValue, view, isInverted) *(maxValue -value) /unit:
+                        getConvenientWidth(slide, lane, value, value +unit, view, isInverted);
                     if (0 < b)
                     {
                         let tick: Type.Tick | undefined;
@@ -2099,7 +2097,7 @@ export const designCurvedTicks = (slide: Type.SlideUnit, view: Type.View, lane: 
             const nextValue = Calculation.roundE(i +unit, unitDigt -3);
             const width =
                 maxValue < nextValue ?
-                    (getConvenientWidth(slide, lane, value, maxValue, view, isInverted) *(maxValue -value) /unit):
+                    getConvenientWidth(slide, lane, value, maxValue, view, isInverted) *(maxValue -value) /unit:
                     getConvenientWidth(slide, lane, value, nextValue, view, isInverted);
             console.log(`designCurvedTicks: value: ${value}, width: ${width}, unit: ${unit}, unitDigt: ${unitDigt}`);
             let tick: Type.Tick | undefined;

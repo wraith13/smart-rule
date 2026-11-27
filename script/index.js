@@ -8057,19 +8057,16 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
         const unit = Math.pow(10, unitDigt);
         const primaryTick = (0, exports.getPrimaryTick)(lane);
         const primaryTickValue = undefined !== primaryTick ? Type.getExValueNumber(primaryTick.value) : undefined;
+        const maxValue = (0, exports.getMaxValue)(lane);
         for (let b = 0; b <= 9; ++b) {
             const value = Calculation.roundE(base + (unit * b), unitDigt - 3);
             const nextValue = Calculation.roundE(value + unit, unitDigt - 3);
             if (value < nextValue) {
                 if (lowValue < nextValue) {
                     if (value <= highValue) {
-                        const width = (0, exports.getConvenientWidth)(slide, lane, value, value + unit, view, isInverted);
-                        // const selfWidth = undefined !== primaryTickValue ?
-                        //     Math.min(getWidth(slide, lane, value, value +unit, view, isInverted) ?? Calculation.MAX_VALUE, getWidth(slide, lane, value, primaryTickValue, view, "auto")):
-                        //     getConvenientWidth(slide, lane, value, value +unit, view, isInverted);
-                        // const frameWidth = undefined !== primaryTickValue ?
-                        //     (getWidth(slide, lane, value, value +unit, view, isInverted) ?? getConvenientWidth(slide, lane, value, value +unit, view, isInverted)):
-                        //     getConvenientWidth(slide, lane, value, value +unit, view, isInverted);
+                        const width = maxValue < nextValue ?
+                            (0, exports.getConvenientWidth)(slide, lane, value, maxValue, view, isInverted) * (maxValue - value) / unit :
+                            (0, exports.getConvenientWidth)(slide, lane, value, value + unit, view, isInverted);
                         if (0 < b) {
                             let tick;
                             switch (true) {
@@ -8720,7 +8717,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                 const value = Calculation.roundE(i, unitDigt - 3);
                 const nextValue = Calculation.roundE(i + unit, unitDigt - 3);
                 const width = maxValue < nextValue ?
-                    ((0, exports.getConvenientWidth)(slide, lane, value, maxValue, view, isInverted) * (maxValue - value) / unit) :
+                    (0, exports.getConvenientWidth)(slide, lane, value, maxValue, view, isInverted) * (maxValue - value) / unit :
                     (0, exports.getConvenientWidth)(slide, lane, value, nextValue, view, isInverted);
                 console.log(`designCurvedTicks: value: ${value}, width: ${width}, unit: ${unit}, unitDigt: ${unitDigt}`);
                 let tick;
