@@ -1337,7 +1337,7 @@ export const designCurvedTicks10 = (view: Type.View, slide: Type.SlideUnit, lane
                     }
                     switch(true)
                     {
-                    case config.render.ruler.tickDensityThreshold_10 <= width:
+                    case config.render.ruler.tickDensityThreshold_10 <= width || (maxValue < nextValue && -15 <= unitDigt):
                         ticks.push(...designCurvedTicks10(view, slide, lane, value, unitDigt -1, tickWindow));
                         break;
                     case config.render.ruler.tickDensityThreshold_5 <= width:
@@ -2146,7 +2146,7 @@ export const designCurvedTicks = (slide: Type.SlideUnit, view: Type.View, lane: 
             }
             switch(true)
             {
-            case config.render.ruler.tickDensityThreshold_10 <= width:
+            case config.render.ruler.tickDensityThreshold_10 <= width || (maxValue < nextValue && -15 <= unitDigt):
                 ticks.push(...designCurvedTicks10(view, slide, lane, value, unitDigt -1, tickWindow));
                 break;
             case config.render.ruler.tickDensityThreshold_5 <= width:

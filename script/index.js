@@ -8117,7 +8117,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                             }
                         }
                         switch (true) {
-                            case config_json_3.default.render.ruler.tickDensityThreshold_10 <= width:
+                            case config_json_3.default.render.ruler.tickDensityThreshold_10 <= width || (maxValue < nextValue && -15 <= unitDigt):
                                 ticks.push(...(0, exports.designCurvedTicks10)(view, slide, lane, value, unitDigt - 1, tickWindow));
                                 break;
                             case config_json_3.default.render.ruler.tickDensityThreshold_5 <= width:
@@ -8759,7 +8759,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                     ticks.push(tick);
                 }
                 switch (true) {
-                    case config_json_3.default.render.ruler.tickDensityThreshold_10 <= width:
+                    case config_json_3.default.render.ruler.tickDensityThreshold_10 <= width || (maxValue < nextValue && -15 <= unitDigt):
                         ticks.push(...(0, exports.designCurvedTicks10)(view, slide, lane, value, unitDigt - 1, tickWindow));
                         break;
                     case config_json_3.default.render.ruler.tickDensityThreshold_5 <= width:

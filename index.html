@@ -2,7 +2,7 @@
 <!--
     This file is genereted by build.js. このファイルは build.js によって生成されました。
     build options: ../build.json all
-    build at: Fri Nov 27 2026 03:42:39 GMT+0900 (日本標準時)
+    build at: Fri Nov 27 2026 21:41:34 GMT+0900 (日本標準時)
     repository: https://github.com/wraith13/smart-rule/
 -->
 <!-- license:
@@ -705,8 +705,8 @@ button:focus
 <div id="toast-panel"></div>
 <script type="text/javascript">
 const build = {
-    at: "Fri Nov 27 2026 03:42:39 GMT+0900 (日本標準時)",
-    tick: 1795718559927
+    at: "Fri Nov 27 2026 21:41:34 GMT+0900 (日本標準時)",
+    tick: 1795783294233
 };
 const evilCommonjsConfig = {
     "log": {
@@ -9185,7 +9185,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                             }
                         }
                         switch (true) {
-                            case config_json_3.default.render.ruler.tickDensityThreshold_10 <= width:
+                            case config_json_3.default.render.ruler.tickDensityThreshold_10 <= width || (maxValue < nextValue && -15 <= unitDigt):
                                 ticks.push(...(0, exports.designCurvedTicks10)(view, slide, lane, value, unitDigt - 1, tickWindow));
                                 break;
                             case config_json_3.default.render.ruler.tickDensityThreshold_5 <= width:
@@ -9827,7 +9827,7 @@ define("script/model", ["require", "exports", "script/locale", "script/calculati
                     ticks.push(tick);
                 }
                 switch (true) {
-                    case config_json_3.default.render.ruler.tickDensityThreshold_10 <= width:
+                    case config_json_3.default.render.ruler.tickDensityThreshold_10 <= width || (maxValue < nextValue && -15 <= unitDigt):
                         ticks.push(...(0, exports.designCurvedTicks10)(view, slide, lane, value, unitDigt - 1, tickWindow));
                         break;
                     case config_json_3.default.render.ruler.tickDensityThreshold_5 <= width:
